@@ -1,0 +1,6 @@
+LINK_DIRECTORIES("../ogdf")
+INCLUDE_DIRECTORIES("../ogdf/include")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -msse -msse2 -msse3 -funroll-loops -Ofast -march=native -ffast-math")
+ADD_EXECUTABLE(testOGDF test_ogdf.cpp timer.cpp)
+TARGET_LINK_LIBRARIES(testOGDF libCOIN.a libOGDF.a)
+SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})

@@ -1,0 +1,7 @@
+/build
+testOGDF
+.vscode
+.DS_Store
+output.txt
+.idea
+CommandList.sh
