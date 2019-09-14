@@ -4,11 +4,10 @@
 <body>
   <svg id="graph"> </svg>
 </body>
-
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<script src="ogdf.js"></script>
 <script>
-    var Module = {}
-    var Module = {
-      onRuntimeInitialized: function () {
+    initOGDF().then(function (Module) {
         let n = 100;
         let nodes = n * n;
         let links = 4 * 2 + 4 * (n - 2) * 3 + (n - 2) * (n - 2) * 4;
@@ -38,7 +37,7 @@
         console.log(nodes, links);
 
         console.time("sort");
-        let result = Module._DRlayout(nodes, links, source, target);
+        let result = Module._FM3(nodes, links, source, target);
         console.timeEnd("sort");
         for (let i = 0; i < nodes; ++i) {
           nodeData.push({ 'id': i, 'x': Module.HEAPF32[(result >> 2) + i * 2], 'y': Module.HEAPF32[(result >> 2) + i * 2 + 1] });
@@ -122,10 +121,10 @@
         Module._free(target);
         Module._free_buf(result);
       }
-    };
+    );
+
 
 </script>
-<script src='https://d3js.org/d3.v5.min.js'></script>
-<script src="GraphLayout.js"></script>
+
 
 </html>
