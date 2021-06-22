@@ -6,7 +6,7 @@ The project is actively developing. My idea is to compile the ogdf library into 
 
 You can see the layout performance in [the random square graph](./squareLayout.html) and [facebook network](./facebookLayout.html)(use python -m http.server). They use the FM3 graph layout algorithm from the ogdf library and get a faster performance compared to some algorithms such as D3 force in the browser.
 
-<img src="./doc/facebook.png">
+![](./doc/img/facebook.png)
 
 ### How to use
 
@@ -45,11 +45,11 @@ initOGDF().then(function (Module) {
 
 ### How to build it?
 
-We suggest you to build ogdf.js with Linux or MacOS. Before building the ogdf.js, you should make sure you have enviroments to build C++ library:
+We suggest you to build ogdf.js with Linux or MacOS (For Windows developers, WSL1/2 is suggested). Before building the ogdf.js, you should make sure you have enviroments to build C++ library:
 
 -   Git
 -   CMake
--   Compiling tools. GCC (Linux), Xcode (MacOS), or Visual Studio 2015+ (Windows)
+-   Compiling tools. GCC (Linux), Xcode (MacOS)
 -   Python 2.7.x
 
 #### Building Steps
@@ -96,6 +96,8 @@ We suggest you to build ogdf.js with Linux or MacOS. Before building the ogdf.js
     $ emcmake cmake ..
     $ emmake make
     ```
+
+    For the "this header is only for x86 only" error, please refer to: [emscripten-issue-9363](https://github.com/emscripten-core/emscripten/issues/9363)
 
 3. Build ogdf.js
     ```bash

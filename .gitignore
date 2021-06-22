@@ -5,3 +5,6 @@ testOGDF
 output.txt
 .idea
 CommandList.sh
+
+npm-debug.log
+/node_modules

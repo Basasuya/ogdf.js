@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <svg id="graph"></svg>
+    </body>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="ogdf.js"></script>
+    <script>
+        d3.json("facebook.json").then(function (graph) {
+            fm3(graph, {}, (graph) => {
+                const svg = d3.select("#graph")
+                const width = 1000
+                svg.attr("width", width).attr("height", width)
+                let container = svg.append("g")
+
+                const link = container
+                    .append("g")
+                    .attr("class", "links")
+                    .selectAll("line")
+                    .data(graph.links)
+                    .enter()
+                    .append("line")
+                    .attr("stroke", "#2a2400")
+                    .attr("stroke-width", 1)
+
+                const node = container
+                    .append("g")
+                    .attr("class", "nodes")
+                    .selectAll("circle")
+                    .data(graph.nodes)
+                    .enter()
+                    .append("circle")
+                    .attr("r", 3)
+                    .attr("fill", "red")
+
+                function ticked() {
+                    console.log("start tick")
+                    const padding = 20
+                    let max = {}
+                    let min = {}
+                    max.x = d3.max(graph.nodes, (n) => n.x)
+                    max.y = d3.max(graph.nodes, (n) => n.y)
+                    min.x = d3.min(graph.nodes, (n) => n.x)
+                    min.y = d3.min(graph.nodes, (n) => n.y)
+                    const xScale = d3
+                        .scaleLinear()
+                        .domain([min.x, max.x])
+                        .range([padding, width - padding])
+                    const yScale = d3
+                        .scaleLinear()
+                        .domain([min.y, max.y])
+                        .range([padding, width - padding])
+
+                    link.attr("x1", function (d) {
+                        return xScale(d.source.x)
+                    })
+                        .attr("y1", function (d) {
+                            return yScale(d.source.y)
+                        })
+                        .attr("x2", function (d) {
+                            return xScale(d.target.x)
+                        })
+                        .attr("y2", function (d) {
+                            return yScale(d.target.y)
+                        })
+
+                    node.attr("cx", function (d) {
+                        return xScale(d.x)
+                    }).attr("cy", function (d) {
+                        return yScale(d.y)
+                    })
+                }
+
+                ticked()
+            })
+        })
+    </script>
+</html>
