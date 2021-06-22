@@ -8,7 +8,8 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "make ogdf.js && webpack"
+        "build": "webpack",
+        "watch": "webpack --watch"
     },
     "repository": {
         "type": "git",

@@ -6,4 +6,9 @@ module.exports = {
         filename: "ogdf.js",
         path: path.resolve(__dirname, "dist"),
     },
+    watchOptions: {
+        ignored: /node_modules/,
+        aggregateTimeout: 300,
+        poll: 1000,
+    },
 }

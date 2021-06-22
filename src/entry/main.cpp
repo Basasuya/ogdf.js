@@ -21,7 +21,7 @@ using namespace ogdf;
 #	endif
 #endif
 
-EM_PORT_API(float*) FM3(int node_num, int link_num, int* source, int* target) {
+EM_PORT_API(float*) FM3(int node_num, int link_num, int* source, int* target, bool useHighLevelOptions, bool singleLevel){ //, string pageFormat) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G,
@@ -41,6 +41,20 @@ EM_PORT_API(float*) FM3(int node_num, int link_num, int* source, int* target) {
 	}
 	//LayoutModule
 	FMMMLayout *model = new FMMMLayout();
+
+	// parameters
+	model->useHighLevelOptions(useHighLevelOptions);
+	model->setSingleLevel(singleLevel);
+	// if (strcmp(pageFormat, "Landscape")) {
+	// 	model->pageFormat(FMMMOptions::PageFormatType::Landscape);
+	// } else if (strcmp(pageFormat, "Portrait")) {
+	// 	model->pageFormat(FMMMOptions::PageFormatType::Portrait);
+	// } else {
+	// 	model->pageFormat(FMMMOptions::PageFormatType::Square);
+	// }
+    // model.unitEdgeLength(15.0);
+    // model.newInitialPlacement(true);
+    // model.qualityVersusSpeed(FMMMOptions::QualityVsSpeed::GorgeousAndEfficient);
 
     model->call(GA);
 
