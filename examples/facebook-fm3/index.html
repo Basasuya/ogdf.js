@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="main" />
+    </body>
+    <script src="../common/NetV.min.js"></script>
+    <script src="../../dist/ogdf.js"></script>
+    <script>
+        const width = 500
+        const height = 500
+        const div = document.getElementById("main")
+        const netv = new NetV({
+            container: div,
+            width,
+            height,
+            node: {
+                style: {
+                    r: 3,
+                    strokeWidth: 0,
+                    fill: { r: 0.2, g: 0.6, b: 0.2, a: 0.5 },
+                },
+            },
+            link: {
+                style: {
+                    strokeColor: { r: 0.4, g: 0.6, b: 0.8, a: 0.2 },
+                },
+            },
+            nodeLimit: 100000,
+            linkLimit: 100000,
+        })
+        fetch("../data/facebook.json")
+            .then(function (response) {
+                return response.json()
+            })
+            .then(function (facebook) {
+                console.log(facebook)
+                fm3(
+                    { nodes: facebook.nodes, links: facebook.links },
+                    { qualityVersusSpeed: "GorgeousAndEfficient" },
+                    (graph) => {
+                        // netv.data(graph)
+                        netv.data(
+                            NetV.Utils.transformGraphPosition(
+                                graph,
+                                Math.min(width, height) * 0.9,
+                                width / 2,
+                                height / 2
+                            )
+                        )
+
+                        netv.draw()
+                    }
+                )
+            })
+    </script>
+</html>

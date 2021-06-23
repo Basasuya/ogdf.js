@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="main" />
+    </body>
+    <script src="../common/NetV.min.js"></script>
+    <script src="../../dist/ogdf.js"></script>
+    <script>
+        const width = 500
+        const height = 500
+        const div = document.getElementById("main")
+        const netv = new NetV({
+            container: div,
+            width,
+            height,
+        })
+        fm3(
+            netv.loadDataset("miserables"),
+            { unitEdgeLength: 10.0, pageFormat: "Landscape" },
+            (graph) => {
+                netv.data(graph)
+                // netv.data(
+                //     NetV.Utils.transformGraphPosition(
+                //         graph,
+                //         Math.min(width, height) * 0.9,
+                //         width / 2,
+                //         height / 2
+                //     )
+                // )
+
+                netv.draw()
+            }
+        )
+    </script>
+</html>

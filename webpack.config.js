@@ -6,6 +6,7 @@ module.exports = {
         filename: "ogdf.js",
         path: path.resolve(__dirname, "dist"),
     },
+    devtool: "source-map",
     watchOptions: {
         ignored: /node_modules/,
         aggregateTimeout: 300,
