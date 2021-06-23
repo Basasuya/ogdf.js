@@ -35,7 +35,7 @@ PARAMETER_MAPPING = {
     },
 }
 */
-EM_PORT_API(float*) FM3(int node_num, int link_num, int* source, int* target, bool useHighLevelOptions, bool singleLevel, int pageFormat, double unitEdgeLength, bool newInitialPlacement, int qualityVersusSpeed, int randSeed, int edgeLengthMeasurement, int allowedPositions, int maxIntPosExponent, double pageRatio, int stepsForRotatingComponents, int tipOverCCs, double minDistCC, int presortCCs, int minGraphSize, int galaxyChoice, int randomTries, int maxIterChange, int maxIterFactor, int initialPlacementMult, int forceModel, double springStrength, double repForcesStrength, int repulsiveForcesCalculation, int StopCriterion, double threshold, int fixedIterations, double forceScalingFactor, bool coolTemperature, double coolValue, int initialPlacementForces, bool resizeDrawing, double resizingScalar, int fineTuningIterations, double fineTuneScalar, bool adjustPostRepStrengthDynamically, double postSpringStrength, double postStrengthOfRepForces, int frGridQuotient, int nmTreeConstruction, int nmSmallCell, int nmParticlesInLeaves, int nmPrecision) {
+EM_PORT_API(float*) FM3(int node_num, int link_num, int* source, int* target, bool useHighLevelOptions, bool singleLevel, int pageFormat, double unitEdgeLength, bool newInitialPlacement, int qualityVersusSpeed, int randSeed, int edgeLengthMeasurement, int allowedPositions, int maxIntPosExponent, double pageRatio, int stepsForRotatingComponents, int tipOverCCs, double minDistCC, int presortCCs, int minGraphSize, int galaxyChoice, int randomTries, int maxIterChange, int maxIterFactor, int initialPlacementMult, int forceModel, double springStrength, double repForcesStrength, int repulsiveForcesCalculation, int stopCriterion, double threshold, int fixedIterations, double forceScalingFactor, bool coolTemperature, double coolValue, int initialPlacementForces, bool resizeDrawing, double resizingScalar, int fineTuningIterations, double fineTuneScalar, bool adjustPostRepStrengthDynamically, double postSpringStrength, double postStrengthOfRepForces, int frGridQuotient, int nmTreeConstruction, int nmSmallCell, int nmParticlesInLeaves, int nmPrecision) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G,
@@ -60,69 +60,44 @@ EM_PORT_API(float*) FM3(int node_num, int link_num, int* source, int* target, bo
 	// high-level-options
 	model->useHighLevelOptions(useHighLevelOptions);
 	model->setSingleLevel(singleLevel);
-
-	if (model->pageFormat() == FMMMOptions::PageFormatType::Landscape) {
-		std::cout << "default pageFormat: Landscape" << std::endl;
-	} else if (model->pageFormat() == FMMMOptions::PageFormatType::Portrait) {
-		std::cout << "default pageFormat: Portrait" << std::endl;
-	} else {
-		std::cout << "default pageFormat: Square" << std::endl;
-	}
-	if (pageFormat == 1) {
-		model->pageFormat(FMMMOptions::PageFormatType::Landscape);
-	} else if (pageFormat == 2) {
-		model->pageFormat(FMMMOptions::PageFormatType::Portrait);
-	} else {
-		model->pageFormat(FMMMOptions::PageFormatType::Square);
-	}
-
+	model->pageFormat(static_cast<FMMMOptions::PageFormatType>(pageFormat));
 	model->unitEdgeLength(unitEdgeLength);
 	model->newInitialPlacement(newInitialPlacement);
-
-	if (qualityVersusSpeed == 1) {
-		std::cout << "GorgeousAndEfficient" << std::endl;
-		model->qualityVersusSpeed(FMMMOptions::QualityVsSpeed::GorgeousAndEfficient);
-	} else if (qualityVersusSpeed == 2) {
-		std::cout << "NiceAndIncredibleSpeed" << std::endl;
-		model->qualityVersusSpeed(FMMMOptions::QualityVsSpeed::NiceAndIncredibleSpeed);
-	} else {
-		std::cout << "BeautifulAndFast" << std::endl;
-		model->qualityVersusSpeed(FMMMOptions::QualityVsSpeed::BeautifulAndFast);
-	}
+	model->qualityVersusSpeed(static_cast<FMMMOptions::QualityVsSpeed>(qualityVersusSpeed));
 
 	// low-level-options
 	model->randSeed(randSeed);
-	// model->edgeLengthMeasurement(edgeLengthMeasurement); // TODO
-	// model->allowedPositions(allowedPositions); //TODO
+	model->edgeLengthMeasurement(static_cast<FMMMOptions::EdgeLengthMeasurement>(edgeLengthMeasurement));
+	model->allowedPositions(static_cast<FMMMOptions::AllowedPositions>(allowedPositions));
 	model->maxIntPosExponent(maxIntPosExponent);
 
 	// divide-et-impera-step-options
 	model->pageRatio(pageRatio);
 	model->stepsForRotatingComponents(stepsForRotatingComponents);
-	// model->tipOverCCs(tipOverCCs); // TODO
+	model->tipOverCCs(static_cast<FMMMOptions::TipOver>(tipOverCCs));
 	model->minDistCC(minDistCC);
-	// model->presortCCs(presortCCs); //TODO
+	model->presortCCs(static_cast<FMMMOptions::PreSort>(presortCCs));
 
 	// multilevel-step-options
 	model->minGraphSize(minGraphSize);
-	// model->galaxyChoice(galaxyChoice);//TODO
+	model->galaxyChoice(static_cast<FMMMOptions::GalaxyChoice>(galaxyChoice));
 	model->randomTries(randomTries);
-	// model->maxIterChange(maxIterChange); // TODO
+	model->maxIterChange(static_cast<FMMMOptions::MaxIterChange>(maxIterChange));
 	model->maxIterFactor(maxIterFactor);
-	// model->initialPlacementMult(initialPlacementMult); // TODO
+	model->initialPlacementMult(static_cast<FMMMOptions::InitialPlacementMult>(initialPlacementMult));
 
 	// force-calculation-step-options
-	// model->forceModel(forceModel); // TODO
+	model->forceModel(static_cast<FMMMOptions::ForceModel>(forceModel));
 	model->springStrength(springStrength);
 	model->repForcesStrength(repForcesStrength);
-	// model->repulsiveForcesCalculation(repulsiveForcesCalculation); // TODO
-	// model->StopCriterion(StopCriterion); // TODO
+	model->repulsiveForcesCalculation(static_cast<FMMMOptions::RepulsiveForcesMethod>(repulsiveForcesCalculation));
+	model->stopCriterion(static_cast<FMMMOptions::StopCriterion>(stopCriterion));
 	model->threshold(threshold);
 	model->fixedIterations(fixedIterations);
 	model->forceScalingFactor(forceScalingFactor);
 	model->coolTemperature(coolTemperature);
 	model->coolValue(coolValue);
-	// model->initialPlacementForces(initialPlacementForces); // TODO
+	model->initialPlacementForces(static_cast<FMMMOptions::InitialPlacementForces>(initialPlacementForces));
 
 	// postprocessing-step-options
 	model->resizeDrawing(resizeDrawing);
@@ -135,8 +110,8 @@ EM_PORT_API(float*) FM3(int node_num, int link_num, int* source, int* target, bo
 
 	// repulsive-force-approximation-methods-options
     model->frGridQuotient(frGridQuotient);
-	// model->nmTreeConstruction(nmTreeConstruction); // TODO
-	// model->nmSmallCell(nmSmallCell); // TODO
+	model->nmTreeConstruction(static_cast<FMMMOptions::ReducedTreeConstruction>(nmTreeConstruction));
+	model->nmSmallCell(static_cast<FMMMOptions::SmallestCellFinding>(nmSmallCell));
 	model->nmParticlesInLeaves(nmParticlesInLeaves);
 	model->nmPrecision(nmPrecision);
 
