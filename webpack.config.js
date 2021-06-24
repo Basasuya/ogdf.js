@@ -3,6 +3,7 @@ const path = require("path")
 module.exports = {
     entry: "./src/index.js",
     output: {
+        libraryTarget: "umd",
         filename: "ogdf.js",
         path: path.resolve(__dirname, "dist"),
     },
