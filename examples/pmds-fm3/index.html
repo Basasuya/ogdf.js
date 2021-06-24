@@ -14,19 +14,23 @@
             width,
             height,
         })
-        fm3(
+        pmds(
             netv.loadDataset("miserables"),
-            { unitEdgeLength: 10.0, pageFormat: "Landscape" },
+            {
+                edgeCosts: 100,
+                numberOfPivots: 250,
+                useEdgeCostsAttribute: false,
+            },
             (graph) => {
-                netv.data(graph)
-                // netv.data(
-                //     NetV.Utils.transformGraphPosition(
-                //         graph,
-                //         Math.min(width, height) * 0.9,
-                //         width / 2,
-                //         height / 2
-                //     )
-                // )
+                // netv.data(graph)
+                netv.data(
+                    NetV.Utils.transformGraphPosition(
+                        graph,
+                        Math.min(width, height) * 0.9,
+                        width / 2,
+                        height / 2
+                    )
+                )
 
                 netv.draw()
             }

@@ -1,5 +1,6 @@
 
 #include <ogdf/basic/GraphAttributes.h>
+#include <ogdf/graphalg/steiner_tree/EdgeWeightedGraph.h>
 #include <ogdf/energybased/FMMMLayout.h>
 #include <ogdf/energybased/PivotMDS.h>
 using namespace ogdf;
@@ -131,12 +132,11 @@ EM_PORT_API(void) free_buf(void* buf) {
 }
 
 
-EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target , double edgeCosts , int numberOfPivots , bool useEdgeCostsAttribute) {
+EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target, double* edgesWeight, double edgeCosts , int numberOfPivots , bool useEdgeCostsAttribute) {
 	node* nodes;
 	Graph G;
-	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);
+	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics | GraphAttributes::edgeDoubleWeight);
 
-		
 	nodes = new node[node_num];
 	for (int i = 0; i < node_num; i++){
 		nodes[i] = G.newNode();
@@ -147,6 +147,7 @@ EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target , 
 	for (int i = 0; i < link_num; i++) {
 		e = G.newEdge(nodes[source[i]], nodes[target[i]]);
 		GA.bends(e);
+		GA.doubleWeight(e) = edgesWeight[i];
 	}
 	//LayoutModule
 	PivotMDS *model = new PivotMDS();
@@ -157,7 +158,7 @@ EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target , 
 
 	model->setEdgeCosts(edgeCosts);
 	model->setNumberOfPivots(numberOfPivots);
-	model->useEdgeCostsAttribute(static_cast<bool>(useEdgeCostsAttribute));
+	model->useEdgeCostsAttribute(true);
 
     model->call(GA);
 
