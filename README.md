@@ -4,7 +4,7 @@
 
 The project is forked from [Basasuya/ogdf.js](https://github.com/Basasuya/ogdf.js). The idea of this project is to compile the C++ library [OGDF](https://ogdf.uos.de/) into a JavaScript library. The former stands both for Open Graph Drawing Framework (the original name) and Open Graph algorithms and Data structures Framework.
 
-We now aim to use [emscripten](https://emscripten.org/) to compile the Layout part of OGDF into ogdf.js.
+We now aim to use [emscripten](https://emscripten.org/) to compile the **Layout** part of OGDF into ogdf.js.
 
 ### How to use
 
@@ -84,9 +84,16 @@ We suggest you to build ogdf.js with Linux or MacOS (For Windows developers, WSL
 
     For the "this header is only for x86 only" error, please refer to: [emscripten-issue-9363](https://github.com/emscripten-core/emscripten/issues/9363)
 
-3. Build ogdf.js
+3. Build rawogdf.js
+
     ```bash
-    $ make ogdf.js
+    $ make rawogdf.js
+    ```
+
+4. Build ogdf.js
+    ```bash
+    $ npm install
+    $ npm run build
     ```
 
 ### Progress
