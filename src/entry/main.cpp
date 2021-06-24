@@ -152,10 +152,6 @@ EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target, d
 	//LayoutModule
 	PivotMDS *model = new PivotMDS();
 	
-	std::cout<<edgeCosts<<std::endl;
-	std::cout<<numberOfPivots<<std::endl;
-	std::cout<<useEdgeCostsAttribute<<std::endl;
-
 	model->setEdgeCosts(edgeCosts);
 	model->setNumberOfPivots(numberOfPivots);
 	model->useEdgeCostsAttribute(true);
