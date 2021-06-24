@@ -131,7 +131,7 @@ EM_PORT_API(void) free_buf(void* buf) {
 }
 
 
-EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target) {
+EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target , double edgeCosts , int numberOfPivots , bool useEdgeCostsAttribute) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);
@@ -150,6 +150,14 @@ EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target) {
 	}
 	//LayoutModule
 	PivotMDS *model = new PivotMDS();
+	
+	std::cout<<edgeCosts<<std::endl;
+	std::cout<<numberOfPivots<<std::endl;
+	std::cout<<useEdgeCostsAttribute<<std::endl;
+
+	model->setEdgeCosts(edgeCosts);
+	model->setNumberOfPivots(numberOfPivots);
+	model->useEdgeCostsAttribute(static_cast<bool>(useEdgeCostsAttribute));
 
     model->call(GA);
 
