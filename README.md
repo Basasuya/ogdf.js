@@ -28,7 +28,7 @@ fm3(/* graph data */ { nodes: facebook.nodes, links: facebook.links },
 
 ### How to build it?
 
-We suggest you to build ogdf.js with Linux or MacOS (For Windows developers, WSL1/2 is suggested). Before building the ogdf.js, you should make sure you have enviroments to build C++ library:
+We suggest you to build ogdf.js with Linux or MacOS (we still have no experience with Windows OS to build the ogdf library, for Windows developers, WSL is suggested). Before building the ogdf.js, you should make sure you have enviroments to build C++ library:
 
 -   Git
 -   CMake
@@ -59,7 +59,7 @@ We suggest you to build ogdf.js with Linux or MacOS (For Windows developers, WSL
     $ source ./emsdk_env.sh
     ```
 
-    On Windows, you should replace `./emsdk` with `emsdk` and replace `source ./emsdk_env.sh` with `emsdk_env`. To ensure that you have install Emscripten successfully, you can create a folder with a file:
+    To ensure that you have install Emscripten successfully, you can create a folder with a file:
 
     ```bash
     $ mkdir hello
@@ -70,6 +70,8 @@ We suggest you to build ogdf.js with Linux or MacOS (For Windows developers, WSL
     $ echo '}' >> hello.c
     $ emcc hello.c -s WASM=1 -o hello.html
     ```
+
+    Then you can start a localhost server to view the html.
 
 2. Build ogdf library.
 

@@ -1,11 +1,7 @@
-/build
-./examples/data
-testOGDF
+examples/data/
+ogdf/
 .vscode
 .DS_Store
-output.txt
 .idea
-CommandList.sh
-
 npm-debug.log
 /node_modules

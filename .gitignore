@@ -1,10 +1,7 @@
 /build
-testOGDF
 .vscode
 .DS_Store
-output.txt
 .idea
-CommandList.sh
 
 npm-debug.log
 /node_modules
