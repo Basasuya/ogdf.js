@@ -33,10 +33,12 @@
                 return response.json()
             })
             .then(function (facebook) {
-                console.log(facebook)
                 fm3(
                     { nodes: facebook.nodes, links: facebook.links },
-                    { qualityVersusSpeed: "GorgeousAndEfficient" },
+                    {
+                        qualityVersusSpeed: "GorgeousAndEfficient",
+                        useWorker: true,
+                    },
                     (graph) => {
                         // netv.data(graph)
                         netv.data(
