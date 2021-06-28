@@ -283,7 +283,7 @@ function fm3(graph, params, callback) {
         })
         worker.postMessage(
             JSON.stringify({
-                initOGDF: initOGDF.toString(),
+                initOGDF: initOGDF.toString(), // ! Maybe we can put initOGDF out of web worker
                 N,
                 M,
                 sourceIndexArray,
