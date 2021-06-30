@@ -168,7 +168,7 @@ EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target, d
     return re;
 }
 
-EM_PORT_API(float*) SM(int node_num, int link_num, int* source, int* target,double* edgesWeight, int terminationCriterion,bool fixXCoords,bool fixYCoords,bool fixZCoords,bool hasInitialLayout,bool layoutComponentsSeparately,double edgeCosts,int numberOfIterations,bool useEdgeCostsAttribute){
+EM_PORT_API(float*) SM(int node_num, int link_num, int* source, int* target, double* edgesWeight, double* nodesX, double* nodesY, int terminationCriterion, bool fixXCoords, bool fixYCoords, bool fixZCoords, bool hasInitialLayout, bool layoutComponentsSeparately, double edgeCosts, int numberOfIterations, bool useEdgeCostsAttribute){
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics | GraphAttributes::edgeDoubleWeight);
@@ -176,6 +176,8 @@ EM_PORT_API(float*) SM(int node_num, int link_num, int* source, int* target,doub
 	nodes = new node[node_num];
 	for (int i = 0; i < node_num; i++){
 		nodes[i] = G.newNode();
+		GA.x(nodes[i]) = nodesX[i];
+		GA.y(nodes[i]) = nodesY[i];
 	}
 
 	edge e;

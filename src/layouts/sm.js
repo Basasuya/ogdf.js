@@ -60,6 +60,12 @@ function sm(graph, params, callback) {
         targetIndexArray.push(id2index[graphCopy.links[i].target])
         edgesWeightArray.push("weight" in graphCopy.links[i] ? graphCopy.links[i].weight : 1)
     }
+    const nodesXArray = []
+    const nodesYArray = []
+    for (let i = 0; i < N; ++i) {
+        nodesXArray.push(graphCopy.nodes[i].x)
+        nodesYArray.push(graphCopy.nodes[i].y)
+    }
     if (parameters.useWorker) {
         const worker = createWorker(function () {
             addEventListener("message", (e) => {
@@ -70,6 +76,8 @@ function sm(graph, params, callback) {
                     sourceIndexArray,
                     targetIndexArray,
                     edgesWeightArray,
+                    nodesXArray,
+                    nodesYArray,
                     originalParameters,
                 } = JSON.parse(e.data)
                 eval(`initOGDF = ${initOGDF}`)
@@ -77,10 +85,16 @@ function sm(graph, params, callback) {
                     let source = Module._malloc(4 * M)
                     let target = Module._malloc(4 * M)
                     let edgesWeight = Module._malloc(8 * M) // double type
+                    let nodesX = Module._malloc(8 * N) // double type
+                    let nodesY = Module._malloc(8 * N) // double type
                     for (let i = 0; i < M; ++i) {
                         Module.HEAP32[source / 4 + i] = sourceIndexArray[i]
                         Module.HEAP32[target / 4 + i] = targetIndexArray[i]
                         Module.HEAPF64[edgesWeight / 8 + i] = edgesWeightArray[i]
+                    }
+                    for (let i = 0; i < N; ++i) {
+                        Module.HEAPF64[nodesX / 8 + i] = nodesXArray[i]
+                        Module.HEAPF64[nodesY / 8 + i] = nodesYArray[i]
                     }
                     const result = Module._SM(
                         N,
@@ -88,6 +102,8 @@ function sm(graph, params, callback) {
                         source,
                         target,
                         edgesWeight,
+                        nodesX,
+                        nodesY,
                         ...originalParameters
                     )
                     const nodes = []
@@ -113,6 +129,8 @@ function sm(graph, params, callback) {
                 sourceIndexArray,
                 targetIndexArray,
                 edgesWeightArray,
+                nodesXArray,
+                nodesYArray,
                 originalParameters,
             })
         )
@@ -130,6 +148,8 @@ function sm(graph, params, callback) {
             let source = Module._malloc(4 * M)
             let target = Module._malloc(4 * M)
             let edgesWeight = Module._malloc(8 * M) // double type
+            let nodesX = Module._malloc(8 * N) // double type
+            let nodesY = Module._malloc(8 * N) // double type
             for (let i = 0; i < M; ++i) {
                 Module.HEAP32[source / 4 + i] = id2index[graphCopy.links[i].source]
                 Module.HEAP32[target / 4 + i] = id2index[graphCopy.links[i].target]
@@ -139,12 +159,18 @@ function sm(graph, params, callback) {
                     Module.HEAPF64[edgesWeight / 8 + i] = 1
                 }
             }
+            for (let i = 0; i < N; ++i) {
+                Module.HEAPF64[nodesX / 8 + i] = graphCopy.nodes[i].x
+                Module.HEAPF64[nodesY / 8 + i] = graphCopy.nodes[i].y
+            }
             const result = Module._SM(
                 N,
                 M,
                 source,
                 target,
                 edgesWeight,
+                nodesX,
+                nodesY,
                 ...parameters
             )
             for (let i = 0; i < N; ++i) {
@@ -156,6 +182,8 @@ function sm(graph, params, callback) {
             Module._free(source)
             Module._free(target)
             Module._free(edgesWeight)
+            Module._free(nodesX)
+            Module._free(nodesY)
             Module._free_buf(result)
         })
     }
