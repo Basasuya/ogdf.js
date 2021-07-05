@@ -2,6 +2,17 @@ const path = require("path")
 
 module.exports = {
     entry: "./src/index.js",
+    module: {
+        rules: [
+            {
+                test: /\.layout.js$/,
+                loader: 'layout-loader'
+            }
+        ]
+    },
+    resolveLoader: {
+        modules: [path.resolve(__dirname, "loader")]
+    },
     output: {
         libraryTarget: "umd",
         filename: "ogdf.js",
