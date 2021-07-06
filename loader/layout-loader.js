@@ -241,6 +241,7 @@ function createLayout() {
     const autoHelper = {
         setNodeAttributeArray(name, forEachNode = (node) => { return node }) {
             let index = _ATTRIBUTE_ARRAYS.findIndex(value => value.name === name)
+            if (index < 0) throw Error(`NodeAttributeSettingError: Node Attribute ${name} has not been defined in C definition, please check  C_DEFINITION.`)
             _ATTRIBUTE_ARRAYS[index].setValue = `
                     (graph) => {
                         const nodeAttributeArray = []
@@ -253,6 +254,7 @@ function createLayout() {
         },
         setLinkAttributeArray(name, forEachLink = (link) => { return link }) {
             let index = _ATTRIBUTE_ARRAYS.findIndex(value => value.name === name)
+            if (index < 0) throw Error(`LinkAttributeSettingError: Link Attribute ${name} has not been defined in C definition, please check  C_DEFINITION.`)
             _ATTRIBUTE_ARRAYS[index].setValue = `
                     (graph) => {
                         const linkAttributeArray = []
