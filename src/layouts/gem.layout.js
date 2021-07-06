@@ -74,13 +74,7 @@ layout = {
             default: 0.001
         }
     },
-    C_DEFINITION: "GEM(int node_num, int link_num, int* source, int* target, double* edgesWeight, double* nodesX, double* nodesY, int attractionFormula, double desiredLength, double gravitationalConstant, double initialTemperature, double maximalDisturbance, double minDistCC, double minimalTemperature, int numberOfRounds, double oscillationAngle, double oscillationSensitivity, double pageRatio, double rotationAngle, double rotationSensitivity)",
-    LINK_ATTRIBUTES: [
-        {
-            name: "edgesWeight",
-            mapper: link => "weight" in link ? link.weight : 1
-        }
-    ],
+    C_DEFINITION: "GEM(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, int attractionFormula, double desiredLength, double gravitationalConstant, double initialTemperature, double maximalDisturbance, double minDistCC, double minimalTemperature, int numberOfRounds, double oscillationAngle, double oscillationSensitivity, double pageRatio, double rotationAngle, double rotationSensitivity)",
     NODE_ATTRIBUTES: [
         {
             name: "nodesX",

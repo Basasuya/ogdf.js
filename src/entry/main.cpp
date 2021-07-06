@@ -213,7 +213,7 @@ EM_PORT_API(float*) SM(int node_num, int link_num, int* source, int* target, dou
     return re;
 }
 
-EM_PORT_API(float*) GEM(int node_num, int link_num, int* source, int* target, double* edgesWeight, double* nodesX, double* nodesY, int attractionFormula, double desiredLength, double gravitationalConstant, double initialTemperature, double maximalDisturbance, double minDistCC, double minimalTemperature, int numberOfRounds, double oscillationAngle, double oscillationSensitivity, double pageRatio, double rotationAngle, double rotationSensitivity){
+EM_PORT_API(float*) GEM(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, int attractionFormula, double desiredLength, double gravitationalConstant, double initialTemperature, double maximalDisturbance, double minDistCC, double minimalTemperature, int numberOfRounds, double oscillationAngle, double oscillationSensitivity, double pageRatio, double rotationAngle, double rotationSensitivity){
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics | GraphAttributes::edgeDoubleWeight);
@@ -230,7 +230,6 @@ EM_PORT_API(float*) GEM(int node_num, int link_num, int* source, int* target, do
 	for (int i = 0; i < link_num; i++) {
 		e = G.newEdge(nodes[source[i]], nodes[target[i]]);
 		GA.bends(e);
-		GA.doubleWeight(e) = edgesWeight[i];
 	}
 	//LayoutModule
 	GEMLayout *model = new GEMLayout();
