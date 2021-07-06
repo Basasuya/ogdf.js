@@ -278,7 +278,7 @@ EM_PORT_API(float*) DH(int node_num, int link_num, int* source, int* target, int
 	//LayoutModule
 	DavidsonHarelLayout *model = new DavidsonHarelLayout();
 
-	model->fixSettings(static_cast<DavidsonHarelLayout::SettingsParameter>(settings));
+	if(settings >= 0) model->fixSettings(static_cast<DavidsonHarelLayout::SettingsParameter>(settings));
 	model->setAttractionWeight(attractionWeight);
 	model->setIterationNumberAsFactor(iterationNumberAsFactor);
 	model->setNodeOverlapWeight(nodeOverlapWeight);

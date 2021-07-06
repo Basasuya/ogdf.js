@@ -11,7 +11,7 @@ layout = {
         settings: {
             type: PARAMETER_TYPE.CATEGORICAL,
             range: ["standard", "repulse", "planar"],
-            default: "standard"
+            default: "none"
         },
         attractionWeight: {
             type: PARAMETER_TYPE.DOUBLE,
