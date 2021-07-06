@@ -1,7 +1,7 @@
 
 // should keep identical to the parameter order in src/entry/main.cpp => function sm()
 
-var layout = {
+layout = {
     OUR_PARAMETERS: {
         useWorker: {
             type: PARAMETER_TYPE.BOOL,

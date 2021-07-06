@@ -1,5 +1,5 @@
 
-var OUR_PARAMETERS = {
+const OUR_PARAMETERS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -7,7 +7,7 @@ var OUR_PARAMETERS = {
     },
 }
 
-var ORIGIN_PARAMETERS = {
+const ORIGIN_PARAMETERS = {
     edgeCosts: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -27,7 +27,7 @@ var ORIGIN_PARAMETERS = {
 
 // should keep identical to the parameter order in src/entry/main.cpp => function pmds()
 
-var layout = {
+layout = {
     ORIGIN_PARAMETERS,
     OUR_PARAMETERS,
     C_DEFINITION: "PMDS(int node_num, int link_num, int* source, int* target, double* edgesWeight, double edgeCosts , int numberOfPivots , bool useEdgeCostsAttribute)",

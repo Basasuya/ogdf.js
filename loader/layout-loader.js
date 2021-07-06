@@ -36,12 +36,10 @@ const ATTRIBUTE_TYPE = {
  * @returns you should choose a initialize function in `initByLayoutName(name)` or `initByLayoutDefinition(definition)` first
  */
 function createLayout() {
-    let Module = null
-    let _graph = null
     let initByName = false
     const STATIC_PARAMETER = { USE_FUNCTION: "", ORIGIN_PARAMETERS: {}, OUR_PARAMETERS: {}, M: 0, N: 0 }
-    const _ATTRIBUTE_ARRAYS = {}
-    const _PARAMETER_SEQUENCE = []
+    const _ATTRIBUTE_ARRAYS = [] // ordered
+    const _PARAMETER_SEQUENCE = [] // ordered
     const _private = {
         _prepare: function () {
             if (!initByName) {
@@ -67,15 +65,18 @@ function createLayout() {
                     'function(graph){',
                     `                    let ATTRIBUTR_ARRAYS = ${JSON.stringify(_ATTRIBUTE_ARRAYS)}`
                 ]
-                for (let attributeArrayName in _ATTRIBUTE_ARRAYS) {
-                    if (!_ATTRIBUTE_ARRAYS[attributeArrayName].setValue)// some attribute array has not been setted yet
-                        throw Error(`AttributeNotSettedError: Attribute ${attributeArrayName} of layout ${STATIC_PARAMETER.USE_FUNCTION} has not been setted yet.`)
-                    lines.push(`                    ATTRIBUTR_ARRAYS.${attributeArrayName}.value = (${_ATTRIBUTE_ARRAYS[attributeArrayName].setValue})(_graph)`)
+                for (let index in _ATTRIBUTE_ARRAYS) {
+                    if (!_ATTRIBUTE_ARRAYS[index].setValue)// some attribute array has not been setted yet
+                        throw Error(`AttributeNotSettedError: Attribute ${_ATTRIBUTE_ARRAYS[index].name} of layout ${STATIC_PARAMETER.USE_FUNCTION} has not been setted yet.`)
+                    lines.push(`                    ATTRIBUTR_ARRAYS[${index}].value = (${_ATTRIBUTE_ARRAYS[index].setValue})(_graph)`)
                 }
                 lines.push(
                     '                       return ATTRIBUTR_ARRAYS',
                     '                   }')
                 return lines.join('\r\n')
+            }
+            else {
+                return _ATTRIBUTE_ARRAYS[0]
             }
         },
         _malloc: function () {
@@ -139,7 +140,7 @@ function createLayout() {
                 ...ORIGIN_PARAMETERS,
             }
             function ${STATIC_PARAMETER.USE_FUNCTION.toLowerCase()}(graph, params, callback) {
-                const ORIGIN_PARAMETER_SEQUENCE = Object.keys(ORIGIN_PARAMETERS)
+                const ORIGIN_PARAMETER_SEQUENCE = ${JSON.stringify(_PARAMETER_SEQUENCE)}
                 let Module
                 const parameters = {
                     ...${JSON.stringify(DEFAULTS)},
@@ -231,40 +232,28 @@ function createLayout() {
         /**
          * Prepare your graph attribute arrays before using if in need
          */
-        prepare(prepareArrays = (graph, CONSTANTS = STATIC_PARAMETER) => { return {} }) {
-            _private._prepareArrays = prepareArrays
-            return manualHelper
-        },
-        /**
-         * Do malloc for some arrays if in need
-         */
-        malloc(mallocArrays = (arrays = {}, Module, CONSTANTS = STATIC_PARAMETER) => { return [] }) {
-            _private._mallocArrays = mallocArrays
-            return manualHelper
-        },
-        /**
-         * Free memory for arrays if in need
-         */
-        free(freeFunc = (arrays = [], buffers = [], Module, CONSTANTS = STATIC_PARAMETER) => { }) {
-            _private._freeFunc = freeFunc
+        setAttributeArrays(mappers = (graph) => { return [] }) {
+            _ATTRIBUTE_ARRAYS.push(mappers.toString())
             return manualHelper
         },
         ...helper
     }
     const autoHelper = {
         setNodeAttributeArray(name, forEachNode = (node) => { return node }) {
-            _ATTRIBUTE_ARRAYS[name].setValue = `
+            let index = _ATTRIBUTE_ARRAYS.findIndex(value => value.name === name)
+            _ATTRIBUTE_ARRAYS[index].setValue = `
                     (graph) => {
                         const nodeAttributeArray = []
                         for (let i = 0; i < N; ++i) {
-                            nodeAttributeArray.push(${forEachNode}(graph.nodes[i]))
+                            nodeAttributeArray.push((${forEachNode})(graph.nodes[i]))
                         }
                         return nodeAttributeArray
                     }`
             return autoHelper
         },
         setLinkAttributeArray(name, forEachLink = (link) => { return link }) {
-            _ATTRIBUTE_ARRAYS[name].setValue = `
+            let index = _ATTRIBUTE_ARRAYS.findIndex(value => value.name === name)
+            _ATTRIBUTE_ARRAYS[index].setValue = `
                     (graph) => {
                         const linkAttributeArray = []
                         for (let i = 0; i < M; ++i) {
@@ -321,7 +310,7 @@ function createLayout() {
                 let starPos = type.indexOf("*")
                 if (starPos > 0) {
                     type = ATTRIBUTE_TYPE[type.substring(0, starPos).toUpperCase()]
-                    _ATTRIBUTE_ARRAYS[name] = { name, type, value: [] }
+                    _ATTRIBUTE_ARRAYS.push({ name, type, value: [] })
                 }
                 else parameterSequence.push(name)
             })
@@ -332,13 +321,72 @@ function createLayout() {
 }
 
 module.exports = function (source) {
+    let layout, result
     eval(source)
-    let result = createLayout()
-        .initByLayoutDefinition(layout.C_DEFINITION)
-        .setNodeAttributeArrays(layout.NODE_ATTRIBUTES)
-        .setLinkAttributeArrays(layout.LINK_ATTRIBUTES)
-        .setOriginParameters(layout.ORIGIN_PARAMETERS)
-        .setOurParameters(layout.OUR_PARAMETERS)
-        .export()
+    if (layout.C_DEFINITION)
+        result = createLayout()
+            .initByLayoutDefinition(layout.C_DEFINITION)
+            .setNodeAttributeArrays(layout.NODE_ATTRIBUTES)
+            .setLinkAttributeArrays(layout.LINK_ATTRIBUTES)
+            .setOriginParameters(layout.ORIGIN_PARAMETERS)
+            .setOurParameters(layout.OUR_PARAMETERS)
+            .export()
+    else if (layout.LAYOUT_NAME)
+        result = createLayout()
+            .initByLayoutName(layout.LAYOUT_NAME)
+            .setAttributeArrays(layout.ATTRIBUTE_ARRAYS)
+            .setOriginParameters(layout.ORIGIN_PARAMETERS)
+            .setOurParameters(layout.OUR_PARAMETERS)
+            .export()
+    else throw Error(`LayoutNotDefinedError: variable 'layout' in ${this.resourcePath} has not been defined correctly.
+    There are two alternative definitions, for example(Recommended):
+    layout = {
+        [Required]C_DEFINITION: "PMDS(int node_num, int link_num, int* source, int* target, ...)",
+        [Optional]NODE_ATTRIBUTES: [
+            {name: "nodesX", mapper: node => node.x}, 
+            {name: "nodesY", mapper: node => node.y},
+            ...
+        ],
+        [Optional]Link_ATTRIBUTES: [
+            {name: "source", mapper: link => link.source},
+            {name: "target", mapper: link => link.target},
+            ...
+        ],
+        [Optional]ORIGIN_PARAMETERS: {
+            edgeCosts: {
+                type: PARAMETER_TYPE.DOUBLE,
+                range: [0, Infinity],
+                default: 100
+            },
+            ...
+        },
+        [Optional]OUR_PARAMETERS: {
+            useWorker: {
+                type: PARAMETER_TYPE.BOOL,
+                range: [true, false],
+                default: false
+            },
+            ...
+        }
+    }
+    Another example(If you want to use this way, make sure your parameters are ordered):
+    layout = {
+        [Required]LAYOUT_NAME:"PMDS",
+        [Optional]ATTRIBUTE_ARRAYS:(graph)=>{
+            let sourceIndexArray, targetIndexArray ...
+            //TODO
+            return [
+                {
+                    name: "source",
+                    type: ATTRIBUTE_TYPE.INT
+                    value: sourceIndexArray
+                },
+                ...
+            ]
+        },
+        [Optional]ORIGIN_PARAMETERS: { ... },
+        [Optional]OUR_PARAMETERS: { ... }
+    }
+    `)
     return result
 }
