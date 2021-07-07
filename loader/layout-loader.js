@@ -43,7 +43,7 @@ function createLayout() {
     const _private = {
         _prepare: function () {
             if (!initByName) {
-                autoHelper.setLinkAttributeArray("source", link => {
+                helper.setLinkAttributeArray("source", link => {
                     const id2index = {}
                     for (let i = 0; i < N; ++i) {
                         if (graph.nodes[i]['id'] in id2index) {
@@ -52,7 +52,7 @@ function createLayout() {
                     }
                     return id2index[link.source]
                 })
-                autoHelper.setLinkAttributeArray("target", link => {
+                helper.setLinkAttributeArray("target", link => {
                     const id2index = {}
                     for (let i = 0; i < N; ++i) {
                         if (graph.nodes[i]['id'] in id2index) {
@@ -226,19 +226,14 @@ function createLayout() {
             ${STATIC_PARAMETER.USE_FUNCTION.toLowerCase()}.parameters = ${JSON.stringify(PARAMETERS)}
             module.exports = ${STATIC_PARAMETER.USE_FUNCTION.toLowerCase()}
             `
-        }
-    }
-    const manualHelper = {
+        },
         /**
          * Prepare your graph attribute arrays before using if in need
          */
         setAttributeArrays(mappers = (graph) => { return [] }) {
             _ATTRIBUTE_ARRAYS.push(mappers.toString())
-            return manualHelper
+            return helper
         },
-        ...helper
-    }
-    const autoHelper = {
         setNodeAttributeArray(name, forEachNode = (node) => { return node }) {
             let index = _ATTRIBUTE_ARRAYS.findIndex(value => value.name === name)
             if (index < 0) throw Error(`NodeAttributeSettingError: Node Attribute ${name} has not been defined in C definition, please check  C_DEFINITION.`)
@@ -250,7 +245,7 @@ function createLayout() {
                         }
                         return nodeAttributeArray
                     }`
-            return autoHelper
+            return helper
         },
         setLinkAttributeArray(name, forEachLink = (link) => { return link }) {
             let index = _ATTRIBUTE_ARRAYS.findIndex(value => value.name === name)
@@ -263,37 +258,36 @@ function createLayout() {
                         }
                         return linkAttributeArray
                     }`
-            return autoHelper
+            return helper
         },
         setNodeAttributeArrays(forEachNodeFunctionArray) {
-            if (!forEachNodeFunctionArray) return autoHelper
+            if (!forEachNodeFunctionArray) return helper
             for (let index in forEachNodeFunctionArray) {
                 let eachNode = forEachNodeFunctionArray[index]
-                autoHelper.setNodeAttributeArray(eachNode.name, eachNode.mapper)
+                helper.setNodeAttributeArray(eachNode.name, eachNode.mapper)
             }
-            return autoHelper
+            return helper
         },
         setLinkAttributeArrays(forEachLinkFunctionArray) {
-            if (!forEachLinkFunctionArray) return autoHelper
+            if (!forEachLinkFunctionArray) return helper
             forEachLinkFunctionArray = forEachLinkFunctionArray
             for (let index in forEachLinkFunctionArray) {
                 let eachLink = forEachLinkFunctionArray[index]
-                autoHelper.setLinkAttributeArray(eachLink.name, eachLink.mapper)
+                helper.setLinkAttributeArray(eachLink.name, eachLink.mapper)
             }
-            return autoHelper
-        },
-        ...helper
+            return helper
+        }
     }
     return {
         /**
          * if you choose init by name, please make sure your parameters are all in order
          * @param {*} name 
-         * @returns manualHelper
+         * @returns helper
          */
         initByLayoutName(name) {
             initByName = true
             STATIC_PARAMETER.USE_FUNCTION = name.toUpperCase()
-            return manualHelper
+            return helper
         },
         /**
          * if you choose init by definition, your parameters is allowed to be unordered
@@ -317,78 +311,75 @@ function createLayout() {
                 else parameterSequence.push(name)
             })
             _PARAMETER_SEQUENCE.push(...parameterSequence.slice(2))
-            return autoHelper
+            return helper
         },
     }
 }
 
 module.exports = function (source) {
-    let layout, result
+    let result
+    let ENTRY_DEFINITION, LAYOUT_NAME, ATTRIBUTE_ARRAYS, NODE_ATTRIBUTES, LINK_ATTRIBUTES, ORIGIN_PARAMETERS, OUR_PARAMETERS
     eval(source)
-    if (layout.C_DEFINITION)
+    if (ENTRY_DEFINITION)
         result = createLayout()
-            .initByLayoutDefinition(layout.C_DEFINITION)
-            .setNodeAttributeArrays(layout.NODE_ATTRIBUTES)
-            .setLinkAttributeArrays(layout.LINK_ATTRIBUTES)
-            .setOriginParameters(layout.ORIGIN_PARAMETERS)
-            .setOurParameters(layout.OUR_PARAMETERS)
+            .initByLayoutDefinition(ENTRY_DEFINITION)
+            .setNodeAttributeArrays(NODE_ATTRIBUTES || [])
+            .setLinkAttributeArrays(LINK_ATTRIBUTES || [])
+            .setOriginParameters(ORIGIN_PARAMETERS || {})
+            .setOurParameters(OUR_PARAMETERS || {})
             .export()
-    else if (layout.LAYOUT_NAME)
+    else if (LAYOUT_NAME)
         result = createLayout()
-            .initByLayoutName(layout.LAYOUT_NAME)
-            .setAttributeArrays(layout.ATTRIBUTE_ARRAYS)
-            .setOriginParameters(layout.ORIGIN_PARAMETERS)
-            .setOurParameters(layout.OUR_PARAMETERS)
+            .initByLayoutName(LAYOUT_NAME)
+            .setAttributeArrays(ATTRIBUTE_ARRAYS)
+            .setOriginParameters(ORIGIN_PARAMETERS || {})
+            .setOurParameters(OUR_PARAMETERS || {})
             .export()
     else throw Error(`LayoutNotDefinedError: variable 'layout' in ${this.resourcePath} has not been defined correctly.
     There are two alternative definitions, for example(Recommended):
-    layout = {
-        [Required]C_DEFINITION: "PMDS(int node_num, int link_num, int* source, int* target, ...)",
-        [Optional]NODE_ATTRIBUTES: [
-            {name: "nodesX", mapper: node => node.x}, 
-            {name: "nodesY", mapper: node => node.y},
-            ...
-        ],
-        [Optional]Link_ATTRIBUTES: [
-            {name: "source", mapper: link => link.source},
-            {name: "target", mapper: link => link.target},
-            ...
-        ],
-        [Optional]ORIGIN_PARAMETERS: {
-            edgeCosts: {
-                type: PARAMETER_TYPE.DOUBLE,
-                range: [0, Infinity],
-                default: 100
+    [Required]C_DEFINITION = "PMDS(int node_num, int link_num, int* source, int* target, ...)",
+    [Optional]NODE_ATTRIBUTES = [
+        {name: "nodesX", mapper: node => node.x}, 
+        {name: "nodesY", mapper: node => node.y},
+        ...
+    ],
+    [Optional]Link_ATTRIBUTES = [
+        {name: "source", mapper: link => link.source},
+        {name: "target", mapper: link => link.target},
+        ...
+    ],
+    [Optional]ORIGIN_PARAMETERS = {
+        edgeCosts: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [0, Infinity],
+            default: 100
+        },
+        ...
+    },
+    [Optional]OUR_PARAMETERS = {
+        useWorker: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: false
+        },
+        ...
+    }
+    Another example(If you want to use this way, make sure your parameters should be ordered):
+    [Required]LAYOUT_NAME = "PMDS",
+    [Optional]ATTRIBUTE_ARRAYS = (graph)=>{
+        let sourceIndexArray, targetIndexArray ...
+        //TODO
+        return [
+            {
+                name: "source",
+                type: ATTRIBUTE_TYPE.INT
+                value: sourceIndexArray
             },
             ...
-        },
-        [Optional]OUR_PARAMETERS: {
-            useWorker: {
-                type: PARAMETER_TYPE.BOOL,
-                range: [true, false],
-                default: false
-            },
-            ...
-        }
-    }
-    Another example(If you want to use this way, make sure your parameters are ordered):
-    layout = {
-        [Required]LAYOUT_NAME:"PMDS",
-        [Optional]ATTRIBUTE_ARRAYS:(graph)=>{
-            let sourceIndexArray, targetIndexArray ...
-            //TODO
-            return [
-                {
-                    name: "source",
-                    type: ATTRIBUTE_TYPE.INT
-                    value: sourceIndexArray
-                },
-                ...
-            ]
-        },
-        [Optional]ORIGIN_PARAMETERS: { ... },
-        [Optional]OUR_PARAMETERS: { ... }
-    }
+        ]
+    },
+    [Optional]ORIGIN_PARAMETERS = { ... },
+    [Optional]OUR_PARAMETERS = { ... }
     `)
     return result
 }
