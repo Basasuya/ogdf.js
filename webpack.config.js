@@ -6,12 +6,27 @@ module.exports = {
         rules: [
             {
                 test: /\.layout.js$/,
-                loader: 'layout-loader'
+                use: [
+                    {
+                        loader: 'babel-loader'
+                    },
+                    {
+                        loader: path.resolve('./loader/layout-loader.js'),
+                        options: {
+                            createReactDOM: true
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.jsx$/,
+                use: [
+                    {
+                        loader: 'babel-loader'
+                    }
+                ]
             }
         ]
-    },
-    resolveLoader: {
-        modules: [path.resolve(__dirname, "loader")]
     },
     output: {
         libraryTarget: "umd",
