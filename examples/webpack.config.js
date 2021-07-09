@@ -1,22 +1,26 @@
 const path = require("path")
 
 module.exports = {
-    entry: "./src/index.js",
+    entry: "./components/index.js",
     module: {
         rules: [
             {
-                test: /\.layout.js$/,
+                test: /\.jsx$/,
                 use: [
                     {
-                        loader: path.resolve('./loader/layout-loader.js'),
+                        loader: 'babel-loader'
                     }
                 ]
-            }
+            },
+            {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            },
         ]
     },
     output: {
         libraryTarget: "umd",
-        filename: "ogdf.js",
+        filename: "ogdf-react.js",
         path: path.resolve(__dirname, "dist"),
     },
     devtool: "source-map",

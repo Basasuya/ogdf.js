@@ -1,4 +1,3 @@
-const { getOptions } = require('loader-utils');
 function getDefaultValueOfParameters(parameters) {
     const result = {}
     Object.keys(parameters).forEach((key) => {
@@ -38,7 +37,6 @@ const ATTRIBUTE_TYPE = {
  */
 function createLayout() {
     let initByName = false
-    let _createReactDOM = false
     const STATIC_PARAMETER = { USE_FUNCTION: "", ORIGIN_PARAMETERS: {}, OUR_PARAMETERS: {}, M: 0, N: 0 }
     const _ATTRIBUTE_ARRAYS = [] // ordered
     const _PARAMETER_SEQUENCE = [] // ordered
@@ -110,10 +108,6 @@ function createLayout() {
         }
     }
     const helper = {
-        setCreateReactDOM(createReactDOM = false) {
-            _createReactDOM = createReactDOM
-            return helper
-        },
         setOriginParameters(params = {}) {
             if (!initByName) {
                 _PARAMETER_SEQUENCE.map((paramName) => {
@@ -231,37 +225,6 @@ function createLayout() {
             }
             ${STATIC_PARAMETER.USE_FUNCTION.toLowerCase()}.parameters = ${JSON.stringify(PARAMETERS)}
             `
-            if (_createReactDOM) code += `
-            const Switcher = require('../../loader/components/switcher.jsx').default
-            const Toggle = require('../../loader/components/toggle.jsx').default
-            const Transformator = require('../../loader/components/transformator.jsx').default
-            const Changer = require('../../loader/components/changer.jsx').default
-            ${STATIC_PARAMETER.USE_FUNCTION.toLowerCase()}.render = function(element, params, callback){
-                const setters = []
-                const parameters = {
-                    ...${JSON.stringify(DEFAULTS)},
-                    ...params
-                }
-                for(let name in PARAMETERS){
-                    let setter;
-                    if(PARAMETERS[name].type === PARAMETER_TYPE.BOOL){
-                        setter = <Toggle key = {name} name = {name} value = {parameters[name]} params = {params}></Toggle>
-                    }
-                    else if(PARAMETERS[name].type === PARAMETER_TYPE.CATEGORICAL){
-                        setter = <Switcher key = {name} name = {name} value = {parameters[name]} range = {PARAMETERS[name].range} params = {params}></Switcher>
-                    }
-                    else{
-                        setter = <Transformator key = {name} name = {name} value = {parameters[name]} params = {params}></Transformator>
-                    }
-                    setters.push(setter)
-                }
-                const paramSetter = <div>{setters}<Changer params = {params} onChange = {callback}/></div>
-                ReactDOM.render(
-                    paramSetter,
-                    element
-                )
-            }
-            `
             code += `export default ${STATIC_PARAMETER.USE_FUNCTION.toLowerCase()}`
             return code
         },
@@ -356,7 +319,6 @@ function createLayout() {
 
 module.exports = function (source) {
     let result
-    const options = getOptions(this) || {}
     let ENTRY_DEFINITION, LAYOUT_NAME, ATTRIBUTE_ARRAYS, NODE_ATTRIBUTES, LINK_ATTRIBUTES, ORIGIN_PARAMETERS, OUR_PARAMETERS
     eval(source)
     if (ENTRY_DEFINITION)
@@ -366,7 +328,6 @@ module.exports = function (source) {
             .setLinkAttributeArrays(LINK_ATTRIBUTES || [])
             .setOriginParameters(ORIGIN_PARAMETERS || {})
             .setOurParameters(OUR_PARAMETERS || {})
-            .setCreateReactDOM(options.createReactDOM)
             .export()
     else if (LAYOUT_NAME)
         result = createLayout()
@@ -374,7 +335,6 @@ module.exports = function (source) {
             .setAttributeArrays(ATTRIBUTE_ARRAYS)
             .setOriginParameters(ORIGIN_PARAMETERS || {})
             .setOurParameters(OUR_PARAMETERS || {})
-            .setCreateReactDOM(options.createReactDOM)
             .export()
     else throw Error(`LayoutNotDefinedError: variable 'layout' in ${this.resourcePath} has not been defined correctly.`)
     return result

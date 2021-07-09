@@ -15,43 +15,7 @@ module: {
             test: /\.layout.js$/,
             use: [
                 {
-                    loader: 'babel-loader'
-                },
-                {
-                    loader: path.resolve('./loader/layout-loader.js'),
-                    options: {
-                        createReactDOM: true
-                    }
-                }
-            ]
-        },
-        {
-            test: /\.jsx$/,
-            use: [
-                {
-                    loader: 'babel-loader'
-                }
-            ]
-        }
-    ]
-}
-```
-
-It needs babel-loader to load jsx syntax, you can run `npm install` to install the packages in need.
-
-If you do not want to generate ReactDOMs, you can also set createReactDOM to `false`, and babel-loader is not in need.
-
-```js
-module: {
-    rules: [
-        {
-            test: /\.layout.js$/,
-            use: [
-                {
-                    loader: path.resolve('./loader/layout-loader.js'),
-                    options: {
-                        createReactDOM: false
-                    }
+                    loader: path.resolve('./loader/layout-loader.js')
                 }
             ]
         }
@@ -91,7 +55,7 @@ ENTRY_DEFINITION = 'EXAMPLE(int node_num, int link_num, int* source, int* target
 LAYOUT_NAME = 'EXAMPLE'
 ```
 
-We strongly recommend you to use ENTRY_DEFINITION, because LAYOUT_NAME parameter is not stable.
+We strongly recommend you to use C_DEFINITION.
 
 ###### Optional Variables
 
@@ -531,68 +495,6 @@ sm.parameters = {
     edgeCosts: { type: 'DOUBLE', range: [0, null], default: 100 },
     numberOfIterations: { type: 'INT', range: [0, null], default: 200 },
     useEdgeCostsAttribute: { type: 'BOOL', range: [true, false], default: false }
-}
-/**
- * If you set createReactDOM as true, the following code will be compiled
- */
-const Switcher = require('../../loader/components/switcher.jsx').default
-const Toggle = require('../../loader/components/toggle.jsx').default
-const Transformator = require('../../loader/components/transformator.jsx').default
-sm.render = function (element, params, callback) {
-    const setters = []
-    const parameters = {
-        ...{
-            useWorker: false,
-            terminationCriterion: 'None',
-            fixXCoords: false,
-            fixYCoords: false,
-            fixZCoords: false,
-            hasInitialLayout: false,
-            layoutComponentsSeparately: false,
-            edgeCosts: 100,
-            numberOfIterations: 200,
-            useEdgeCostsAttribute: false
-        },
-        ...params
-    }
-    for (let name in PARAMETERS) {
-        let setter
-        if (PARAMETERS[name].type === PARAMETER_TYPE.BOOL) {
-            setter = (
-                <Toggle
-                    key={name}
-                    name={name}
-                    value={parameters[name]}
-                    params={params}
-                    onChange={callback}
-                ></Toggle>
-            )
-        } else if (PARAMETERS[name].type === PARAMETER_TYPE.CATEGORICAL) {
-            setter = (
-                <Switcher
-                    key={name}
-                    name={name}
-                    value={parameters[name]}
-                    range={PARAMETERS[name].range}
-                    params={params}
-                    onChange={callback}
-                ></Switcher>
-            )
-        } else {
-            setter = (
-                <Transformator
-                    key={name}
-                    name={name}
-                    value={parameters[name]}
-                    params={params}
-                    onChange={callback}
-                ></Transformator>
-            )
-        }
-        setters.push(setter)
-    }
-    const paramSetter = <div>{setters}</div>
-    ReactDOM.render(paramSetter, element)
 }
 export default sm
 ```
