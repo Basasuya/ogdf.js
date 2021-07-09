@@ -91,7 +91,7 @@ ENTRY_DEFINITION = 'EXAMPLE(int node_num, int link_num, int* source, int* target
 LAYOUT_NAME = 'EXAMPLE'
 ```
 
-We strongly recommend you to use C_DEFINITION.
+We strongly recommend you to use ENTRY_DEFINITION, because LAYOUT_NAME parameter is not stable.
 
 ###### Optional Variables
 
