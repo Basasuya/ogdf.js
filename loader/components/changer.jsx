@@ -6,6 +6,7 @@ class Changer extends React.Component {
         this.onChange = props.onChange
         this.state = { params: props.params }
         this.changeParam = this.changeParam.bind(this)
+        this.draw = this.draw.bind(this)
     }
 
     changeParam(value) {
@@ -13,7 +14,14 @@ class Changer extends React.Component {
         this.setState({
             params: this.params
         })
+    }
+
+    draw() {
         this.onChange(this.params)
+    }
+
+    render() {
+        return <button onClick={this.draw}>Start</button>
     }
 }
 export default Changer

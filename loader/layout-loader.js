@@ -235,6 +235,7 @@ function createLayout() {
             const Switcher = require('../../loader/components/switcher.jsx').default
             const Toggle = require('../../loader/components/toggle.jsx').default
             const Transformator = require('../../loader/components/transformator.jsx').default
+            const Changer = require('../../loader/components/changer.jsx').default
             ${STATIC_PARAMETER.USE_FUNCTION.toLowerCase()}.render = function(element, params, callback){
                 const setters = []
                 const parameters = {
@@ -244,17 +245,17 @@ function createLayout() {
                 for(let name in PARAMETERS){
                     let setter;
                     if(PARAMETERS[name].type === PARAMETER_TYPE.BOOL){
-                        setter = <Toggle key = {name} name = {name} value = {parameters[name]} params = {params} onChange = {callback}></Toggle>
+                        setter = <Toggle key = {name} name = {name} value = {parameters[name]} params = {params}></Toggle>
                     }
                     else if(PARAMETERS[name].type === PARAMETER_TYPE.CATEGORICAL){
-                        setter = <Switcher key = {name} name = {name} value = {parameters[name]} range = {PARAMETERS[name].range} params = {params} onChange = {callback}></Switcher>
+                        setter = <Switcher key = {name} name = {name} value = {parameters[name]} range = {PARAMETERS[name].range} params = {params}></Switcher>
                     }
                     else{
-                        setter = <Transformator key = {name} name = {name} value = {parameters[name]} params = {params} onChange = {callback}></Transformator>
+                        setter = <Transformator key = {name} name = {name} value = {parameters[name]} params = {params}></Transformator>
                     }
                     setters.push(setter)
                 }
-                const paramSetter = <div>{setters}</div>
+                const paramSetter = <div>{setters}<Changer params = {params} onChange = {callback}/></div>
                 ReactDOM.render(
                     paramSetter,
                     element
@@ -375,51 +376,6 @@ module.exports = function (source) {
             .setOurParameters(OUR_PARAMETERS || {})
             .setCreateReactDOM(options.createReactDOM)
             .export()
-    else throw Error(`LayoutNotDefinedError: variable 'layout' in ${this.resourcePath} has not been defined correctly.
-    There are two alternative definitions, for example(Recommended):
-    [Required]C_DEFINITION = "PMDS(int node_num, int link_num, int* source, int* target, ...)",
-    [Optional]NODE_ATTRIBUTES = [
-        {name: "nodesX", mapper: node => node.x}, 
-        {name: "nodesY", mapper: node => node.y},
-        ...
-    ],
-    [Optional]Link_ATTRIBUTES = [
-        {name: "source", mapper: link => link.source},
-        {name: "target", mapper: link => link.target},
-        ...
-    ],
-    [Optional]ORIGIN_PARAMETERS = {
-        edgeCosts: {
-            type: PARAMETER_TYPE.DOUBLE,
-            range: [0, Infinity],
-            default: 100
-        },
-        ...
-    },
-    [Optional]OUR_PARAMETERS = {
-        useWorker: {
-            type: PARAMETER_TYPE.BOOL,
-            range: [true, false],
-            default: false
-        },
-        ...
-    }
-    Another example(If you want to use this way, make sure your parameters should be ordered):
-    [Required]LAYOUT_NAME = "PMDS",
-    [Optional]ATTRIBUTE_ARRAYS = (graph)=>{
-        let sourceIndexArray, targetIndexArray ...
-        //TODO
-        return [
-            {
-                name: "source",
-                type: ATTRIBUTE_TYPE.INT
-                value: sourceIndexArray
-            },
-            ...
-        ]
-    },
-    [Optional]ORIGIN_PARAMETERS = { ... },
-    [Optional]OUR_PARAMETERS = { ... }
-    `)
+    else throw Error(`LayoutNotDefinedError: variable 'layout' in ${this.resourcePath} has not been defined correctly.`)
     return result
 }

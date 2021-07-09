@@ -1,31 +1,14 @@
-//!< Exact calculation (slow).
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
 
-//!< Grid approximation (inaccurate).
-
-//!< Iteratively (in constant time).
-
-//!< Path-by-path construction.
-
-//!< Random placement (based on current time).
-
-//!< Random placement (based on randIterNr()).
-
-//!< Stop if fixedIterations() is reached.
-
-//!< Stop if threshold() is reached.
-
-//!< The force-model by Eades.
-
-//!< The force-model by Fruchterman, Reingold.
-
-//!< Uniform placement on a grid.
-
-//!< kept constant at the force calculation step at every level
-
-//!< linearly decreasing from MaxIterFactor*FixedIterations to FixedIterations
-
-//!< only using information about placement of nodes on higher levels
-
-//!< selecting by non-uniform probability depending on the star masses (prefering nodes with lower star mass)
-
-//!< selecting by uniform random probability
+/** @license React v17.0.2
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
