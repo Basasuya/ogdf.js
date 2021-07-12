@@ -4,60 +4,69 @@ import Toggle from './toggle.jsx'
 import Transformator from './transformator.jsx'
 import { PARAMETER_TYPE, getDefaultValueOfParameters } from '../../../src/utils/parameters'
 import React from 'react'
-import ReactDOM from 'react-dom'
-class Dashboard {
-    constructor(settings) {
-        this.container = settings.container
-        this.parameters = settings.parameters
-        this.render = this.render.bind(this)
+import { Collapse } from 'antd'
+const { Panel } = Collapse
+class Dashboard extends React.Component {
+    constructor(props) {
+        super(props)
+        this.callback = props.callback
+        this.layoutName = props.layoutName
+        this.params = {}
     }
-    render(params, callback) {
+
+    componentDidUpdate(props) {
+        if (this.layoutName !== props.layoutName) {
+            this.callback = props.callback
+            this.layoutName = props.layoutName
+            this.params = {}
+            this.setState({}, this.forceUpdate)
+        }
+    }
+
+    render() {
         const setters = []
-        const PARAMETERS = this.parameters
+        const PARAMETERS = window[this.layoutName].parameters
         const parameters = {
             ...getDefaultValueOfParameters(PARAMETERS),
-            ...params
+            ...this.params
         }
-        for (let name in PARAMETERS) {
-            let setter
+        const getChanger = (name) => {
             if (PARAMETERS[name].type === PARAMETER_TYPE.BOOL) {
-                setter = (
-                    <Toggle
-                        key={name}
-                        name={name}
-                        value={parameters[name]}
-                        params={params}
-                    ></Toggle>
-                )
+                return <Toggle name={name} value={parameters[name]} params={this.params}></Toggle>
             } else if (PARAMETERS[name].type === PARAMETER_TYPE.CATEGORICAL) {
-                setter = (
+                return (
                     <Switcher
-                        key={name}
                         name={name}
                         value={parameters[name]}
                         range={PARAMETERS[name].range}
-                        params={params}
+                        params={this.params}
                     ></Switcher>
                 )
             } else {
-                setter = (
+                return (
                     <Transformator
-                        key={name}
                         name={name}
                         value={parameters[name]}
-                        params={params}
+                        range={PARAMETERS[name].range}
+                        params={this.params}
                     ></Transformator>
                 )
             }
+        }
+        for (let name in PARAMETERS) {
+            let setter = (
+                <Panel header={name} key={name}>
+                    {getChanger(name)}
+                </Panel>
+            )
             setters.push(setter)
         }
-        const controller = (
+        return (
             <div>
-                {setters}
-                <Changer params={params} onChange={callback} />
+                <Changer params={this.params} onChange={this.callback} />
+                <Collapse accordion>{setters}</Collapse>
             </div>
         )
-        ReactDOM.render(controller, this.container)
     }
 }
 export default Dashboard

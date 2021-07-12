@@ -1,5 +1,5 @@
 const path = require("path")
-
+const webpack = require("webpack")
 module.exports = {
     entry: "./components/index.js",
     module: {
@@ -8,7 +8,10 @@ module.exports = {
                 test: /\.jsx$/,
                 use: [
                     {
-                        loader: 'babel-loader'
+                        loader: 'babel-loader',
+                        options: {
+                            cacheDirectory: true
+                        }
                     }
                 ]
             },
@@ -29,4 +32,9 @@ module.exports = {
         aggregateTimeout: 300,
         poll: 1000,
     },
+    plugins: [
+        new webpack.DefinePlugin({
+            "process.env.NODE_ENV": JSON.stringify("development")
+        })
+    ],
 }

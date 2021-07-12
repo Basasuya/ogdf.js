@@ -1,28 +1,27 @@
 import Changer from './changer.jsx'
 import React from 'react'
-import { Button } from 'antd'
+import { Switch } from 'antd'
 import 'antd/dist/antd.css'
 class Toggle extends Changer {
     constructor(props) {
         super(props)
-        this.state = { value: props.value }
-        this.isToggleOn = props.value
-        this.handleClick = this.handleClick.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
-    handleClick() {
-        this.setState((state) => ({
-            value: !state.value
-        }))
-        this.isToggleOn = !this.isToggleOn
-        super.changeParam(this.isToggleOn)
+    handleChange(checked) {
+        super.changeParam(checked)
     }
 
     render() {
+        let checkedChildren = this.props.name + ': TRUE'
+        let unCheckedChildren = this.props.name + ': FALSE'
         return (
-            <Button onClick={this.handleClick}>
-                {this.props.name}:{this.state.value ? 'TRUE' : 'FALSE'}
-            </Button>
+            <Switch
+                defaultChecked={this.props.value}
+                checkedChildren={checkedChildren}
+                unCheckedChildren={unCheckedChildren}
+                onChange={this.handleChange}
+            />
         )
     }
 }

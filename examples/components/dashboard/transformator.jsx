@@ -1,5 +1,6 @@
 import Changer from './changer.jsx'
 import React from 'react'
+import { InputNumber } from 'antd'
 class Transformator extends Changer {
     constructor(props) {
         super(props)
@@ -8,20 +9,21 @@ class Transformator extends Changer {
         this.handleChange = this.handleChange.bind(this)
     }
 
-    handleChange(event) {
-        this.setState({
-            value: event.target.value
-        })
-        super.changeParam(event.target.value)
+    handleChange(value) {
+        this.setState({ value })
+        super.changeParam(value)
     }
 
     render() {
         return (
             <div>
-                <p>
-                    {this.props.name}:
-                    <input type="number" onChange={this.handleChange} value={this.state.value} />
-                </p>
+                {this.props.name}:
+                <InputNumber
+                    onChange={this.handleChange}
+                    min={this.props.range[0]}
+                    max={this.props.range[1]}
+                    defaultValue={this.props.value}
+                />
             </div>
         )
     }

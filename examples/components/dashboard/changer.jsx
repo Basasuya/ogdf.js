@@ -1,4 +1,6 @@
 import React from 'react'
+import { Button } from 'antd'
+import 'antd/dist/antd.css'
 class Changer extends React.Component {
     constructor(props) {
         super(props)
@@ -9,6 +11,13 @@ class Changer extends React.Component {
         this.draw = this.draw.bind(this)
     }
 
+    componentDidUpdate(props) {
+        if (this.params !== props.params) {
+            this.params = props.params
+            this.setState({ params: this.params })
+        }
+    }
+
     changeParam(value) {
         this.params[this.props.name] = value
         this.setState({
@@ -17,11 +26,11 @@ class Changer extends React.Component {
     }
 
     draw() {
-        this.onChange(this.params)
+        this.onChange(this.state.params)
     }
 
     render() {
-        return <button onClick={this.draw}>Start</button>
+        return <Button onClick={this.draw}>Draw Graph</Button>
     }
 }
 export default Changer

@@ -1,5 +1,6 @@
 import Changer from './changer.jsx'
 import React from 'react'
+import { Radio } from 'antd'
 class Switcher extends Changer {
     constructor(props) {
         super(props)
@@ -20,19 +21,15 @@ class Switcher extends Changer {
                 <p>
                     {this.props.name}:{this.state.value}
                 </p>
-                {this.props.range.map((option) => {
-                    return (
-                        <p key={option}>
-                            {option}
-                            <input
-                                type="radio"
-                                name={this.props.name}
-                                value={option}
-                                onChange={this.handleChange}
-                            />
-                        </p>
-                    )
-                })}
+                <Radio.Group onChange={this.handleChange} value={this.state.value}>
+                    {this.props.range.map((option) => {
+                        return (
+                            <Radio value={option} key={option}>
+                                {option}
+                            </Radio>
+                        )
+                    })}
+                </Radio.Group>
             </div>
         )
     }

@@ -1,2 +1,3 @@
-import Dashboard from './dashboard/index.jsx'
-export { Dashboard }
+import createPage from "./creater.jsx";
+
+createPage("main")
