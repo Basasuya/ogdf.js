@@ -1,4 +1,5 @@
-import { Menu, Layout } from 'antd'
+import { Menu, Layout, Upload, message, Button } from 'antd'
+import { UploadOutlined } from '@ant-design/icons'
 import React from 'react'
 import Dashboard from './dashboard/index.jsx'
 import NetVElement from './netv-react/index.jsx'
@@ -12,7 +13,7 @@ class OGDFLayoutTestPage extends React.Component {
             data: 'miserables'
         }
         this.onKeyChange = this.onKeyChange.bind(this)
-        this.onDataChange = this.onDataChange.bind(this)
+        this.beforeDataUpload = this.beforeDataUpload.bind(this)
         this.netv = null
         this.setNetVRef = (element) => {
             this.netv = element
@@ -25,13 +26,22 @@ class OGDFLayoutTestPage extends React.Component {
     onKeyChange(event) {
         let key = event.key
         window[key](this.netv.data, {}, this.netv.onGraphChange)
-        this.setState({ layout: key }, () => {
-            this.forceUpdate()
-        })
+        this.setState({ layout: key }, this.forceUpdate)
     }
 
-    onDataChange(data) {
-        this.setState({ data })
+    beforeDataUpload(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader()
+            reader.readAsText(file)
+            reader.onload = () => {
+                const json = JSON.parse(reader.result)
+                const data = { nodes: json.nodes, links: json.links }
+                console.log(data)
+                this.setState({ data }, () => {
+                    window[this.state.layout](this.netv.data, {}, this.netv.onGraphChange)
+                })
+            }
+        })
     }
 
     componentDidMount() {
@@ -70,10 +80,16 @@ class OGDFLayoutTestPage extends React.Component {
                             width="500"
                             height="500"
                             data={this.state.data}
-                            onDataChange={this.onDataChange}
-                            adaption={true}
+                            adaption
                             ref={this.setNetVRef}
                         ></NetVElement>
+                        <Upload
+                            action="localhost:8081/data"
+                            beforeUpload={this.beforeDataUpload}
+                            // onChange={this.onDataChange}
+                        >
+                            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                        </Upload>
                     </Content>
                     <Footer></Footer>
                 </Layout>

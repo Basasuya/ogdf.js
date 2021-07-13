@@ -15,11 +15,11 @@ class Dashboard extends React.Component {
     }
 
     componentDidUpdate(props) {
-        if (this.layoutName !== props.layoutName) {
-            this.callback = props.callback
-            this.layoutName = props.layoutName
+        if (this.props.layoutName !== props.layoutName) {
+            this.callback = this.props.callback
+            this.layoutName = this.props.layoutName
             this.params = {}
-            this.setState({}, this.forceUpdate)
+            this.setState({})
         }
     }
 

@@ -12,8 +12,8 @@ class Changer extends React.Component {
     }
 
     componentDidUpdate(props) {
-        if (this.params !== props.params) {
-            this.params = props.params
+        if (this.props.params !== props.params) {
+            this.params = this.props.params
             this.setState({ params: this.params })
         }
     }

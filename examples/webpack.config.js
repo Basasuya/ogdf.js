@@ -32,9 +32,4 @@ module.exports = {
         aggregateTimeout: 300,
         poll: 1000,
     },
-    plugins: [
-        new webpack.DefinePlugin({
-            "process.env.NODE_ENV": JSON.stringify("development")
-        })
-    ],
 }
