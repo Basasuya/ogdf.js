@@ -1,7 +1,10 @@
 const path = require("path")
 const webpack = require("webpack")
 module.exports = {
-    entry: "./components/index.js",
+    entry: {
+        "ogdf": "../src/index.js",
+        "ogdf-react": "./components/index.js"
+    },
     module: {
         rules: [
             {
@@ -19,11 +22,19 @@ module.exports = {
                 test: /\.css$/i,
                 use: ["style-loader", "css-loader"],
             },
+            {
+                test: /\.layout.js$/,
+                use: [
+                    {
+                        loader: path.resolve('../loader/layout-loader.js'),
+                    }
+                ]
+            }
         ]
     },
     output: {
         libraryTarget: "umd",
-        filename: "ogdf-react.js",
+        filename: "[name].js",
         path: path.resolve(__dirname, "dist"),
     },
     devtool: "source-map",
