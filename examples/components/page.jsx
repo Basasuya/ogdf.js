@@ -1,9 +1,8 @@
-import { Menu, Layout, Upload, message, Button } from 'antd'
+import { Menu, Row, Col, Upload, message, Button } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import React from 'react'
 import Dashboard from './dashboard/index.jsx'
 import NetVElement from './netv-react/index.jsx'
-const { Sider, Content, Footer, Header } = Layout
 
 class OGDFLayoutTestPage extends React.Component {
     constructor(props) {
@@ -19,14 +18,24 @@ class OGDFLayoutTestPage extends React.Component {
             this.netv = element
         }
         this.callback = (params) => {
+            this.onDrawing()
             window[this.state.layout](this.netv.data, params, this.netv.onGraphChange)
         }
     }
 
     onKeyChange(event) {
         let key = event.key
+        this.onDrawing()
         window[key](this.netv.data, {}, this.netv.onGraphChange)
         this.setState({ layout: key }, this.forceUpdate)
+    }
+
+    onDrawing() {
+        message.loading(`Evaluating and drawing...`)
+    }
+
+    onDone() {
+        message.success(`Congratulations! Graph drawing completed!`)
     }
 
     beforeDataUpload(file) {
@@ -38,6 +47,7 @@ class OGDFLayoutTestPage extends React.Component {
                 const data = { nodes: json.nodes, links: json.links }
                 console.log(data)
                 this.setState({ data }, () => {
+                    this.onDrawing()
                     window[this.state.layout](this.netv.data, {}, this.netv.onGraphChange)
                 })
             }
@@ -45,14 +55,15 @@ class OGDFLayoutTestPage extends React.Component {
     }
 
     componentDidMount() {
+        this.onDrawing()
         window[this.state.layout](this.netv.data, {}, this.netv.onGraphChange)
     }
 
     render() {
         return (
-            <Layout className="layout">
-                <Layout>
-                    <Header>
+            <>
+                <Row>
+                    <Col span={24}>
                         <Menu
                             mode="horizontal"
                             defaultSelectedKeys="fm3"
@@ -74,14 +85,17 @@ class OGDFLayoutTestPage extends React.Component {
                                 StressMinimization
                             </Menu.Item>
                         </Menu>
-                    </Header>
-                    <Content>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col span={12}>
                         <NetVElement
                             width="500"
                             height="500"
                             data={this.state.data}
-                            adaption
+                            autoTransform
                             ref={this.setNetVRef}
+                            onDone={this.onDone}
                         ></NetVElement>
                         <Upload
                             action="localhost:8081/data"
@@ -90,13 +104,15 @@ class OGDFLayoutTestPage extends React.Component {
                         >
                             <Button icon={<UploadOutlined />}>Click to Upload</Button>
                         </Upload>
-                    </Content>
-                    <Footer></Footer>
-                </Layout>
-                <Sider>
-                    <Dashboard layoutName={this.state.layout} callback={this.callback}></Dashboard>
-                </Sider>
-            </Layout>
+                    </Col>
+                    <Col span={12}>
+                        <Dashboard
+                            layoutName={this.state.layout}
+                            callback={this.callback}
+                        ></Dashboard>
+                    </Col>
+                </Row>
+            </>
         )
     }
 }

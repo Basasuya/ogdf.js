@@ -46,7 +46,6 @@ export default class NetVElement extends React.Component {
         super(props)
         this.width = props.width || 400
         this.height = props.height || 300
-        this.adaption = props.adaption || true
     }
 
     componentDidMount() {
@@ -84,7 +83,7 @@ export default class NetVElement extends React.Component {
 
     onGraphChange(graph) {
         this.netv.data(
-            this.adaption
+            this.props.autoTransform
                 ? NetV.Utils.transformGraphPosition(
                       graph,
                       Math.min(this.width, this.height) * 0.9,
@@ -94,6 +93,7 @@ export default class NetVElement extends React.Component {
                 : graph
         )
         this.netv.draw()
+        if (this.props.onDone) this.props.onDone()
     }
 
     render() {
