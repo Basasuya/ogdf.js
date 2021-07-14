@@ -1,0 +1,175 @@
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/*!
+  Copyright (c) 2018 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+
+/*! ../utils */
+
+/*! ../utils/const */
+
+/*! ../utils/is */
+
+/*! ../utils/utils */
+
+/*! ./configs */
+
+/*! ./dataset */
+
+/*! ./element */
+
+/*! ./elements/link */
+
+/*! ./elements/node */
+
+/*! ./elements/render-link */
+
+/*! ./elements/render-node */
+
+/*! ./interaction/interaction */
+
+/*! ./miserables */
+
+/*! ./patents */
+
+/*! ./render-element */
+
+/*! ./renderer */
+
+/*! ./shaders/link-shader */
+
+/*! ./shaders/node-shader */
+
+/*! ./utils */
+
+/*! ./utils/const */
+
+/*! ./utils/map2 */
+
+/*! ./utils/utils */
+
+/*! exports provided: EMPTY_FUNCTION */
+
+/*! no static exports found */
+
+/*!**********************!*\
+  !*** ./src/index.ts ***!
+  \**********************/
+
+/*!************************!*\
+  !*** ./src/configs.ts ***!
+  \************************/
+
+/*!*************************!*\
+  !*** ./src/utils/is.ts ***!
+  \*************************/
+
+/*!***************************!*\
+  !*** ./src/utils/map2.ts ***!
+  \***************************/
+
+/*!****************************!*\
+  !*** ./src/utils/const.js ***!
+  \****************************/
+
+/*!****************************!*\
+  !*** ./src/utils/utils.ts ***!
+  \****************************/
+
+/*!******************************!*\
+  !*** ./src/dataset/index.ts ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./src/elements/link.ts ***!
+  \******************************/
+
+/*!******************************!*\
+  !*** ./src/elements/node.ts ***!
+  \******************************/
+
+/*!*******************************!*\
+  !*** ./src/renderer/index.ts ***!
+  \*******************************/
+
+/*!*******************************!*\
+  !*** ./src/renderer/utils.ts ***!
+  \*******************************/
+
+/*!********************************!*\
+  !*** ./src/dataset/patents.ts ***!
+  \********************************/
+
+/*!*********************************!*\
+  !*** ./src/elements/element.ts ***!
+  \*********************************/
+
+/*!***********************************!*\
+  !*** ./src/dataset/miserables.ts ***!
+  \***********************************/
+
+/*!****************************************!*\
+  !*** ./src/interaction/interaction.ts ***!
+  \****************************************/
+
+/*!*********************************************!*\
+  !*** ./src/renderer/shaders/link-shader.ts ***!
+  \*********************************************/
+
+/*!*********************************************!*\
+  !*** ./src/renderer/shaders/node-shader.ts ***!
+  \*********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/renderer/elements/render-link.ts ***!
+  \**********************************************/
+
+/*!**********************************************!*\
+  !*** ./src/renderer/elements/render-node.ts ***!
+  \**********************************************/
+
+/*!*************************************************!*\
+  !*** ./src/renderer/elements/render-element.ts ***!
+  \*************************************************/
+
+/** @license React v0.20.2
+ * scheduler.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.13.1
+ * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v17.0.2
+ * react-dom.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v17.0.2
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */

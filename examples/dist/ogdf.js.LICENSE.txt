@@ -1,0 +1,31 @@
+//!< Exact calculation (slow).
+
+//!< Grid approximation (inaccurate).
+
+//!< Iteratively (in constant time).
+
+//!< Path-by-path construction.
+
+//!< Random placement (based on current time).
+
+//!< Random placement (based on randIterNr()).
+
+//!< Stop if fixedIterations() is reached.
+
+//!< Stop if threshold() is reached.
+
+//!< The force-model by Eades.
+
+//!< The force-model by Fruchterman, Reingold.
+
+//!< Uniform placement on a grid.
+
+//!< kept constant at the force calculation step at every level
+
+//!< linearly decreasing from MaxIterFactor*FixedIterations to FixedIterations
+
+//!< only using information about placement of nodes on higher levels
+
+//!< selecting by non-uniform probability depending on the star masses (prefering nodes with lower star mass)
+
+//!< selecting by uniform random probability
