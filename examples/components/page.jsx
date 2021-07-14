@@ -35,6 +35,7 @@ class OGDFLayoutTestPage extends React.Component {
     }
 
     onDone() {
+        message.destroy()
         message.success(`Congratulations! Graph drawing completed!`)
     }
 
@@ -97,6 +98,8 @@ class OGDFLayoutTestPage extends React.Component {
                             ref={this.setNetVRef}
                             onDone={this.onDone}
                         ></NetVElement>
+                    </Col>
+                    <Col span={12}>
                         <Upload
                             action="localhost:8081/data"
                             beforeUpload={this.beforeDataUpload}
@@ -104,8 +107,6 @@ class OGDFLayoutTestPage extends React.Component {
                         >
                             <Button icon={<UploadOutlined />}>Click to Upload</Button>
                         </Upload>
-                    </Col>
-                    <Col span={12}>
                         <Dashboard
                             layoutName={this.state.layout}
                             callback={this.callback}
