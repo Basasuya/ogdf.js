@@ -49,7 +49,7 @@ The ENTRY_DEFINITION should be this:
 ENTRY_DEFINITION = 'EXAMPLE(int node_num, int link_num, int* source, int* target, ...)'
 ```
 
--   LAYOUT_NAME: The string name of your layout
+-   LAYOUT_NAME (NOT recommended): The string name of your layout
 
 ```js
 LAYOUT_NAME = 'EXAMPLE'
@@ -61,35 +61,20 @@ We strongly recommend you to use C_DEFINITION.
 
 These variables are optional, you should use these variables in need.
 
--   ATTRIBUTE_ARRAYS: A function with parameter `graph`, and returns a array with objects.
+-   GRAPH_ATTRYBUTES: An array with objects, each element has two attributes:
+    (Attribute)name: the parameter in C entry definition
+    (Attribute)mapper: a map funtion for graph, returns a constant variable about this graph
 
 ```js
-ATTRIBUTE_ARRAYS = function (graph) {
-    let sourceIndexArray = []
-    let nodesXArray = []
-    //TODO
-    for (let i = 0; i < graph.links.length; i++) {
-        sourceIndexArray.push(graph.links[i].source)
-    }
-    for (let i = 0; i < graph.nodes.length; i++) {
-        nodesXArray.push(graph.nodes[i].x)
-    }
-    return [
-        {
-            name: 'source',
-            value: sourceIndexArray
-        },
-        {
-            name: 'nodesX',
-            value: nodesXArray
-        }
-        ...
-    ]
-}
+GRAPH_ATTRYBUTES = [
+    { name: 'node_num', mapper: (graph) => graph.nodes.length },
+    { name: 'link_num', mapper: (graph) => graph.links.length },
+    ...
+]
 ```
 
 -   NODE_ATTRIBUTES: An array with objects, each element has two attributes:
-    (Attribute)name: the parameter in C definition
+    (Attribute)name: the parameter in C entry definition
     (Attribute)mapper: a map funtion for nodes
 
 ```js
@@ -101,7 +86,7 @@ NODE_ATTRIBUTES = [
 ```
 
 -   LINK_ATTRIBUTES: An array with objects, each element has two attributes:
-    (Attribute)name: the parameter in C definition
+    (Attribute)name: the parameter in C entry definition
     (Attribute)mapper: a map funtion for links
 
 ```js
@@ -135,6 +120,33 @@ ORIGIN_PARAMETERS = {
         default: 'none'
     },
     ...
+}
+```
+
+-   ATTRIBUTE_ARRAYS (NOT recommended): A function with parameter `graph`, and returns a array with objects.
+
+```js
+ATTRIBUTE_ARRAYS = function (graph) {
+    let sourceIndexArray = []
+    let nodesXArray = []
+    //TODO
+    for (let i = 0; i < graph.links.length; i++) {
+        sourceIndexArray.push(graph.links[i].source)
+    }
+    for (let i = 0; i < graph.nodes.length; i++) {
+        nodesXArray.push(graph.nodes[i].x)
+    }
+    return [
+        {
+            name: 'source',
+            value: sourceIndexArray
+        },
+        {
+            name: 'nodesX',
+            value: nodesXArray
+        }
+        ...
+    ]
 }
 ```
 
