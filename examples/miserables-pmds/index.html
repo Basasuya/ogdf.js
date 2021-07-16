@@ -8,18 +8,18 @@
     <script>
         const width = 500
         const height = 500
-        const div = document.getElementById("main")
+        const div = document.getElementById('main')
         const netv = new NetV({
             container: div,
             width,
-            height,
+            height
         })
-        co(
-            netv.loadDataset("miserables"),
+        pmds(
+            netv.loadDataset('miserables'),
             {
                 edgeCosts: 100,
                 numberOfPivots: 250,
-                useEdgeCostsAttribute: true,
+                useEdgeCostsAttribute: true
             },
             (graph) => {
                 // netv.data(graph)
@@ -31,7 +31,6 @@
                         height / 2
                     )
                 )
-
                 netv.draw()
             }
         )
