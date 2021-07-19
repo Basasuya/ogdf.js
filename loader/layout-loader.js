@@ -1,7 +1,13 @@
 function getDefaultValueOfParameters(parameters) {
-    const result = {}
+    let result = {}
     Object.keys(parameters).forEach((key) => {
         result[key] = parameters[key].default
+        if (parameters[key].modules) {
+            result = {
+                ...result,
+                ...getDefaultValueOfParameters(parameters[key].modules[parameters[key].default])
+            }
+        }
     })
     return result
 }
@@ -12,6 +18,8 @@ const PARAMETER_TYPE = {
     DOUBLE: "DOUBLE",
     BOOL: "BOOL",
 }
+
+const OGDF_MODULES = require("../src/utils/modules")
 
 const ATTRIBUTE_TYPE = {
     DOUBLE: {
@@ -132,14 +140,30 @@ function createLayout() {
     const helper = {
         setOriginParameters(params = {}) {
             if (!initByName) {
-                _PARAMETER_SEQUENCE.map((paramName) => {
-                    if (params[paramName]) {
-                        STATIC_PARAMETER.ORIGIN_PARAMETERS[paramName] = params[paramName]
+                let isDefined = [].fill(0, 0, _PARAMETER_SEQUENCE.length)
+                function findParams(params) {
+                    for (let paramName in params) {
+                        let search = _PARAMETER_SEQUENCE.findIndex(element => element === paramName)
+                        if (search >= 0) {
+                            isDefined[search] = 1
+                            STATIC_PARAMETER.ORIGIN_PARAMETERS[paramName] = params[paramName]
+                        }
+                        else throw Error(`Origin parameter ${paramName} of layout ${STATIC_PARAMETER.USE_FUNCTION} is not defined in ENTRY DEFINITION.`)
+                        if (params[paramName].modules) {
+                            for (let moduleName in params[paramName].modules) {
+                                let ogdfModule = params[paramName].modules[moduleName]
+                                findParams(ogdfModule)
+                            }
+                        }
                     }
-                    else throw Error(`Origin parameter ${paramName} of layout ${STATIC_PARAMETER.USE_FUNCTION} is not defined.`)
+                }
+                findParams(params)
+                isDefined.forEach((value, index) => {
+                    if (value === 0)
+                        throw Error(`Origin parameter ${_PARAMETER_SEQUENCE[index]} of layout ${STATIC_PARAMETER.USE_FUNCTION} is defined ENTRY DEFINITION but not be found in ORIGIN PARAMETERS.`)
                 })
             }
-            STATIC_PARAMETER.ORIGIN_PARAMETERS = params
+            else STATIC_PARAMETER.ORIGIN_PARAMETERS = params
             return helper
         },
         setOurParameters(params = {}) {
@@ -155,6 +179,7 @@ function createLayout() {
             let code = `
             const initOGDF = require('../../entry/rawogdf')
             const { PARAMETER_TYPE } = require('../../utils/parameters')
+            const OGDF_MODULES = require('../../utils/modules')
             const OUR_PARAMETERS = ${JSON.stringify(STATIC_PARAMETER.OUR_PARAMETERS)}
             const ORIGIN_PARAMETERS = ${JSON.stringify(STATIC_PARAMETER.ORIGIN_PARAMETERS)}
             const PARAMETERS = {
@@ -168,13 +193,21 @@ function createLayout() {
                     ...${JSON.stringify(DEFAULTS)},
                     ...params
                 }
-                const originalParameters = ORIGIN_PARAMETER_SEQUENCE.map((paramName) => {
-                    if (PARAMETERS[paramName].type === PARAMETER_TYPE.CATEGORICAL) {
-                        return PARAMETERS[paramName].range.indexOf(parameters[paramName])
-                    } else {
-                        return parameters[paramName]
+                const originalParameters = [].fill(0,0,ORIGIN_PARAMETER_SEQUENCE.length)
+                function setParameters(PARAMS) {
+                    for(let paramName in PARAMS){
+                        if (PARAMS[paramName].type === PARAMETER_TYPE.CATEGORICAL) {
+                            originalParameters[ORIGIN_PARAMETER_SEQUENCE.indexOf(paramName)] = PARAMS[paramName].range.indexOf(parameters[paramName])
+                            if (PARAMS[paramName].modules) {
+                                let module = PARAMETERS[paramName].modules[parameters[paramName]]
+                                setParameters(module)
+                            }
+                        } else if(PARAMS[paramName]){
+                            originalParameters[ORIGIN_PARAMETER_SEQUENCE.indexOf(paramName)] = parameters[paramName]
+                        }
                     }
-                })
+                }
+                setParameters(ORIGIN_PARAMETERS)
                 const _graph = JSON.parse(JSON.stringify(graph))
                 const GRAPH_ATTRIBUTES = (${_private._initialize()})(_graph)
                 const indexArrays = (${_private._prepare()})(_graph)
