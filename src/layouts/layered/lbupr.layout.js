@@ -10,13 +10,13 @@ OUR_PARAMETERS = {
 ORIGIN_PARAMETERS = {
     hierarchyLayoutType: {
         type: PARAMETER_TYPE.CATEGORICAL,
-        range: ["Fast", "FastSimple", "Optimal"],
+        range: OGDF_MODULES.RANGES.HierarchyLayout,
         modules: OGDF_MODULES.HierarchyLayout,
         default: "Fast",
     },
     rankingType: {
         type: PARAMETER_TYPE.CATEGORICAL,
-        range: ["CoffmanGraham", "LongestPath", "Optimal"],
+        range: OGDF_MODULES.RANGES.Ranking,
         modules: OGDF_MODULES.Ranking,
         default: "Optimal",
     }

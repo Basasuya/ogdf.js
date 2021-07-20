@@ -179,4 +179,12 @@ const CCLayoutPack = {
     TileToRows: {}
 }
 
-module.exports = { Ranking, CrossingMinimization, HierarchyLayout, HierarchyClusterLayout, CCLayoutPack }
+const RANGES = {
+    Ranking: ["CoffmanGraham", "LongestPath", "Optimal"],
+    CrossingMinimization: ["BarycenterHeuristic", "GlobalSifting", "GreedyInsertHeuristic", "GreedySwitchHeuristic", "GridSifting", "MedianHeuristic", "SiftingHeuristic", "SplitHeuristic"],
+    HierarchyLayout: ["Fast", "FastSimple", "Optimal"],
+    HierarchyClusterLayout: ["Optimal"],
+    CCLayoutPack: ["TileToRows"]
+}
+
+module.exports = { Ranking, CrossingMinimization, HierarchyLayout, HierarchyClusterLayout, CCLayoutPack, RANGES }
