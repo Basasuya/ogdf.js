@@ -362,12 +362,12 @@ function createLayout() {
         initByLayoutDefinition(definition) {
             initByName = false
             STATIC_PARAMETER.USE_FUNCTION = definition.substring(0, definition.indexOf("("))
-            const parameterDefinitions = definition.substring(definition.indexOf("(") + 1, definition.indexOf(")")).split(/\,\s?/)
+            const parameterDefinitions = definition.substring(definition.indexOf("(") + 1, definition.indexOf(")")).split(/\s?\,\s?/)
             let isGraphAttributes = true
             parameterDefinitions.forEach((value) => {
                 let parts = value.split(/\s/)
-                let type = parts[0]
-                let name = parts[1]
+                let type = parts.slice(0, -1).join(" ") // eg. "unsigned int param"
+                let name = parts[parts.length - 1]
                 let starPos = type.indexOf("*")
                 if (starPos > 0) {
                     if (isGraphAttributes) isGraphAttributes = false
