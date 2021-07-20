@@ -1,15 +1,24 @@
 #include <ogdf/upward/LayerBasedUPRLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float*) LBUPR(int node_num, int link_num, int* source, int* target, int hierarchyLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, bool balanced, bool downward, bool leftToRight, double weightBalancing, double weightSegments, int rankingType, bool alignBaseClasses, bool alignSiblings, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges) {
+EM_PORT_API(float*) LBUPR(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, double* nodesWidth, double* nodesHeight, int hierarchyLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, bool balanced, bool downward, bool leftToRight, double weightBalancing, double weightSegments, int rankingType, bool alignBaseClasses, bool alignSiblings, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges) {
 	node* nodes;
 	Graph G;
-	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);
+	GraphAttributes GA(G, GraphAttributes::nodeGraphics | 
+						GraphAttributes::edgeGraphics | 
+						GraphAttributes::nodeStyle |
+						GraphAttributes::edgeStyle |
+						GraphAttributes::nodeLabel |
+						GraphAttributes::edgeLabel);
 	
 
 	nodes = new node[node_num];
 	for (int i = 0; i < node_num; i++){
 		nodes[i] = G.newNode();
+		GA.x(nodes[i]) = nodesX[i];
+		GA.y(nodes[i]) = nodesY[i];
+		GA.width(nodes[i]) = nodesWidth[i];
+		GA.height(nodes[i]) = nodesHeight[i];
 	}
 
 	edge e;
