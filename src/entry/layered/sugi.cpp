@@ -4,7 +4,7 @@
 #include <ogdf/layered/LongestPathRanking.h>
 #include "../main.h"
 
-EM_PORT_API(float*) SUGI(int node_num, int link_num, int* source, int* target, bool alignBaseClasses, bool alignSiblings, bool arrangeCCs, int fails, unsigned int maxThreads, double minDistCC, double pageRatio, bool permuteFirst, int runs, bool transpose, int clusterLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, double weightBalancing, double weightClusters, double weightSegments, int crossMinType, int nRepeats, int verticalStepsBound, int layoutType, bool balanced, bool downward, bool leftToRight, int packerType, int rankingType, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges) {
+EM_PORT_API(float*) SUGI(int node_num, int link_num, int* source, int* target, bool alignBaseClasses, bool alignSiblings, bool arrangeCCs, int fails, unsigned int maxThreads, double minDistCC, double pageRatio, bool permuteFirst, int runs, bool transpose, int clusterLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, double weightBalancing, double weightClusters, double weightSegments, int crossMinType, int nRepeats, int verticalStepsBound, int layoutType, bool balanced, bool downward, bool leftToRight, int packerType, int rankingType, int width, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges, int subgraphType) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);
@@ -49,7 +49,7 @@ EM_PORT_API(float*) SUGI(int node_num, int link_num, int* source, int* target, b
 	CCLayoutPackModule* packer = getCCLayoutPack(packerType);
 	model->setPacker(packer);
 
-	RankingModule* ranking = getRanking(rankingType, alignBaseClasses, alignSiblings, optimizeEdgeLength, separateDeg0Layer, separateMultiEdges);
+	RankingModule* ranking = getRanking(rankingType, width, alignBaseClasses, alignSiblings, optimizeEdgeLength, separateDeg0Layer, separateMultiEdges, subgraphType);
 	model->setRanking(ranking);
 
 	model->call(GA);

@@ -9,20 +9,18 @@ OUR_PARAMETERS = {
 
 ORIGIN_PARAMETERS = {
     hierarchyLayoutType: {
-        type: PARAMETER_TYPE.CATEGORICAL,
-        range: OGDF_MODULES.RANGES.HierarchyLayout,
-        modules: OGDF_MODULES.HierarchyLayout,
+        type: PARAMETER_TYPE.MODULE,
+        module: "HierarchyLayout",
         default: "Fast",
     },
     rankingType: {
-        type: PARAMETER_TYPE.CATEGORICAL,
-        range: OGDF_MODULES.RANGES.Ranking,
-        modules: OGDF_MODULES.Ranking,
+        type: PARAMETER_TYPE.MODULE,
+        module: "Ranking",
         default: "Optimal",
     }
 }
 
-ENTRY_DEFINITION = "LBUPR(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, double* nodesWidth, double* nodesHeight, int hierarchyLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, bool balanced, bool downward, bool leftToRight, double weightBalancing, double weightSegments, int rankingType, bool alignBaseClasses, bool alignSiblings, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges)"
+ENTRY_DEFINITION = "LBUPR(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, double* nodesWidth, double* nodesHeight, int hierarchyLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, bool balanced, bool downward, bool leftToRight, double weightBalancing, double weightSegments, int rankingType, int width, bool alignBaseClasses, bool alignSiblings, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges, int subgraphType)"
 
 NODE_ATTRIBUTES = [
     {

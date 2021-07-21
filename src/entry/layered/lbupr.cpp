@@ -1,7 +1,7 @@
 #include <ogdf/upward/LayerBasedUPRLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float*) LBUPR(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, double* nodesWidth, double* nodesHeight, int hierarchyLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, bool balanced, bool downward, bool leftToRight, double weightBalancing, double weightSegments, int rankingType, bool alignBaseClasses, bool alignSiblings, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges) {
+EM_PORT_API(float*) LBUPR(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, double* nodesWidth, double* nodesHeight, int hierarchyLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, bool balanced, bool downward, bool leftToRight, double weightBalancing, double weightSegments, int rankingType, int width, bool alignBaseClasses, bool alignSiblings, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges, int subgraphType) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | 
@@ -39,7 +39,7 @@ EM_PORT_API(float*) LBUPR(int node_num, int link_num, int* source, int* target, 
 	HierarchyLayoutModule *layout = getHierarchyLayout(hierarchyLayoutType,fixedLayerDistance,layerDistance,nodeDistance,balanced,downward,leftToRight,weightBalancing,weightSegments);
 	model->setLayout(layout);
 
-	RankingModule *ranking = getRanking(rankingType,alignBaseClasses,alignSiblings,optimizeEdgeLength,separateDeg0Layer,separateMultiEdges);
+	RankingModule *ranking = getRanking(rankingType, width, alignBaseClasses, alignSiblings, optimizeEdgeLength, separateDeg0Layer, separateMultiEdges, subgraphType);
 	model->setRanking(ranking);
 	
 	model->call(UPR,GA);

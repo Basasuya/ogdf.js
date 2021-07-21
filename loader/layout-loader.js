@@ -2,10 +2,13 @@ function getDefaultValueOfParameters(parameters) {
     let result = {}
     Object.keys(parameters).forEach((key) => {
         result[key] = parameters[key].default
-        if (parameters[key].modules) {
+        if (parameters[key].type === PARAMETER_TYPE.MODULE) {
+            if (!OGDF_MODULES[parameters[key].module] || !OGDF_MODULES.RANGES[parameters[key].module]) {
+                throw Error(`OGDFModuleError: Module name ${parameters[key].module} has not been defined, please check OGDF_MODULES.`)
+            }
             result = {
                 ...result,
-                ...getDefaultValueOfParameters(parameters[key].modules[parameters[key].default])
+                ...getDefaultValueOfParameters(OGDF_MODULES[parameters[key].module][parameters[key].default])
             }
         }
     })
@@ -13,6 +16,7 @@ function getDefaultValueOfParameters(parameters) {
 }
 
 const PARAMETER_TYPE = {
+    MODULE: "MODULE",
     CATEGORICAL: "CATEGORICAL",
     INT: "INT",
     DOUBLE: "DOUBLE",
@@ -149,9 +153,12 @@ function createLayout() {
                             STATIC_PARAMETER.ORIGIN_PARAMETERS[paramName] = params[paramName]
                         }
                         else throw Error(`Origin parameter ${paramName} of layout ${STATIC_PARAMETER.USE_FUNCTION} is not defined in ENTRY DEFINITION.`)
-                        if (params[paramName].modules) {
-                            for (let moduleName in params[paramName].modules) {
-                                let ogdfModule = params[paramName].modules[moduleName]
+                        if (params[paramName].type === PARAMETER_TYPE.MODULE) {
+                            if (!OGDF_MODULES[params[paramName].module] || !OGDF_MODULES.RANGES[params[paramName].module]) {
+                                throw Error(`OGDFModuleError: Module name ${params[paramName].module} has not been defined, please check OGDF_MODULES.`)
+                            }
+                            for (let moduleName in OGDF_MODULES[params[paramName].module]) {
+                                let ogdfModule = OGDF_MODULES[params[paramName].module][moduleName]
                                 findParams(ogdfModule)
                             }
                         }
@@ -196,12 +203,14 @@ function createLayout() {
                 const originalParameters = [].fill(0,0,ORIGIN_PARAMETER_SEQUENCE.length)
                 function setParameters(PARAMS) {
                     for(let paramName in PARAMS){
-                        if (PARAMS[paramName].type === PARAMETER_TYPE.CATEGORICAL) {
-                            originalParameters[ORIGIN_PARAMETER_SEQUENCE.indexOf(paramName)] = PARAMS[paramName].range.indexOf(parameters[paramName])
-                            if (PARAMS[paramName].modules) {
-                                let module = PARAMETERS[paramName].modules[parameters[paramName]]
+                        if (PARAMS[paramName].type === PARAMETER_TYPE.MODULE) {
+                            originalParameters[ORIGIN_PARAMETER_SEQUENCE.indexOf(paramName)] = OGDF_MODULES.RANGES[PARAMS[paramName].module].indexOf(parameters[paramName])
+                            if (PARAMS[paramName].module) {
+                                let module = OGDF_MODULES[PARAMETERS[paramName].module[parameters[paramName]]]
                                 setParameters(module)
                             }
+                        } else if (PARAMS[paramName].type === PARAMETER_TYPE.CATEGORICAL) {
+                            originalParameters[ORIGIN_PARAMETER_SEQUENCE.indexOf(paramName)] = PARAMS[paramName].range.indexOf(parameters[paramName])
                         } else if(PARAMS[paramName]){
                             originalParameters[ORIGIN_PARAMETER_SEQUENCE.indexOf(paramName)] = parameters[paramName]
                         }

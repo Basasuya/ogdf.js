@@ -59,35 +59,30 @@ ORIGIN_PARAMETERS = {
         default: true,
     },
     clusterLayoutType: {
-        type: PARAMETER_TYPE.CATEGORICAL,
-        range: OGDF_MODULES.RANGES.HierarchyClusterLayout,
-        modules: OGDF_MODULES.HierarchyClusterLayout,
+        type: PARAMETER_TYPE.MODULE,
+        module: "HierarchyClusterLayout",
         default: "Optimal",
     },
     crossMinType: {
-        type: PARAMETER_TYPE.CATEGORICAL,
-        range: OGDF_MODULES.RANGES.CrossingMinimization,
-        modules: OGDF_MODULES.CrossingMinimization,
+        type: PARAMETER_TYPE.MODULE,
+        module: "LayeredCrossMin",
         default: "BarycenterHeuristic",
     },
     layoutType: {
-        type: PARAMETER_TYPE.CATEGORICAL,
-        range: OGDF_MODULES.RANGES.HierarchyLayout,
-        modules: OGDF_MODULES.HierarchyLayout,
+        type: PARAMETER_TYPE.MODULE,
+        module: "HierarchyLayout",
         default: "Fast",
     },
     packerType: {
-        type: PARAMETER_TYPE.CATEGORICAL,
-        range: OGDF_MODULES.RANGES.CCLayoutPack,
-        modules: OGDF_MODULES.CCLayoutPack,
+        type: PARAMETER_TYPE.MODULE,
+        module: "CCLayoutPack",
         default: "TileToRows",
     },
     rankingType: {
-        type: PARAMETER_TYPE.CATEGORICAL,
-        range: OGDF_MODULES.RANGES.Ranking,
-        modules: OGDF_MODULES.Ranking,
+        type: PARAMETER_TYPE.MODULE,
+        module: "Ranking",
         default: "LongestPath",
     }
 }
 
-ENTRY_DEFINITION = "SUGI(int node_num, int link_num, int* source, int* target, bool alignBaseClasses, bool alignSiblings, bool arrangeCCs, int fails, unsigned int maxThreads, double minDistCC, double pageRatio, bool permuteFirst, int runs, bool transpose, int clusterLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, double weightBalancing, double weightClusters, double weightSegments, int crossMinType, int nRepeats, int verticalStepsBound, int layoutType, bool balanced, bool downward, bool leftToRight, int packerType, int rankingType, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges)"
+ENTRY_DEFINITION = "SUGI(int node_num, int link_num, int* source, int* target, bool alignBaseClasses, bool alignSiblings, bool arrangeCCs, int fails, unsigned int maxThreads, double minDistCC, double pageRatio, bool permuteFirst, int runs, bool transpose, int clusterLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, double weightBalancing, double weightClusters, double weightSegments, int crossMinType, int nRepeats, int verticalStepsBound, int layoutType, bool balanced, bool downward, bool leftToRight, int packerType, int rankingType, int width, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges, int subgraphType)"

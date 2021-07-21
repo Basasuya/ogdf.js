@@ -11,7 +11,7 @@ EM_PORT_API(float*) CO(int node_num, int link_num, int group_num, int* source, i
     Graph G;
 
     cluster* clusters;
-    ClusterGraph CG;
+    ClusterGraph CG(G);
     ClusterGraphAttributes CGA;
 	ClusterPlanRep PG(CGA,CG);
 
