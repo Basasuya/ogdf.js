@@ -70,7 +70,8 @@ const CrossingMinimization = {
         timeLimit: {
             type: PARAMETER_TYPE.INT,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         },
         inserterType: {
             type: PARAMETER_TYPE.MODULE,
@@ -106,7 +107,8 @@ const EdgeInsertion = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         }
     },
     MultiEdgeApprox: {
@@ -138,7 +140,8 @@ const EdgeInsertion = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         }
     },
     VariableEmbedding: {
@@ -155,7 +158,8 @@ const EdgeInsertion = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         }
     }
 }
@@ -165,21 +169,24 @@ const Embedder = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         }
     },
     MinDepth: {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         }
     },
     MinDepthPiTa: {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         },
         useExtendedDepthDefinition: {
             type: PARAMETER_TYPE.BOOL,
@@ -191,14 +198,16 @@ const Embedder = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         }
     },
     Simple: {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         }
     }
 }
@@ -416,8 +425,32 @@ const PlanarSubgraph = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         },
+    },
+    BoyerMyrvold: {
+        maxThreads: {
+            type: PARAMETER_TYPE.INT,
+            range: [0, Infinity],
+            default: 1
+        },
+        timeLimit: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [-Infinity, Infinity],
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
+        },
+        runs: {
+            type: PARAMETER_TYPE.INT,
+            range: [0, Infinity],
+            default: 10
+        },
+        randomness: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [-Infinity, Infinity],
+            default: 0
+        }
     },
     Cactus: {
         maxThreads: {
@@ -428,7 +461,8 @@ const PlanarSubgraph = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         },
     },
     Empty: {
@@ -440,7 +474,8 @@ const PlanarSubgraph = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         },
     },
     Fast: {
@@ -452,7 +487,8 @@ const PlanarSubgraph = {
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         },
         runs: {
             type: PARAMETER_TYPE.INT,
@@ -469,7 +505,8 @@ const PlanarSubgraph = {
         timeLimit: {
             type: PARAMETER_TYPE.INT,
             range: [-Infinity, Infinity],
-            default: -1
+            default: 1000
+            // default: -1 if timeLimit < 0 will be unstoppable
         },
     }
 }
@@ -565,7 +602,10 @@ const RANGES = {
     HierarchyLayout: ["Fast", "FastSimple", "Optimal"],
     LayeredCrossMin: ["BarycenterHeuristic", "GlobalSifting", "GreedyInsertHeuristic", "GreedySwitchHeuristic", "GridSifting", "MedianHeuristic", "SiftingHeuristic", "SplitHeuristic"],
     LayoutPlanRep: ["Ortho"],
+    MixedModelCrossingsBeautifier: ["MMCBDoubleGrid", "MMCBLocalStretch", "MMDummyCrossingsBeautifier"],
+    PlanarSubgraph: ["Maximum", "Cactus", "Empty", "Fast", "Tree"],
     Ranking: ["CoffmanGraham", "LongestPath", "Optimal"],
+    ShellingOrder: ["Biconnected", "Triconnected"]
 }
 
 const OGDF_MODULES = { AcyclicSubgraph, Augmentation, CCLayoutPack, CrossingMinimization, EdgeInsertion, Embedder, GridLayoutPlanRep, HierarchyClusterLayout, HierarchyLayout, LayeredCrossMin, LayoutPlanRep, MixedModelCrossingsBeautifier, PlanarSubgraph, Ranking, ShellingOrder, RANGES }

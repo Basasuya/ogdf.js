@@ -144,7 +144,7 @@ function createLayout() {
     const helper = {
         setOriginParameters(params = {}) {
             if (!initByName) {
-                let isDefined = [].fill(0, 0, _PARAMETER_SEQUENCE.length)
+                let isDefined = _PARAMETER_SEQUENCE.map(() => 0)
                 function findParams(params) {
                     for (let paramName in params) {
                         let search = _PARAMETER_SEQUENCE.findIndex(element => element === paramName)
@@ -200,13 +200,13 @@ function createLayout() {
                     ...${JSON.stringify(DEFAULTS)},
                     ...params
                 }
-                const originalParameters = [].fill(0,0,ORIGIN_PARAMETER_SEQUENCE.length)
+                const originalParameters = ORIGIN_PARAMETER_SEQUENCE.map(() => 0)
                 function setParameters(PARAMS) {
                     for(let paramName in PARAMS){
                         if (PARAMS[paramName].type === PARAMETER_TYPE.MODULE) {
                             originalParameters[ORIGIN_PARAMETER_SEQUENCE.indexOf(paramName)] = OGDF_MODULES.RANGES[PARAMS[paramName].module].indexOf(parameters[paramName])
                             if (PARAMS[paramName].module) {
-                                let module = OGDF_MODULES[PARAMETERS[paramName].module[parameters[paramName]]]
+                                let module = OGDF_MODULES[PARAMETERS[paramName].module][parameters[paramName]]
                                 setParameters(module)
                             }
                         } else if (PARAMS[paramName].type === PARAMETER_TYPE.CATEGORICAL) {

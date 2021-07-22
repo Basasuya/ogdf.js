@@ -89,9 +89,9 @@ ShellingOrderModule* getShellingOrder(int type, double baseRatio);
 
 GridLayoutPlanRepModule* getGridLayoutPlanRep(int type, double separation, int augmenterType, int crossingsBeautifierType, int embedderType, double timeLimit, bool useExtendedDepthDefinition, int shellingOrderType, double baseRatio);
 
-EdgeInsertionModule* getEdgeInsertion(int type, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double timeLimit, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int runsPostprocessing);
+EdgeInsertionModule* getEdgeInsertion(int type, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double timeLimit, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics);
 
 template<typename T>
 PlanarSubgraphModule<T>* getPlanarSubgraph(int type, unsigned int maxThreads, double timeLimit, int runs, double randomness);
 
-CrossingMinimizationModule* getCrossingMinimization(int type, int globalInternalLibraryLogLevel, int globalLogLevel, int globalMinimumLogLevel, bool globalStatisticMode, int localLogLevel, int localLogMode, unsigned int maxThreads, int permutations, bool timeout, double timeLimit, int inserterType, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int runsPostprocessing, int subgraphType, int runs, double randomness);
+CrossingMinimizationModule* getCrossingMinimization(int type, int globalInternalLibraryLogLevel, int globalLogLevel, int globalMinimumLogLevel, bool globalStatisticMode, int localLogLevel, int localLogMode, unsigned int maxThreads, int permutations, bool timeout, double timeLimit, int inserterType, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int subgraphType, int runs, double randomness);

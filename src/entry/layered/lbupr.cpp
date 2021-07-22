@@ -1,6 +1,11 @@
 #include <ogdf/upward/LayerBasedUPRLayout.h>
 #include "../main.h"
 
+#include "../test.h"
+void OnSIGSEGV(int sig){
+	std::cout<<sig<<std::endl;
+}
+
 EM_PORT_API(float*) LBUPR(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, double* nodesWidth, double* nodesHeight, int hierarchyLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, bool balanced, bool downward, bool leftToRight, double weightBalancing, double weightSegments, int rankingType, int width, bool alignBaseClasses, bool alignSiblings, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges, int subgraphType) {
 	node* nodes;
 	Graph G;
@@ -31,7 +36,7 @@ EM_PORT_API(float*) LBUPR(int node_num, int link_num, int* source, int* target, 
 	UpwardPlanRep UPR;
 	UPR.init(G);
 
-	
+	initSignalListener(OnSIGSEGV);
 
 	//LayoutModule
 	LayerBasedUPRLayout *model = new LayerBasedUPRLayout();
@@ -41,7 +46,7 @@ EM_PORT_API(float*) LBUPR(int node_num, int link_num, int* source, int* target, 
 
 	RankingModule *ranking = getRanking(rankingType, width, alignBaseClasses, alignSiblings, optimizeEdgeLength, separateDeg0Layer, separateMultiEdges, subgraphType);
 	model->setRanking(ranking);
-	
+
 	model->call(UPR,GA);
 	//model->UPRLayoutSimple(UPR,GA);
 

@@ -1,7 +1,7 @@
 #include <ogdf/planarity/PlanarizationGridLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float*) PG(int node_num, int link_num, int* source, int* target, double pageRatio, double separation, int crossMinType, int globalInternalLibraryLogLevel, int globalLogLevel, int globalMinimumLogLevel, bool globalStatisticMode, int localLogLevel, int localLogMode, unsigned int maxThreads, int permutations, bool timeout, double timeLimit, int inserterType, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int runsPostprocessing, int subgraphType, int runs, double randomness, int packerType, int planarLayouterType, int augmenterType, int crossingsBeautifierType, int embedderType, bool useExtendedDepthDefinition, int shellingOrderType, double baseRatio) {
+EM_PORT_API(float*) PG(int node_num, int link_num, int* source, int* target, double pageRatio, double separation, int crossMinType, int globalInternalLibraryLogLevel, int globalLogLevel, int globalMinimumLogLevel, bool globalStatisticMode, int localLogLevel, int localLogMode, unsigned int maxThreads, int permutations, bool timeout, double timeLimit, int inserterType, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int subgraphType, int runs, double randomness, int packerType, int planarLayouterType, int augmenterType, int crossingsBeautifierType, int embedderType, bool useExtendedDepthDefinition, int shellingOrderType, double baseRatio) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);
@@ -25,7 +25,7 @@ EM_PORT_API(float*) PG(int node_num, int link_num, int* source, int* target, dou
 	model->pageRatio(pageRatio);
     model->separation(separation);
 
-	CrossingMinimizationModule* crossMin = getCrossingMinimization(crossMinType, globalStatisticMode, globalLogLevel, globalMinimumLogLevel, globalStatisticMode, localLogLevel, localLogMode, maxThreads, permutations, timeout, timeLimit, inserterType, keepEmbedding, percentMostCrossed, removeReinsert, percentMostCrossedFix, percentMostCrossedVar, removeReinsertFix, removeReinsertVar, statistics, runsPostprocessing, subgraphType, runs, randomness);
+	CrossingMinimizationModule* crossMin = getCrossingMinimization(crossMinType, globalStatisticMode, globalLogLevel, globalMinimumLogLevel, globalStatisticMode, localLogLevel, localLogMode, maxThreads, permutations, timeout, timeLimit, inserterType, keepEmbedding, percentMostCrossed, removeReinsert, percentMostCrossedFix, percentMostCrossedVar, removeReinsertFix, removeReinsertVar, statistics, subgraphType, runs, randomness);
 	model->setCrossMin(crossMin);
 
 	CCLayoutPackModule* packer = getCCLayoutPack(packerType);

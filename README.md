@@ -8,10 +8,28 @@ We now aim to use [emscripten](https://emscripten.org/) to compile the **Layout*
 
 ### How to use
 
-Two layout algorithms are supported now:
+Some layout algorithms are supported now:
 
+##### Energy-based Layout Algorithms
+
+-   [DavidsonHarel](https://ogdf.uos.de/doc/classogdf_1_1_davidson_harel_layout.html): the Davidson-Harel layout algorithm.
+-   [GEM](https://ogdf.uos.de/doc/classogdf_1_1_g_e_m_layout.html): the energy-based GEM layout algorithm.
 -   [FMMM](https://ogdf.uos.de/doc/classogdf_1_1_f_m_m_m_layout.html): the fast multipole multilevel layout algorithm
 -   [PivotMDS](https://ogdf.uos.de/doc/classogdf_1_1_pivot_m_d_s.html): the Pivot MDS (multi-dimensional scaling) layout algorithm.
+-   [StressMinimization](https://ogdf.uos.de/doc/classogdf_1_1_stress_minimization.html): energy-based layout using stress minimization.
+
+##### Layer-based Layout Algorithms
+
+-   [Sugiyama](https://ogdf.uos.de/doc/classogdf_1_1_sugiyama_layout.html): Sugiyama's layout algorithm.
+
+##### Planar and Planarization-based Layout Algorithms
+
+-   [Planarization](https://ogdf.uos.de/doc/classogdf_1_1_planarization_layout.html): The planarization approach for drawing graphs.
+-   [PlanarizationGrid](https://ogdf.uos.de/doc/classogdf_1_1_planarization_grid_layout.html): the planarization grid layout algorithm
+
+##### Layout Algorithms for Clustered Graphs
+
+-   [ClusterOrtho](https://ogdf.uos.de/doc/classogdf_1_1_cluster_ortho_layout.html): Represents a planar orthogonal drawing algorithm for c-planar, c-connected clustered graphs.
 
 Examples can be found in [./examples](./examples). We use [NetV.js](https://github.com/ZJUVAG/NetV.js) to render the graph.
 

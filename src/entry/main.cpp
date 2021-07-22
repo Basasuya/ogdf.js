@@ -375,7 +375,7 @@ GridLayoutPlanRepModule* getGridLayoutPlanRep(int type, double separation, int a
     }
 }
 
-EdgeInsertionModule* getEdgeInsertion(int type, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double timeLimit, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int runsPostprocessing){
+EdgeInsertionModule* getEdgeInsertion(int type, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double timeLimit, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics){
 	switch (type)
     {
     case 0:
@@ -463,24 +463,24 @@ PlanarSubgraphModule<T>* getPlanarSubgraph(int type, unsigned int maxThreads, do
     }
 }
 
-CrossingMinimizationModule* getCrossingMinimization(int type, int globalInternalLibraryLogLevel, int globalLogLevel, int globalMinimumLogLevel, bool globalStatisticMode, int localLogLevel, int localLogMode, unsigned int maxThreads, int permutations, bool timeout, double timeLimit, int inserterType, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int runsPostprocessing, int subgraphType, int runs, double randomness){
+CrossingMinimizationModule* getCrossingMinimization(int type, int globalInternalLibraryLogLevel, int globalLogLevel, int globalMinimumLogLevel, bool globalStatisticMode, int localLogLevel, int localLogMode, unsigned int maxThreads, int permutations, bool timeout, double timeLimit, int inserterType, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int subgraphType, int runs, double randomness){
     switch (type)
     {
     case 0:
         {
             SubgraphPlanarizer* subgraphPlanarizer = new SubgraphPlanarizer();
-            subgraphPlanarizer->globalInternalLibraryLogLevel(static_cast<Logger::Level>(globalInternalLibraryLogLevel));
-            subgraphPlanarizer->globalLogLevel(static_cast<Logger::Level>(globalLogLevel));
-            subgraphPlanarizer->globalMinimumLogLevel(static_cast<Logger::Level>(globalMinimumLogLevel));
-            subgraphPlanarizer->globalStatisticMode(globalStatisticMode);
-            subgraphPlanarizer->localLogLevel(static_cast<Logger::Level>(localLogLevel));
-            subgraphPlanarizer->localLogMode(static_cast<Logger::LogMode>(localLogMode));
+            // subgraphPlanarizer->globalInternalLibraryLogLevel(static_cast<Logger::Level>(globalInternalLibraryLogLevel));
+            // subgraphPlanarizer->globalLogLevel(static_cast<Logger::Level>(globalLogLevel));
+            // subgraphPlanarizer->globalMinimumLogLevel(static_cast<Logger::Level>(globalMinimumLogLevel));
+            // subgraphPlanarizer->globalStatisticMode(globalStatisticMode);
+            // subgraphPlanarizer->localLogLevel(static_cast<Logger::Level>(localLogLevel));
+            // subgraphPlanarizer->localLogMode(static_cast<Logger::LogMode>(localLogMode));
             subgraphPlanarizer->maxThreads(maxThreads);
             subgraphPlanarizer->permutations(permutations);
             subgraphPlanarizer->setTimeout(timeout);
             subgraphPlanarizer->timeLimit(timeLimit);
 
-			EdgeInsertionModule* inserter = getEdgeInsertion(inserterType, keepEmbedding, percentMostCrossed, removeReinsert, timeLimit, percentMostCrossedFix, percentMostCrossedVar, removeReinsertFix, removeReinsertVar, statistics, runsPostprocessing);
+			EdgeInsertionModule* inserter = getEdgeInsertion(inserterType, keepEmbedding, percentMostCrossed, removeReinsert, timeLimit, percentMostCrossedFix, percentMostCrossedVar, removeReinsertFix, removeReinsertVar, statistics);
 			subgraphPlanarizer->setInserter(inserter);
 
 			PlanarSubgraphModule<int>* subgraph = getPlanarSubgraph<int>(subgraphType, maxThreads, timeLimit, runs, randomness);
