@@ -53,7 +53,6 @@ EM_PORT_API(float*) CO(int node_num, int link_num, int group_num, int* source, i
     model->scaling(scaling);
     model->separation(separation);
     model->setOptions(optionField);
-    std::cout<<"now OK"<<std::endl;
     model->call(PG, entry, layout, edges, G);
 
 	float* re = (float*)malloc(node_num * 2 * 4);

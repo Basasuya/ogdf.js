@@ -8,15 +8,23 @@ import lbupr from "./layouts/layered/lbupr.layout"
 import sugi from "./layouts/layered/sugi.layout"
 import pl from "./layouts/planarity/pl.layout"
 import pg from "./layouts/planarity/pg.layout"
+import nr from "./layouts/energybased/nr.layout"
+import segv from "./layouts/energybased/segv.layout"
+import sekk from "./layouts/energybased/sekk.layout"
+import tut from "./layouts/energybased/tut.layout"
 export {
-    co,
+    //co, disabled
     dh,
     fm3,
     gem,
-    lbupr,
+    //lbupr, disabled
+    nr,
     pg,
     pl,
     pmds,
+    segv,
+    sekk,
     sm,
-    sugi
+    sugi,
+    tut,
 }
