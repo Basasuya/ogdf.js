@@ -18,9 +18,9 @@ class Switcher extends Changer {
     render() {
         return (
             <div>
-                <p>
+                {/* <p>
                     {this.props.name}:{this.state.value}
-                </p>
+                </p> */}
                 <Radio.Group onChange={this.handleChange} value={this.state.value}>
                     {this.props.range.map((option) => {
                         return (

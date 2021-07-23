@@ -1,4 +1,4 @@
-import { Menu, Row, Col, Upload, message, Button } from 'antd'
+import { Menu, Row, Col, Upload, message, Button,} from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import React from 'react'
 import Dashboard from './dashboard/index.jsx'
@@ -89,17 +89,7 @@ class OGDFLayoutTestPage extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={12}>
-                        <NetVElement
-                            width="500"
-                            height="500"
-                            data={this.state.data}
-                            autoTransform
-                            ref={this.setNetVRef}
-                            onDone={this.onDone}
-                        ></NetVElement>
-                    </Col>
-                    <Col span={12}>
+                    <Col span={5}>
                         <Upload
                             action="localhost:8081/data"
                             beforeUpload={this.beforeDataUpload}
@@ -107,11 +97,31 @@ class OGDFLayoutTestPage extends React.Component {
                         >
                             <Button icon={<UploadOutlined />}>Click to Upload</Button>
                         </Upload>
+                        <div
+                            style={{
+                                overflow: 'auto',
+                                height: '100vh',
+                                //width: '300vh',
+                                //position: 'fixed',
+                                left: 0,
+                            }}
+                        >
                         <Dashboard
                             layoutName={this.state.layout}
                             callback={this.callback}
                         ></Dashboard>
+                        </div>
                     </Col>
+                    <Col span={12}>
+                        <NetVElement
+                            width="800"
+                            height="800"
+                            data={this.state.data}
+                            autoTransform
+                            ref={this.setNetVRef}
+                            onDone={this.onDone}
+                        ></NetVElement>
+                    </Col>                 
                 </Row>
             </>
         )

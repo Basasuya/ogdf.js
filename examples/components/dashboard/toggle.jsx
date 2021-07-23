@@ -13,8 +13,10 @@ class Toggle extends Changer {
     }
 
     render() {
-        let checkedChildren = this.props.name + ': TRUE'
-        let unCheckedChildren = this.props.name + ': FALSE'
+        //let checkedChildren = this.props.name + ': TRUE'
+        //let unCheckedChildren = this.props.name + ': FALSE'
+        let checkedChildren = 'TRUE'
+        let unCheckedChildren = 'FALSE'
         return (
             <Switch
                 defaultChecked={this.props.value}

@@ -4,7 +4,7 @@ import Toggle from './toggle.jsx'
 import Transformator from './transformator.jsx'
 import { PARAMETER_TYPE, getDefaultValueOfParameters } from '../../../src/utils/parameters'
 import React from 'react'
-import { Collapse } from 'antd'
+import { Collapse, Card, Col, Row } from 'antd'
 const { Panel } = Collapse
 class Dashboard extends React.Component {
     constructor(props) {
@@ -55,9 +55,17 @@ class Dashboard extends React.Component {
         }
         for (let name in PARAMETERS) {
             let setter = (
-                <Panel header={name} key={name}>
-                    {getChanger(name)}
-                </Panel>
+                <Col span={5}>
+                    <Card 
+                        size="small"
+                        title={name}
+                    >
+                        {getChanger(name)}
+                    </Card>
+                {/* <Panel header={name} key={name}>
+                        {getChanger(name)}
+                    </Panel> */}
+                </Col>
             )
             setters.push(setter)
         }
@@ -69,4 +77,5 @@ class Dashboard extends React.Component {
         )
     }
 }
+
 export default Dashboard
