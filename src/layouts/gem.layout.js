@@ -1,11 +1,9 @@
-
-
 OUR_PARAMETERS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
-    },
+        default: false
+    }
 }
 
 ORIGIN_PARAMETERS = {
@@ -17,7 +15,7 @@ ORIGIN_PARAMETERS = {
     desiredLength: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 5.
+        default: 5
     },
     gravitationalConstant: {
         type: PARAMETER_TYPE.DOUBLE,
@@ -27,17 +25,17 @@ ORIGIN_PARAMETERS = {
     initialTemperature: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 10.
+        default: 10
     },
     maximalDisturbance: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 0.
+        default: 0
     },
     minDistCC: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 20.
+        default: 20
     },
     minimalTemperature: {
         type: PARAMETER_TYPE.DOUBLE,
@@ -52,7 +50,7 @@ ORIGIN_PARAMETERS = {
     oscillationAngle: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: Math.PI / 2.
+        default: Math.PI / 2
     },
     oscillationSensitivity: {
         type: PARAMETER_TYPE.DOUBLE,
@@ -62,12 +60,12 @@ ORIGIN_PARAMETERS = {
     pageRatio: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 1.
+        default: 1
     },
     rotationAngle: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: Math.PI / 3.
+        default: Math.PI / 3
     },
     rotationSensitivity: {
         type: PARAMETER_TYPE.DOUBLE,
@@ -76,16 +74,16 @@ ORIGIN_PARAMETERS = {
     }
 }
 
-ENTRY_DEFINITION = "GEM(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, int attractionFormula, double desiredLength, double gravitationalConstant, double initialTemperature, double maximalDisturbance, double minDistCC, double minimalTemperature, int numberOfRounds, double oscillationAngle, double oscillationSensitivity, double pageRatio, double rotationAngle, double rotationSensitivity)"
+ENTRY_DEFINITION =
+    'GEM(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, int attractionFormula, double desiredLength, double gravitationalConstant, double initialTemperature, double maximalDisturbance, double minDistCC, double minimalTemperature, int numberOfRounds, double oscillationAngle, double oscillationSensitivity, double pageRatio, double rotationAngle, double rotationSensitivity)'
 
 NODE_ATTRIBUTES = [
     {
-        name: "nodesX",
-        mapper: node => node.x
+        name: 'nodesX',
+        mapper: (node) => node.x
     },
     {
-        name: "nodesY",
-        mapper: node => node.y
+        name: 'nodesY',
+        mapper: (node) => node.y
     }
 ]
-

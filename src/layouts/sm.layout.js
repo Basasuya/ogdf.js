@@ -1,17 +1,16 @@
-
 OUR_PARAMETERS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
-    },
+        default: false
+    }
 }
 
 ORIGIN_PARAMETERS = {
     terminationCriterion: {
         type: PARAMETER_TYPE.CATEGORICAL,
-        range: ["None", "PositionDifference", "Stress"],
-        default: "None"
+        range: ['None', 'PositionDifference', 'Stress'],
+        default: 'None'
     },
     fixXCoords: {
         type: PARAMETER_TYPE.BOOL,
@@ -55,23 +54,23 @@ ORIGIN_PARAMETERS = {
     }
 }
 
-ENTRY_DEFINITION = "SM(int node_num, int link_num, int* source, int* target, double* edgesWeight, double* nodesX, double* nodesY, int terminationCriterion, bool fixXCoords, bool fixYCoords, bool fixZCoords, bool hasInitialLayout, bool layoutComponentsSeparately, double edgeCosts, int numberOfIterations, bool useEdgeCostsAttribute)"
+ENTRY_DEFINITION =
+    'SM(int node_num, int link_num, int* source, int* target, double* edgesWeight, double* nodesX, double* nodesY, int terminationCriterion, bool fixXCoords, bool fixYCoords, bool fixZCoords, bool hasInitialLayout, bool layoutComponentsSeparately, double edgeCosts, int numberOfIterations, bool useEdgeCostsAttribute)'
 
 LINK_ATTRIBUTES = [
     {
-        name: "edgesWeight",
-        mapper: link => "weight" in link ? link.weight : 1
+        name: 'edgesWeight',
+        mapper: (link) => ('weight' in link ? link.weight : 1)
     }
 ]
 
 NODE_ATTRIBUTES = [
     {
-        name: "nodesX",
-        mapper: node => node.x
+        name: 'nodesX',
+        mapper: (node) => node.x
     },
     {
-        name: "nodesY",
-        mapper: node => node.y
+        name: 'nodesY',
+        mapper: (node) => node.y
     }
 ]
-

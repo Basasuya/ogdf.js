@@ -1,18 +1,16 @@
-
-
 OUR_PARAMETERS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
-    },
+        default: false
+    }
 }
 
 ORIGIN_PARAMETERS = {
     settings: {
         type: PARAMETER_TYPE.CATEGORICAL,
-        range: ["standard", "repulse", "planar"],
-        default: "none"
+        range: ['standard', 'repulse', 'planar'],
+        default: 'none'
     },
     attractionWeight: {
         type: PARAMETER_TYPE.DOUBLE,
@@ -27,7 +25,7 @@ ORIGIN_PARAMETERS = {
     nodeOverlapWeight: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 100.
+        default: 100
     },
     numberOfIterations: {
         type: PARAMETER_TYPE.INT,
@@ -37,17 +35,17 @@ ORIGIN_PARAMETERS = {
     planarityWeight: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 500.
+        default: 500
     },
     preferredEdgeLength: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 0.
+        default: 0
     },
     preferredEdgeLengthMultiplier: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 2.
+        default: 2
     },
     repulsionWeight: {
         type: PARAMETER_TYPE.DOUBLE,
@@ -56,8 +54,8 @@ ORIGIN_PARAMETERS = {
     },
     speed: {
         type: PARAMETER_TYPE.CATEGORICAL,
-        range: ["Fast", "Medium", "HQ"],
-        default: "Medium"
+        range: ['Fast', 'Medium', 'HQ'],
+        default: 'Medium'
     },
     startTemperature: {
         type: PARAMETER_TYPE.INT,
@@ -66,5 +64,5 @@ ORIGIN_PARAMETERS = {
     }
 }
 
-ENTRY_DEFINITION = "DH(int node_num, int link_num, int* source, int* target, int settings, double attractionWeight, bool iterationNumberAsFactor, double nodeOverlapWeight, int numberOfIterations, double planarityWeight, double preferredEdgeLength, double preferredEdgeLengthMultiplier, double repulsionWeight, int speed, int startTemperature)"
-
+ENTRY_DEFINITION =
+    'DH(int node_num, int link_num, int* source, int* target, int settings, double attractionWeight, bool iterationNumberAsFactor, double nodeOverlapWeight, int numberOfIterations, double planarityWeight, double preferredEdgeLength, double preferredEdgeLengthMultiplier, double repulsionWeight, int speed, int startTemperature)'

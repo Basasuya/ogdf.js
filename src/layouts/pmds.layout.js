@@ -1,10 +1,9 @@
-
 OUR_PARAMETERS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
-    },
+        default: false
+    }
 }
 
 ORIGIN_PARAMETERS = {
@@ -25,10 +24,12 @@ ORIGIN_PARAMETERS = {
     }
 }
 
-ENTRY_DEFINITION = "PMDS(int node_num, int link_num, int* source, int* target, double* edgesWeight, double edgeCosts , int numberOfPivots , bool useEdgeCostsAttribute)"
+ENTRY_DEFINITION =
+    'PMDS(int node_num, int link_num, int* source, int* target, double* edgesWeight, double edgeCosts , int numberOfPivots , bool useEdgeCostsAttribute)'
 
 LINK_ATTRIBUTES = [
     {
-        name: "edgesWeight", mapper: link => "weight" in link ? link.weight : 1
+        name: 'edgesWeight',
+        mapper: (link) => ('weight' in link ? link.weight : 1)
     }
 ]

@@ -7,8 +7,8 @@ export function getDefaultValueOfParameters(parameters) {
 }
 
 export const PARAMETER_TYPE = {
-    CATEGORICAL: "CATEGORICAL",
-    INT: "INT",
-    DOUBLE: "DOUBLE",
-    BOOL: "BOOL",
+    CATEGORICAL: 'CATEGORICAL',
+    INT: 'INT',
+    DOUBLE: 'DOUBLE',
+    BOOL: 'BOOL'
 }
