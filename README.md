@@ -95,6 +95,7 @@ We suggest you to build ogdf.js with Linux or MacOS (we still have no experience
 4. Build ogdf.js
     ```bash
     $ npm install
+    $ npm install -g webpack
     $ npm run build
     ```
 

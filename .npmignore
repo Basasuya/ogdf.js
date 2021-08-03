@@ -5,3 +5,4 @@ ogdf/
 .idea
 npm-debug.log
 /node_modules
+/dashboard/
