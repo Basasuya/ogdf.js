@@ -157,7 +157,7 @@ EM_PORT_API(float*) PMDS(int node_num, int link_num, int* source, int* target, d
 	
 	model->setEdgeCosts(edgeCosts);
 	model->setNumberOfPivots(numberOfPivots);
-	model->useEdgeCostsAttribute(true);
+	model->useEdgeCostsAttribute(true); // ?
 
     model->call(GA);
 
