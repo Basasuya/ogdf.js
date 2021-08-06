@@ -81,6 +81,7 @@ const ATTRIBUTES = {
         }
     ],
     sequence: ['edgesWeight', 'nodesX', 'nodesY']
+    // sequence: ['nodesX', 'nodesY']
 }
 
 const sm = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, ATTRIBUTES)

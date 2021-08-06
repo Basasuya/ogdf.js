@@ -1,4 +1,8 @@
-OUR_PARAMETERS = {
+import { PARAMETER_TYPE } from '../utils/parameters'
+import createLayout from './creater'
+
+const NAME = 'GEM'
+const OUR_PARAMETERS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -6,7 +10,7 @@ OUR_PARAMETERS = {
     }
 }
 
-ORIGIN_PARAMETERS = {
+const ORIGIN_PARAMETERS = {
     attractionFormula: {
         type: PARAMETER_TYPE.INT,
         range: [0, Infinity],
@@ -74,16 +78,23 @@ ORIGIN_PARAMETERS = {
     }
 }
 
-ENTRY_DEFINITION =
-    'GEM(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, int attractionFormula, double desiredLength, double gravitationalConstant, double initialTemperature, double maximalDisturbance, double minDistCC, double minimalTemperature, int numberOfRounds, double oscillationAngle, double oscillationSensitivity, double pageRatio, double rotationAngle, double rotationSensitivity)'
+// double* nodesX, double* nodesY
+const ATTRIBUTES = {
+    node: [
+        {
+            name: 'nodesX',
+            mapper: (node) => ('x' in node ? node.x : 0),
+            type: PARAMETER_TYPE.DOUBLE
+        },
+        {
+            name: 'nodesY',
+            mapper: (node) => ('y' in node ? node.y : 0),
+            type: PARAMETER_TYPE.DOUBLE
+        }
+    ],
+    link: [],
+    sequence: ['nodeX', 'nodeY']
+}
 
-NODE_ATTRIBUTES = [
-    {
-        name: 'nodesX',
-        mapper: (node) => node.x
-    },
-    {
-        name: 'nodesY',
-        mapper: (node) => node.y
-    }
-]
+const gem = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, ATTRIBUTES)
+export default gem

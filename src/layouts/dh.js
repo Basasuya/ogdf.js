@@ -1,4 +1,8 @@
-OUR_PARAMETERS = {
+import { PARAMETER_TYPE } from '../utils/parameters'
+import createLayout from './creater'
+
+const NAME = 'DH'
+const OUR_PARAMETERS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -6,7 +10,7 @@ OUR_PARAMETERS = {
     }
 }
 
-ORIGIN_PARAMETERS = {
+const ORIGIN_PARAMETERS = {
     settings: {
         type: PARAMETER_TYPE.CATEGORICAL,
         range: ['standard', 'repulse', 'planar'],
@@ -64,5 +68,6 @@ ORIGIN_PARAMETERS = {
     }
 }
 
-ENTRY_DEFINITION =
-    'DH(int node_num, int link_num, int* source, int* target, int settings, double attractionWeight, bool iterationNumberAsFactor, double nodeOverlapWeight, int numberOfIterations, double planarityWeight, double preferredEdgeLength, double preferredEdgeLengthMultiplier, double repulsionWeight, int speed, int startTemperature)'
+const dh = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, {})
+
+export default dh

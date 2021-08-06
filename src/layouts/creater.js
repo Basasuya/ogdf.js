@@ -65,82 +65,84 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
             orderedAttributes.push(unorderedAttributes[name])
         }) // ! Ensure the order of attributes
 
-        if (parameters.useWorker) {
-            const worker = createWorker(function () {
+        function createOGDFProcess() {
+            function OGDFProcess(
+                {
+                    NAME,
+                    PARAMETER_TYPE,
+                    initOGDF,
+                    N,
+                    M,
+                    sourceIndexArray,
+                    targetIndexArray,
+                    orderedAttributes,
+                    originalParameters
+                },
+                callback
+            ) {
+                initOGDF().then(function (Module) {
+                    let source = Module._malloc(4 * M)
+                    let target = Module._malloc(4 * M)
+                    for (let i = 0; i < M; ++i) {
+                        Module.HEAP32[source / 4 + i] = sourceIndexArray[i]
+                        Module.HEAP32[target / 4 + i] = targetIndexArray[i]
+                    }
+                    const mallocAttributes = orderedAttributes.map((attr) => {
+                        let bytes = 4
+                        if (attr.type == PARAMETER_TYPE.DOUBLE) {
+                            bytes = 8
+                        }
+                        const malloc = Module._malloc(bytes * attr.value.length)
+                        let heap = Module.HEAP32
+                        if (attr.type == PARAMETER_TYPE.DOUBLE) {
+                            heap = Module.HEAPF64
+                        }
+                        for (let i = 0; i < attr.value.length; ++i) {
+                            heap[malloc / bytes + i] = attr.value[i]
+                        }
+                        return malloc
+                    })
+                    const result = Module[`_${NAME}`](
+                        N,
+                        M,
+                        source,
+                        target,
+                        ...mallocAttributes,
+                        ...originalParameters
+                    ) // ! Ensure the order of attributes/parameters
+                    const nodes = []
+                    for (let i = 0; i < N; ++i) {
+                        nodes[i] = {}
+                        nodes[i]['x'] = Module.HEAPF32[(result >> 2) + i * 2]
+                        nodes[i]['y'] = Module.HEAPF32[(result >> 2) + i * 2 + 1]
+                    }
+                    Module._free(source)
+                    Module._free(target)
+                    Module._free_buf(result)
+                    callback(nodes)
+                })
+            }
+            if (DedicatedWorkerGlobalScope && this instanceof DedicatedWorkerGlobalScope) {
+                // if it is executed in webworker
                 addEventListener('message', (e) => {
                     let message = JSON.parse(e.data)
-                    let {
-                        NAME,
-                        initOGDF,
-                        N,
-                        M,
-                        sourceIndexArray,
-                        targetIndexArray,
-                        orderedAttributes,
-                        originalParameters
-                    } = message
+                    let initOGDF = message.initOGDF
                     eval(`initOGDF = ${initOGDF}`)
                     message.initOGDF = initOGDF
-
-                    function ogdfProcess({
-                        initOGDF,
-                        N,
-                        M,
-                        sourceIndexArray,
-                        targetIndexArray,
-                        orderedAttributes,
-                        originalParameters
-                    }) {
-                        initOGDF().then(function (Module) {
-                            let source = Module._malloc(4 * M)
-                            let target = Module._malloc(4 * M)
-                            for (let i = 0; i < M; ++i) {
-                                Module.HEAP32[source / 4 + i] = sourceIndexArray[i]
-                                Module.HEAP32[target / 4 + i] = targetIndexArray[i]
-                            }
-                            const mallocAttributes = orderedAttributes.map((attr) => {
-                                let bytes = 4
-                                if (attr.type == PARAMETER_TYPE.DOUBLE) {
-                                    bytes = 8
-                                }
-                                const malloc = Module._malloc(bytes * attr.value.length)
-                                let heap = Module.HEAP32
-                                if (attr.type == PARAMETER_TYPE.DOUBLE) {
-                                    heap = Module.HEAPF64
-                                }
-                                for (let i = 0; i < N; ++i) {
-                                    heap[malloc / bytes + i] = attr.value[i]
-                                }
-                                return malloc
-                            })
-                            const result = Module[`_${NAME}`](
-                                N,
-                                M,
-                                source,
-                                target,
-                                ...mallocAttributes,
-                                ...originalParameters
-                            ) // ! Ensure the order of attributes/parameters
-                            const nodes = []
-                            for (let i = 0; i < N; ++i) {
-                                nodes[i] = {}
-                                nodes[i]['x'] = Module.HEAPF32[(result >> 2) + i * 2]
-                                nodes[i]['y'] = Module.HEAPF32[(result >> 2) + i * 2 + 1]
-                            }
-                            Module._free(source)
-                            Module._free(target)
-                            Module._free_buf(result)
-                            postMessage(JSON.stringify(nodes)) // todo
-                        })
-                    }
-                    ogdfProcess(message)
+                    OGDFProcess(message, (nodes) => postMessage(JSON.stringify(nodes)))
                 })
-            })
+            }
+            return OGDFProcess
+        }
+
+        if (parameters.useWorker) {
+            const worker = createWorker(createOGDFProcess)
 
             // post data, including functions/parameters/..., into the webworker
             worker.postMessage(
                 JSON.stringify({
                     NAME,
+                    PARAMETER_TYPE,
                     initOGDF: initOGDF.toString(), // ! Maybe we can put initOGDF out of web worker
                     N,
                     M,
@@ -162,47 +164,27 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
                 callback(graphCopy)
             }
         } else {
-            initOGDF().then(function (Module) {
-                let source = Module._malloc(4 * M)
-                let target = Module._malloc(4 * M)
-                for (let i = 0; i < M; ++i) {
-                    Module.HEAP32[source / 4 + i] = sourceIndexArray[i]
-                    Module.HEAP32[target / 4 + i] = targetIndexArray[i]
-                }
-                const mallocAttributes = orderedAttributes.map((attr) => {
-                    let bytes = 4
-                    if (attr.type == PARAMETER_TYPE.DOUBLE) {
-                        bytes = 8
-                    }
-                    const malloc = Module._malloc(bytes * attr.value.length)
-                    let heap = Module.HEAP32
-                    if (attr.type == PARAMETER_TYPE.DOUBLE) {
-                        heap = Module.HEAPF64
-                    }
-                    for (let i = 0; i < N; ++i) {
-                        heap[malloc / bytes + i] = attr.value[i]
-                    }
-                    return malloc
-                })
-                const result = Module[`_${NAME}`](
+            const OGDFProcess = createOGDFProcess()
+            OGDFProcess(
+                {
+                    NAME,
+                    PARAMETER_TYPE,
+                    initOGDF,
                     N,
                     M,
-                    source,
-                    target,
-                    ...mallocAttributes,
-                    ...originalParameters
-                ) // ! Ensure the order of attributes/parameters
-                for (let i = 0; i < N; ++i) {
-                    graphCopy.nodes[i]['x'] = Module.HEAPF32[(result >> 2) + i * 2]
-                    graphCopy.nodes[i]['y'] = Module.HEAPF32[(result >> 2) + i * 2 + 1]
+                    sourceIndexArray,
+                    targetIndexArray,
+                    orderedAttributes,
+                    originalParameters
+                },
+                (nodes) => {
+                    for (let i = 0; i < N; ++i) {
+                        graphCopy.nodes[i]['x'] = nodes[i].x
+                        graphCopy.nodes[i]['y'] = nodes[i].y
+                    }
+                    callback(graphCopy)
                 }
-
-                callback(graphCopy)
-
-                Module._free(source)
-                Module._free(target)
-                Module._free_buf(result)
-            })
+            )
         }
     }
 

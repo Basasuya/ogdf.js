@@ -8,18 +8,23 @@
     <script>
         const width = 500
         const height = 500
-        const div = document.getElementById("main")
+        const div = document.getElementById('main')
         const netv = new NetV({
             container: div,
             width,
-            height,
+            height
         })
-        pmds(
-            netv.loadDataset("miserables"),
+        const miserables = netv.loadDataset('miserables')
+        miserables.links.forEach((link) => {
+            link.weight = Math.random()
+        })
+        sm(
+            miserables,
             {
                 edgeCosts: 100,
                 numberOfPivots: 250,
                 useEdgeCostsAttribute: true,
+                useWorker: true
             },
             (graph) => {
                 // netv.data(graph)
