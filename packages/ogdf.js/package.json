@@ -1,0 +1,34 @@
+{
+  "name": "ogdfjs",
+  "version": "0.1.1",
+  "description": "Using Emscripten to encapsulate OGDF layout functions to JavaScript code",
+  "keywords": [
+    "graph",
+    "visualization",
+    "ogdf",
+    "layout"
+  ],
+  "author": "JackieAnxis <jackieanxis@gmail.com>",
+  "homepage": "https://raw.githubusercontent.com/ZJUVAI/ogdf.js#readme",
+  "license": "MIT",
+  "main": "src/index.js",
+  "directories": {},
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://raw.githubusercontent.com/ZJUVAI/ogdf.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "webpack",
+    "lint": "eslint src/index.js",
+    "watch": "webpack --watch"
+  },
+  "browser": {
+      "crypto": false,
+      "fs": false,
+      "path": false
+  }
+}
