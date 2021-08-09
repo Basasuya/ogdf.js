@@ -93,7 +93,7 @@ const ATTRIBUTES = {
         }
     ],
     link: [],
-    sequence: ['nodeX', 'nodeY']
+    sequence: ['nodesX', 'nodesY']
 }
 
 const gem = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, ATTRIBUTES)

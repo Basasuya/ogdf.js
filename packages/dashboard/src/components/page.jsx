@@ -1,4 +1,4 @@
-import { Menu, Row, Col, Upload, message, Button,} from 'antd'
+import { Menu, Row, Col, Upload, message, Button } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import React from 'react'
 import Dashboard from './dashboard/index.jsx'
@@ -27,7 +27,7 @@ class OGDFLayoutTestPage extends React.Component {
     onKeyChange(event) {
         let key = event.key
         this.onDrawing()
-        window[key](this.netv.data, {}, this.netv.onGraphChange)
+        ogdf[key](this.netv.data, {}, this.netv.onGraphChange)
         this.setState({ layout: key }, this.forceUpdate)
     }
 
@@ -104,13 +104,13 @@ class OGDFLayoutTestPage extends React.Component {
                                 height: '100vh',
                                 //width: '300vh',
                                 //position: 'fixed',
-                                left: 0,
+                                left: 0
                             }}
                         >
-                        <Dashboard
-                            layoutName={this.state.layout}
-                            callback={this.callback}
-                        ></Dashboard>
+                            <Dashboard
+                                layoutName={this.state.layout}
+                                callback={this.callback}
+                            ></Dashboard>
                         </div>
                     </Col>
                     <Col span={12}>
@@ -122,7 +122,7 @@ class OGDFLayoutTestPage extends React.Component {
                             ref={this.setNetVRef}
                             onDone={this.onDone}
                         ></NetVElement>
-                    </Col>                 
+                    </Col>
                 </Row>
             </>
         )
