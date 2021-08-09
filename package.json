@@ -1,46 +1,43 @@
 {
     "name": "ogdfjs",
     "version": "0.1.0",
+    "private": true,
     "description": "Using Emscripten to encapsulate OGDF layout functions to JavaScript code",
     "main": "src/index.js",
-    "directories": {
-        "doc": "doc"
-    },
+    "workspaces": [
+        "packages/*"
+    ],
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "webpack",
-        "build:example": "cd ./examples && npm run build",
-        "lint": "eslint src/index.js",
-        "watch": "webpack --watch"
+        "build": "cd packages/ogdf.js && npm run build",
+        "bootstrap": "lerna bootstrap",
+        "lint": "cd packages/ogdf.js && npm run lint",
+        "watch": "cd packages/ogdf.js && npm run watch",
+        "build:dashboard": "cd packages/dashboard && npm run build",
+        "watch:dashboard": "cd packages/dashboard && npm run start"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/JackieAnxis/ogdf.js.git"
+        "url": "git+https://github.com/ZJUVAI/ogdf.js.git"
     },
     "keywords": [
-        "graph visualization",
+        "graph",
+        "visualization",
         "ogdf",
         "layout"
     ],
-    "author": "Jiacheng Pan, Yuanzhe Hu",
+    "author": "Jiacheng Pan, Yuanzhe Hu, Xiaoyu Yang",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/JackieAnxis/ogdf.js/issues"
+        "url": "https://github.com/ZJUVAI/ogdf.js/issues"
     },
-    "homepage": "https://github.com/JackieAnxis/ogdf.js#readme",
+    "homepage": "https://github.com/ZJUVAI/ogdf.js#readme",
     "devDependencies": {
         "eslint": "^6.6.0",
         "eslint-config-prettier": "^6.14.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-jsx-a11y": "^6.3.1",
         "eslint-plugin-prettier": "^3.1.4",
-        "prettier": "^2.3.2",
-        "webpack": "^5.48.0",
-        "webpack-cli": "^4.7.2"
-    },
-    "browser": {
-        "crypto": false,
-        "fs": false,
-        "path": false
+        "lerna": "^4.0.0",
+        "prettier": "^2.3.2"
     }
 }

@@ -10,8 +10,8 @@ We now aim to use [emscripten](https://emscripten.org/) to compile the **Layout*
 
 Two layout algorithms are supported now:
 
--   [FMMM](https://ogdf.uos.de/doc/classogdf_1_1_f_m_m_m_layout.html): the fast multipole multilevel layout algorithm
--   [PivotMDS](https://ogdf.uos.de/doc/classogdf_1_1_pivot_m_d_s.html): the Pivot MDS (multi-dimensional scaling) layout algorithm.
+-   [FMMM](https://ogdf.uos.de/doc/classogdf_1_1_f_m_m_m_layout.html) (`fm3`): the fast multipole multilevel layout algorithm
+-   [PivotMDS](https://ogdf.uos.de/doc/classogdf_1_1_pivot_m_d_s.html) (`pmds`): the Pivot MDS (multi-dimensional scaling) layout algorithm.
 
 Examples can be found in [./examples](./examples). We use [NetV.js](https://github.com/ZJUVAG/NetV.js) to render the graph.
 
@@ -24,6 +24,12 @@ fm3(/* graph data */ { nodes: facebook.nodes, links: facebook.links },
         netv.draw()
     }
 )
+
+// or using import/export
+import * as ogdf from 'ogdfjs'
+ogdf.fm3(/* .... */) {
+    // ...
+}
 ```
 
 ### How to build it?
@@ -37,10 +43,13 @@ We suggest you to build ogdf.js with Linux or MacOS (we still have no experience
 
 #### Building Steps
 
+_NOTE\*: for Windows users, please use WSL to perform step 1~3._
+
 1. Download and install [Emscripten](https://github.com/emscripten-core/emscripten). Here is several main steps, and please refer to [the official document](https://emscripten.org/docs/getting_started/downloads.html) for more details:
 
     ```bash
     # Get the emsdk repo
+    $ cd ..
     $ git clone https://github.com/emscripten-core/emsdk.git
 
     # Enter that directory
@@ -69,6 +78,9 @@ We suggest you to build ogdf.js with Linux or MacOS (we still have no experience
     $ echo 'printf("Hello, world!\n");' >> hello.c
     $ echo '}' >> hello.c
     $ emcc hello.c -s WASM=1 -o hello.html
+    $ python -m SimpleHTTPServer 1111 # for python2
+    $ python -m http.server 1111 # for python3
+    # open your browser, and open http://localhost:1111/hello.html
     ```
 
     Then you can start a localhost server to view the html.
@@ -76,7 +88,9 @@ We suggest you to build ogdf.js with Linux or MacOS (we still have no experience
 2. Build ogdf library.
 
     ```bash
-    $ cd ogdf
+    # cd to ~/packages/ogdf.js
+    $ cd ../../ogdf.js
+    $ cd packages/ogdf.js/ogdf
     $ mkdir build && cd build
     $ emcmake cmake ..
     $ emmake make
@@ -89,14 +103,20 @@ We suggest you to build ogdf.js with Linux or MacOS (we still have no experience
 3. Build rawogdf.js
 
     ```bash
+    # cd to ~/packages/ogdf.js
+    $ cd ../..
     $ make rawogdf.js
     ```
 
 4. Build ogdf.js
     ```bash
+    # cd to ~/
+    $ cd ../..
     $ npm install
-    $ npm install -g webpack
+    $ npm run bootstrap
     $ npm run build
+    # open dashboard
+    $ npm run watch:dashboard
     ```
 
 ### Progress
