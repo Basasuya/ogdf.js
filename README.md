@@ -41,6 +41,7 @@ We suggest you to build ogdf.js with Linux or MacOS (we still have no experience
 
     ```bash
     # Get the emsdk repo
+    $ cd ..
     $ git clone https://github.com/emscripten-core/emsdk.git
 
     # Enter that directory
@@ -76,7 +77,9 @@ We suggest you to build ogdf.js with Linux or MacOS (we still have no experience
 2. Build ogdf library.
 
     ```bash
-    $ cd ogdf
+    # cd to ~/packages/ogdf.js
+    $ cd ../ogdf.js
+    $ cd packages/ogdf.js/ogdf
     $ mkdir build && cd build
     $ emcmake cmake ..
     $ emmake make
@@ -89,14 +92,20 @@ We suggest you to build ogdf.js with Linux or MacOS (we still have no experience
 3. Build rawogdf.js
 
     ```bash
+    # cd to ~/packages/ogdf.js
+    $ cd ../..
     $ make rawogdf.js
     ```
 
 4. Build ogdf.js
     ```bash
+    # cd to ~/
+    $ cd ../..
     $ npm install
-    $ npm install -g webpack
+    $ lerna bootstrap
     $ npm run build
+    # open dashboar
+    $ npm run watch:dashboard
     ```
 
 ### Progress
