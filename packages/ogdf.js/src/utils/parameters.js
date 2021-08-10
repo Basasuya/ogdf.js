@@ -1,6 +1,7 @@
 import OGDF_MODULES from "./modules"
+import { PARAMETER_TYPE } from './parameter-type'
 
-export function getDefaultValueOfParameters(parameters) {
+function getDefaultValueOfParameters(parameters) {
     let result = {}
     Object.keys(parameters).forEach((key) => {
         result[key] = parameters[key].default
@@ -17,7 +18,7 @@ export function getDefaultValueOfParameters(parameters) {
     return result
 }
 
-export function getOriginParameterSequence(parameters) {
+function getOriginParameterSequence(parameters) {
     let sequence = []
     for (let paramName in parameters) {
         sequence.push(paramName)
@@ -38,7 +39,7 @@ export function getOriginParameterSequence(parameters) {
     return sequence
 }
 
-export function getOriginalParameters(parameters, PARAMETERS, SEQUENCE) {
+function getOriginalParameters(parameters, PARAMETERS, SEQUENCE) {
     let originalParameters = []
     for (let paramName in PARAMETERS) {
         if (PARAMETERS[paramName].type === PARAMETER_TYPE.MODULE) {
@@ -58,10 +59,4 @@ export function getOriginalParameters(parameters, PARAMETERS, SEQUENCE) {
     return originalParameters
 }
 
-export const PARAMETER_TYPE = {
-    MODULE: "MODULE",
-    CATEGORICAL: "CATEGORICAL",
-    INT: "INT",
-    DOUBLE: "DOUBLE",
-    BOOL: "BOOL",
-}
+export { PARAMETER_TYPE, getDefaultValueOfParameters, getOriginalParameters, getOriginParameterSequence }

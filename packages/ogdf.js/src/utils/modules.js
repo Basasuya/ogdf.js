@@ -1,4 +1,4 @@
-import { PARAMETER_TYPE } from './parameters'
+import { PARAMETER_TYPE } from './parameter-type'
 
 const AcyclicSubgraph = {
     Dfs: {}, GreedyCycleRemoval: {}
