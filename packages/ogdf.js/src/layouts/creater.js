@@ -1,6 +1,6 @@
 import initOGDF from '../entry/rawogdf'
 import { createWorker } from '../utils/worker-helper'
-import { getDefaultValueOfParameters, PARAMETER_TYPE } from '../utils/parameters'
+import { getDefaultValueOfParameters, getOriginParameterSequence, getOriginalParameters, PARAMETER_TYPE } from '../utils/parameters'
 
 export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, ATTRIBUTES) {
     const PARAMETERS = {
@@ -8,7 +8,7 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
         ...OUR_PARAMETERS // parameters defined by us, such as useWebWorker, ...
     }
 
-    const ORIGIN_PARAMETER_SEQUENCE = Object.keys(ORIGIN_PARAMETERS)
+    const ORIGIN_PARAMETER_SEQUENCE = getOriginParameterSequence(ORIGIN_PARAMETERS)
 
     function layout(graph, params, callback) {
         // overwrite default parameters by user defined parameters
@@ -18,13 +18,7 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
         }
 
         // ogdf-defined parameters should keep their orders
-        const originalParameters = ORIGIN_PARAMETER_SEQUENCE.map((paramName) => {
-            if (PARAMETERS[paramName].type === PARAMETER_TYPE.CATEGORICAL) {
-                return PARAMETERS[paramName].range.indexOf(parameters[paramName])
-            } else {
-                return parameters[paramName]
-            }
-        })
+        const originalParameters = getOriginalParameters(parameters, ORIGIN_PARAMETERS, ORIGIN_PARAMETER_SEQUENCE)
 
         const graphCopy = JSON.parse(JSON.stringify(graph)) // ! maybe we dont need to copy it
         const N = graphCopy.nodes.length
