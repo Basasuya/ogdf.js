@@ -1,10 +1,4 @@
-const PARAMETER_TYPE = {
-    MODULE: "MODULE",
-    CATEGORICAL: "CATEGORICAL",
-    INT: "INT",
-    DOUBLE: "DOUBLE",
-    BOOL: "BOOL",
-}
+import { PARAMETER_TYPE } from './parameters'
 
 const AcyclicSubgraph = {
     Dfs: {}, GreedyCycleRemoval: {}

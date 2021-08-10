@@ -13,9 +13,12 @@ Some layout algorithms are supported now:
 ##### Energy-based Layout Algorithms
 
 -   [DavidsonHarel](https://ogdf.uos.de/doc/classogdf_1_1_davidson_harel_layout.html): the Davidson-Harel layout algorithm.
--   [GEM](https://ogdf.uos.de/doc/classogdf_1_1_g_e_m_layout.html): the energy-based GEM layout algorithm.
 -   [FMMM](https://ogdf.uos.de/doc/classogdf_1_1_f_m_m_m_layout.html): the fast multipole multilevel layout algorithm
+-   [GEM](https://ogdf.uos.de/doc/classogdf_1_1_g_e_m_layout.html): the energy-based GEM layout algorithm.
+-   [NodeRespecter](https://ogdf.uos.de/doc/classogdf_1_1_node_respecter_layout.html): the NodeRespecterLayout layout algorithm.
 -   [PivotMDS](https://ogdf.uos.de/doc/classogdf_1_1_pivot_m_d_s.html): the Pivot MDS (multi-dimensional scaling) layout algorithm.
+-   [SpringEmbedderGridVariant](https://ogdf.uos.de/doc/classogdf_1_1_spring_embedder_grid_variant.html): the spring-embedder layout algorithm with force approximation using hte grid variant approach.
+-   [SpringEmbedderKK](https://ogdf.uos.de/doc/classogdf_1_1_spring_embedder_k_k.html): the spring-embedder layout algorithm by Kamada and Kawai.
 -   [StressMinimization](https://ogdf.uos.de/doc/classogdf_1_1_stress_minimization.html): energy-based layout using stress minimization.
 
 ##### Layer-based Layout Algorithms
