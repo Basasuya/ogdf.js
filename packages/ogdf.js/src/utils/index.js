@@ -1,2 +1,3 @@
 import * as parameters from './parameters'
-export { parameters }
+import OGDF_MODULES from './modules'
+export { parameters, OGDF_MODULES }
