@@ -14,12 +14,17 @@
             width,
             height
         })
-        pmds(
-            netv.loadDataset('miserables'),
+        const miserables = netv.loadDataset('miserables')
+        miserables.links.forEach((link) => {
+            link.weight = Math.random()
+        })
+        sm(
+            miserables,
             {
                 edgeCosts: 100,
                 numberOfPivots: 250,
-                useEdgeCostsAttribute: true
+                useEdgeCostsAttribute: true,
+                useWorker: true
             },
             (graph) => {
                 // netv.data(graph)
