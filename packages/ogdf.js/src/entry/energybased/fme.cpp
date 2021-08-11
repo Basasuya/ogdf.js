@@ -2,7 +2,7 @@
 #include "../main.h"
 
 EM_PORT_API(float *)
-FME(int node_num, int link_num, int *source, int *target, float defaultEdgeLength, float defaultNodeSize, uint32_t multipolePrec, uint32_t numberOfThreads, uint32_t numIterations, bool randomize)
+FME(int node_num, int link_num, int *source, int *target, double *nodesX, double *nodesY, float defaultEdgeLength, float defaultNodeSize, uint32_t multipolePrec, uint32_t numberOfThreads, uint32_t numIterations, bool randomize)
 {
     node *nodes;
     Graph G;
@@ -13,6 +13,8 @@ FME(int node_num, int link_num, int *source, int *target, float defaultEdgeLengt
     for (int i = 0; i < node_num; i++)
     {
         nodes[i] = G.newNode();
+        GA.x(nodes[i]) = nodesX[i];
+        GA.y(nodes[i]) = nodesY[i];
     }
 
     edge e;

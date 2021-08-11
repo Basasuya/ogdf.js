@@ -47,7 +47,7 @@ const ORIGIN_PARAMETERS = {
         default: true,
     },
     zeroLength: {
-        type: PARAMETER_TYPE.BOOL,
+        type: PARAMETER_TYPE.DOUBLE,
         range: [-Infinity, Infinity],
         default: -1.0,
     },
