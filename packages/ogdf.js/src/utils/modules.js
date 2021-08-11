@@ -345,6 +345,81 @@ const HierarchyLayout = {
     }
 }
 
+const InitialPlacer = {
+    BarycenterPlacer: {
+        randomOffset: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: true,
+        },
+        weightedPositionPriority: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: false,
+        }
+    },
+    CirclePlacer: {
+        circleSize: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [0, Infinity],
+            default: 0.0,
+        },
+        nodeSelection: {
+            type: PARAMETER_TYPE.CATEGORICAL,
+            range: ["New", "Old", "All"],
+            default: "New"
+        },
+        radiusFixed: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: false,
+        },
+        randomOffset: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: true,
+        }
+    },
+    MedianPlacer: {
+        randomOffset: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: true,
+        }
+    },
+    RandomPlacer: {
+        randomOffset: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: true,
+        },
+        circleSize: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [0, Infinity],
+            default: 0.0,
+        },
+    },
+    SolarPlacer: {
+        randomOffset: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: true,
+        },
+    },
+    ZeroPlacer: {
+        randomRange: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [0, Infinity],
+            default: 1.0,
+        },
+        randomOffset: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: true,
+        },
+    }
+}
+
 const LayeredCrossMin = {
     BarycenterHeuristic: {},
     GlobalSifting: {
@@ -366,6 +441,19 @@ const LayeredCrossMin = {
     MedianHeuristic: {},
     SiftingHeuristic: {},
     SplitHeuristic: {}
+}
+
+const Layout = {
+    DavidsonHarelLayout: {},
+    FMMMLayout: {},
+    FastMultipoleEmbedder: {}, FastMultipoleMultilevelEmbedder: {},
+    GEMLayout: {},
+    NodeRespecterLayout: {},
+    PivotMDS: {},
+    SpringEmbedderGridVariant: {},
+    SpringEmbedderKK: {},
+    StressMinimization: {},
+    TutteLayout: {}
 }
 
 const LayoutPlanRep = {
@@ -407,6 +495,76 @@ const MixedModelCrossingsBeautifier = {
     MMCBDoubleGrid: {},
     MMCBLocalStretch: {},
     MMDummyCrossingsBeautifier: {}
+}
+
+const MultilevelBuilder = {
+    EdgeCoverMerger: {
+        edgeLengthAdjustment: {
+            type: PARAMETER_TYPE.INT,
+            range: [0, Infinity],
+            default: 0
+        },
+        factor: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [0, Infinity],
+            default: 2.0
+        }
+    },
+    IndependentSetMerger: {
+        edgeLengthAdjustment: {
+            type: PARAMETER_TYPE.INT,
+            range: [0, Infinity],
+            default: 0
+        },
+        searchDepthBase: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [0, Infinity],
+            default: 2.0
+        }
+    },
+    LocalBiconnectedMerger: {
+        edgeLengthAdjustment: {
+            type: PARAMETER_TYPE.INT,
+            range: [0, Infinity],
+            default: 0
+        },
+        factor: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [0, Infinity],
+            default: 2.0
+        }
+    },
+    MatchingMerger: {
+        edgeLengthAdjustment: {
+            type: PARAMETER_TYPE.INT,
+            range: [0, Infinity],
+            default: 0
+        },
+        selectByNodeMass: {
+            type: PARAMETER_TYPE.BOOL,
+            range: [true, false],
+            default: false
+        }
+    },
+    RandomMerger: {
+        edgeLengthAdjustment: {
+            type: PARAMETER_TYPE.INT,
+            range: [0, Infinity],
+            default: 0
+        },
+        factor: {
+            type: PARAMETER_TYPE.DOUBLE,
+            range: [0, Infinity],
+            default: 2.0
+        }
+    },
+    SolarMerger: {
+        edgeLengthAdjustment: {
+            type: PARAMETER_TYPE.INT,
+            range: [0, Infinity],
+            default: 0
+        }
+    }
 }
 
 const PlanarSubgraph = {
@@ -594,14 +752,17 @@ const RANGES = {
     GridLayoutPlanRep: ["Mixed"],
     HierarchyClusterLayout: ["Optimal"],
     HierarchyLayout: ["Fast", "FastSimple", "Optimal"],
+    InitialPlacer: ["BarycenterPlacer", "CirclePlacer", "MedianPlacer", "RandomPlacer", "SolarPlacer", "ZeroPlacer"],
     LayeredCrossMin: ["BarycenterHeuristic", "GlobalSifting", "GreedyInsertHeuristic", "GreedySwitchHeuristic", "GridSifting", "MedianHeuristic", "SiftingHeuristic", "SplitHeuristic"],
+    Layout: ["DavidsonHarelLayout", "FMMMLayout", "FastMultipoleEmbedder", "FastMultipoleMultilevelEmbedder", "GEMLayout", "NodeRespecterLayout", "PivotMDS", "SpringEmbedderGridVariant", "SpringEmbedderKK", "StressMinimization", "TutteLayout"],
     LayoutPlanRep: ["Ortho"],
     MixedModelCrossingsBeautifier: ["MMCBDoubleGrid", "MMCBLocalStretch", "MMDummyCrossingsBeautifier"],
+    MultilevelBuilder: ["EdgeCoverMerger", "IndependentSetMerger", "LocalBiconnectedMerger", "MatchingMerger", "RandomMerger", "SolarMerger"],
     PlanarSubgraph: ["Maximum", "Cactus", "Empty", "Fast", "Tree"],
     Ranking: ["CoffmanGraham", "LongestPath", "Optimal"],
     ShellingOrder: ["Biconnected", "Triconnected"]
 }
 
-const OGDF_MODULES = { AcyclicSubgraph, Augmentation, CCLayoutPack, CrossingMinimization, EdgeInsertion, Embedder, GridLayoutPlanRep, HierarchyClusterLayout, HierarchyLayout, LayeredCrossMin, LayoutPlanRep, MixedModelCrossingsBeautifier, PlanarSubgraph, Ranking, ShellingOrder, RANGES }
+const OGDF_MODULES = { AcyclicSubgraph, Augmentation, CCLayoutPack, CrossingMinimization, EdgeInsertion, Embedder, GridLayoutPlanRep, HierarchyClusterLayout, HierarchyLayout, InitialPlacer, LayeredCrossMin, Layout, LayoutPlanRep, MixedModelCrossingsBeautifier, MultilevelBuilder, PlanarSubgraph, Ranking, ShellingOrder, RANGES }
 
 export default OGDF_MODULES

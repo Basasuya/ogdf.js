@@ -1,7 +1,10 @@
 // energybased
 import dh from './layouts/energybased/dh'
 import fm3 from './layouts/energybased/fm3'
+import fme from './layouts/energybased/fme'
+import fmme from './layouts/energybased/fmme'
 import gem from './layouts/energybased/gem'
+import mul from './layouts/energybased/mul'
 import nr from './layouts/energybased/nr'
 import pmds from './layouts/energybased/pmds'
 import segv from './layouts/energybased/segv'
@@ -21,7 +24,10 @@ import * as utils from './utils'
 export {
     dh,
     fm3,
+    fme,
+    fmme,
     gem,
+    mul,
     nr,
     pmds,
     segv,
