@@ -3,8 +3,8 @@
     <body>
         <div id="main" />
     </body>
-    <script src="../common/NetV.min.js"></script>
-    <script src="../../dist/ogdf.js"></script>
+    <script src="https://unpkg.com/netv/build/NetV.js"></script>
+    <script src="../../packages/ogdf.js/dist/ogdf.js"></script>
     <script>
         const width = 500
         const height = 500
@@ -18,15 +18,15 @@
         miserables.links.forEach((link) => {
             link.weight = Math.random()
         })
-        sm(
-            miserables,
-            {
+        const layout = new sm({
+            graph: miserables,
+            parameters: {
                 edgeCosts: 100,
                 numberOfPivots: 250,
                 useEdgeCostsAttribute: true,
                 useWorker: true
             },
-            (graph) => {
+            callback: (graph) => {
                 // netv.data(graph)
                 netv.data(
                     NetV.Utils.transformGraphPosition(
@@ -38,6 +38,7 @@
                 )
                 netv.draw()
             }
-        )
+        })
+        layout.run()
     </script>
 </html>
