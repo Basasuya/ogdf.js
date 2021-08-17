@@ -13,8 +13,11 @@ Some layout algorithms are supported now:
 ##### Energy-based Layout Algorithms
 
 -   [DavidsonHarel](https://ogdf.uos.de/doc/classogdf_1_1_davidson_harel_layout.html): the Davidson-Harel layout algorithm.
+-   [FastMultipoleEmbedder](https://ogdf.uos.de/doc/classogdf_1_1_fast_multipole_embedder.html): the fast multipole embedder approach for force-directed layout.
+-   [FastMultipoleMultilevelEmbedder](https://ogdf.uos.de/doc/classogdf_1_1_fast_multipole_multilevel_embedder.html): the fast multipole multilevel embedder approach for force-directed multilevel layout.
 -   [FMMM](https://ogdf.uos.de/doc/classogdf_1_1_f_m_m_m_layout.html): the fast multipole multilevel layout algorithm
 -   [GEM](https://ogdf.uos.de/doc/classogdf_1_1_g_e_m_layout.html): the energy-based GEM layout algorithm.
+-   [MultilevelLayout](https://ogdf.uos.de/doc/classogdf_1_1_multilevel_layout.html): the multilevel drawing framework.
 -   [NodeRespecter](https://ogdf.uos.de/doc/classogdf_1_1_node_respecter_layout.html): the NodeRespecterLayout layout algorithm.
 -   [PivotMDS](https://ogdf.uos.de/doc/classogdf_1_1_pivot_m_d_s.html): the Pivot MDS (multi-dimensional scaling) layout algorithm.
 -   [SpringEmbedderGridVariant](https://ogdf.uos.de/doc/classogdf_1_1_spring_embedder_grid_variant.html): the spring-embedder layout algorithm with force approximation using hte grid variant approach.

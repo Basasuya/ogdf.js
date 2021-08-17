@@ -49,6 +49,30 @@
 #include <ogdf/augmentation/PlanarAugmentation.h>
 #include <ogdf/augmentation/PlanarAugmentationFix.h>
 
+#include <ogdf/energybased/multilevel_mixer/EdgeCoverMerger.h>
+#include <ogdf/energybased/multilevel_mixer/IndependentSetMerger.h>
+#include <ogdf/energybased/multilevel_mixer/LocalBiconnectedMerger.h>
+#include <ogdf/energybased/multilevel_mixer/MatchingMerger.h>
+#include <ogdf/energybased/multilevel_mixer/RandomMerger.h>
+#include <ogdf/energybased/multilevel_mixer/SolarMerger.h>
+#include <ogdf/energybased/multilevel_mixer/BarycenterPlacer.h>
+#include <ogdf/energybased/multilevel_mixer/CirclePlacer.h>
+#include <ogdf/energybased/multilevel_mixer/MedianPlacer.h>
+#include <ogdf/energybased/multilevel_mixer/RandomPlacer.h>
+#include <ogdf/energybased/multilevel_mixer/SolarPlacer.h>
+#include <ogdf/energybased/multilevel_mixer/ZeroPlacer.h>
+
+#include <ogdf/energybased/DavidsonHarelLayout.h>
+#include <ogdf/energybased/FMMMLayout.h>
+#include <ogdf/energybased/FastMultipoleEmbedder.h>
+#include <ogdf/energybased/GEMLayout.h>
+#include <ogdf/energybased/NodeRespecterLayout.h>
+#include <ogdf/energybased/PivotMDS.h>
+#include <ogdf/energybased/SpringEmbedderGridVariant.h>
+#include <ogdf/energybased/SpringEmbedderKK.h>
+#include <ogdf/energybased/StressMinimization.h>
+#include <ogdf/energybased/TutteLayout.h>
+
 EM_PORT_API(void)
 free_buf(void *buf)
 {
@@ -506,6 +530,160 @@ CrossingMinimizationModule *getCrossingMinimization(int type, int globalInternal
         return subgraphPlanarizer;
     }
     default:
+        return nullptr;
+    }
+}
+
+MultilevelBuilder *getMultilevelBuilder(int type, int edgeLengthAdjustment, double factor, float searchDepthBase, bool selectByNodeMass)
+{
+    switch (type)
+    {
+    case 0:
+    {
+        EdgeCoverMerger *merger = new EdgeCoverMerger();
+        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
+        merger->setFactor(factor);
+        return merger;
+    }
+    case 1:
+    {
+        IndependentSetMerger *merger = new IndependentSetMerger();
+        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
+        merger->setSearchDepthBase(searchDepthBase);
+        return merger;
+    }
+    case 2:
+    {
+        LocalBiconnectedMerger *merger = new LocalBiconnectedMerger();
+        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
+        merger->setFactor(factor);
+        return merger;
+    }
+    case 3:
+    {
+        MatchingMerger *merger = new MatchingMerger();
+        merger->selectByNodeMass(selectByNodeMass);
+        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
+        return merger;
+    }
+    case 4:
+    {
+        RandomMerger *merger = new RandomMerger();
+        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
+        merger->setFactor(factor);
+        return merger;
+    }
+    case 5:
+    {
+        SolarMerger *merger = new SolarMerger();
+        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
+        return merger;
+    }
+    default:
+        return nullptr;
+    }
+}
+
+InitialPlacer *getInitialPlacer(int type, bool randomOffset, bool weightedPositionPriority, double circleSize, int nodeSelection, bool radiusFixed, double randomRange)
+{
+    switch (type)
+    {
+    case 0:
+    {
+        BarycenterPlacer *placer = new BarycenterPlacer();
+        placer->setRandomOffset(randomOffset);
+        placer->weightedPositionPriority(weightedPositionPriority);
+        return placer;
+    }
+    case 1:
+    {
+        CirclePlacer *placer = new CirclePlacer();
+        placer->setCircleSize(circleSize);
+        placer->setNodeSelection(static_cast<CirclePlacer::NodeSelection>(nodeSelection));
+        placer->setRadiusFixed(radiusFixed);
+        placer->setRandomOffset(randomOffset);
+        return placer;
+    }
+    case 2:
+    {
+        MedianPlacer *placer = new MedianPlacer();
+        placer->setRandomOffset(randomOffset);
+        return placer;
+    }
+    case 3:
+    {
+        RandomPlacer *placer = new RandomPlacer();
+        placer->setRandomOffset(randomOffset);
+        placer->setCircleSize(circleSize);
+        return placer;
+    }
+    case 4:
+    {
+        SolarPlacer *placer = new SolarPlacer();
+        placer->setRandomOffset(randomOffset);
+        return placer;
+    }
+    case 5:
+    {
+        ZeroPlacer *placer = new ZeroPlacer();
+        placer->setRandomRange(randomRange);
+        placer->setRandomOffset(randomOffset);
+        return placer;
+    }
+    default:
+        return nullptr;
+    }
+}
+
+LayoutModule *getLayout(int type)
+{
+    switch (type)
+    {
+        case 0:
+        {
+            return new DavidsonHarelLayout();
+        }
+        case 1:
+        {
+            return new FMMMLayout();
+        }
+        case 2:
+        {
+            return new FastMultipoleEmbedder();
+        }
+        case 3:
+        {
+            return new FastMultipoleMultilevelEmbedder();
+        }
+        case 4:
+        {
+            return new GEMLayout();
+        }
+        case 5:
+        {
+            return new NodeRespecterLayout();
+        }
+        case 6:
+        {
+            return new PivotMDS();
+        }
+        case 7:
+        {
+            return new SpringEmbedderGridVariant();
+        }
+        case 8:
+        {
+            return new SpringEmbedderKK();
+        }
+        case 9:
+        {
+            return new StressMinimization();
+        }
+        case 10:
+        {
+            return new TutteLayout();
+        }
+        default:
         return nullptr;
     }
 }
