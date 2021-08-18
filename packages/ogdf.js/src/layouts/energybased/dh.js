@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'DH'
-const OUR_PARAMETERS = {
+const OUR_PARAMETER_DEFINITIONS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETERS = {
     }
 }
 
-const ORIGIN_PARAMETERS = {
+const ORIGIN_PARAMETER_DEFINITIONS = {
     settings: {
         type: PARAMETER_TYPE.CATEGORICAL,
         range: ['standard', 'repulse', 'planar'],
@@ -68,6 +68,6 @@ const ORIGIN_PARAMETERS = {
     }
 }
 
-const dh = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, {})
+const dh = createLayout(NAME, OUR_PARAMETER_DEFINITIONS, ORIGIN_PARAMETER_DEFINITIONS, {})
 
 export default dh

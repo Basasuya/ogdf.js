@@ -6,7 +6,7 @@ import * as ogdf from 'ogdfjs'
 import React from 'react'
 import { Collapse, Card, Col, Row } from 'antd'
 const { Panel } = Collapse
-const { PARAMETER_TYPE, getDefaultValueOfParameters } = ogdf.utils.parameters
+const { PARAMETER_TYPE, getDefaultParameters } = ogdf.utils.parameters
 class Dashboard extends React.Component {
     constructor(props) {
         super(props)
@@ -28,7 +28,7 @@ class Dashboard extends React.Component {
         const setters = []
         const PARAMETERS = ogdf[this.layoutName].parameters
         const parameters = {
-            ...getDefaultValueOfParameters(PARAMETERS),
+            ...getDefaultParameters(PARAMETERS),
             ...this.params
         }
         const getChanger = (name) => {

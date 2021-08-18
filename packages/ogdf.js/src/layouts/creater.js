@@ -1,19 +1,26 @@
 import initOGDF from '../entry/rawogdf'
 import { createWorker } from '../utils/worker-helper'
 import {
-    getDefaultValueOfParameters,
+    getDefaultParameters,
     getOriginParameterSequence,
-    getOriginalParameters,
+    getOriginalParameterValues,
     PARAMETER_TYPE
 } from '../utils/parameters'
+import { OGDF_MODULES, parameters } from '../utils'
 
-export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, ATTRIBUTES) {
-    const PARAMETERS = {
-        ...ORIGIN_PARAMETERS, // parameters defined by ogdf
-        ...OUR_PARAMETERS // parameters defined by us, such as useWebWorker, ...
+export default function createLayout(
+    NAME,
+    OUR_PARAMETER_DEFINITIONS,
+    ORIGIN_PARAMETER_DEFINITIONS,
+    ATTRIBUTES_DEFINITIONS
+) {
+    // parameters
+    const PARAMETER_DEFINITIONS = {
+        ...ORIGIN_PARAMETER_DEFINITIONS, // parameters defined by ogdf
+        ...OUR_PARAMETER_DEFINITIONS // parameters defined by us, such as useWebWorker, ...
     }
 
-    const ORIGIN_PARAMETER_SEQUENCE = getOriginParameterSequence(ORIGIN_PARAMETERS)
+    const DEFAULT_PARAMETERS = getDefaultParameters(PARAMETER_DEFINITIONS)
 
     class Layout {
         constructor({ graph, parameters, callback }) {
@@ -27,7 +34,7 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
 
             // overwrite default parameters by user defined parameters
             this._parameters = {
-                ...getDefaultValueOfParameters(PARAMETERS)
+                ...DEFAULT_PARAMETERS
             }
             this.parameters(parameters)
 
@@ -36,12 +43,12 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
         }
         run() {
             // ogdf-defined parameters should keep their orders
-            const originalParameters = getOriginalParameters(
+            const originParameterValues = getOriginalParameterValues(
                 this._parameters,
-                ORIGIN_PARAMETERS,
+                ORIGIN_PARAMETER_DEFINITIONS,
                 ORIGIN_PARAMETER_SEQUENCE
             )
-            console.log(originalParameters)
+            console.log(originParameterValues)
 
             const N = this._graph.nodes.length
             const M = this._graph.links.length
@@ -57,7 +64,7 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
                         sourceIndexArray,
                         targetIndexArray,
                         orderedAttributes,
-                        originalParameters
+                        originParameterValues
                     },
                     callback
                 ) {
@@ -89,7 +96,7 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
                             source,
                             target,
                             ...mallocAttributes,
-                            ...originalParameters
+                            ...originParameterValues
                         ) // ! Ensure the order of attributes/parameters
                         const nodes = []
                         for (let i = 0; i < N; ++i) {
@@ -131,7 +138,7 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
                         sourceIndexArray: this._sourceIndexArray,
                         targetIndexArray: this._targetIndexArray,
                         orderedAttributes: this._orderedAttributes,
-                        originalParameters
+                        originParameterValues
                     })
                 )
 
@@ -157,7 +164,7 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
                         sourceIndexArray: this._sourceIndexArray,
                         targetIndexArray: this._targetIndexArray,
                         orderedAttributes: this._orderedAttributes,
-                        originalParameters
+                        originParameterValues
                     },
                     (nodes) => {
                         for (let i = 0; i < N; ++i) {
@@ -178,12 +185,37 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
                         ...parameter
                     }
                 } else if (typeof parameter == 'string') {
+                    // e.g., this.parameters("useHighLevelOptions", true)
+                    // e.g., this.parameters("SolarMerger.edgeLengthAdjustment")
+                    const parameterChain = parameter.split('.')
+                    let parent = this._parameters
+                    for (let i = 0; i < parameterChain.length - 1; i++) {
+                        parent = parent[parameterChain[i]]
+                        if (!parent || !parent[parameterChain[i + 1]]) {
+                            throw Error(
+                                `ParameterError: Cannot find parameter ${parameter} in ${this.name}'s parameters`
+                            )
+                        }
+                    }
+                    const chainEnd = parameterChain[parameterChain.length - 1]
                     if (value !== undefined) {
-                        // this.parameters("useHighLevelOptions", true )
-                        this._parameters[parameter] = value
+                        if (parent[parent[chainEnd]]) {
+                            const moduleName = chainEnd
+                            const oldModule = parent[chainEnd]
+                            const newModule = value
+                            if (!(newModule in OGDF_MODULES[moduleName])) {
+                                throw Error(
+                                    `OGDFModuleError: Module ${moduleName} cannot be set to ${newModule}.`
+                                )
+                            }
+                            delete parent[oldModule] // delete old module settings
+                            parent[newModule] = getDefaultParameters(
+                                OGDF_MODULES[moduleName][newModule]
+                            )
+                        }
+                        parent[chainEnd] = value
                     } else {
-                        // this.parameters("useHighLevelOptions")
-                        return this._parameters[parameter]
+                        return parent[chainEnd]
                     }
                 }
             }
@@ -211,8 +243,8 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
                 }
 
                 // sort attributes according to their order (sequence)
-                const nodeAttributes = ATTRIBUTES.node
-                const linkAttributes = ATTRIBUTES.link
+                const nodeAttributes = ATTRIBUTES_DEFINITIONS.node
+                const linkAttributes = ATTRIBUTES_DEFINITIONS.link
                 const unorderedAttributes = {}
                 nodeAttributes?.forEach((attr) => {
                     unorderedAttributes[attr.name] = {
@@ -227,7 +259,7 @@ export default function createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, AT
                     }
                 })
                 this._orderedAttributes = []
-                ATTRIBUTES.sequence?.forEach((name) => {
+                ATTRIBUTES_DEFINITIONS.sequence?.forEach((name) => {
                     this._orderedAttributes.push(unorderedAttributes[name])
                 }) // ! Ensure the order of attributes
             }

@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'PMDS'
-const OUR_PARAMETERS = {
+const OUR_PARAMETER_DEFINITIONS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETERS = {
     }
 }
 
-const ORIGIN_PARAMETERS = {
+const ORIGIN_PARAMETER_DEFINITIONS = {
     edgeCosts: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -29,7 +29,7 @@ const ORIGIN_PARAMETERS = {
 }
 
 // PMDS(int node_num, int link_num, int* source, int* target, double* edgesWeight, double edgeCosts , int numberOfPivots , bool useEdgeCostsAttribute)
-const ATTRIBUTES = {
+const ATTRIBUTES_DEFINITIONS = {
     node: [],
     link: [
         {
@@ -41,5 +41,10 @@ const ATTRIBUTES = {
     sequence: ['edgesWeight']
 }
 
-const pmds = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, ATTRIBUTES)
+const pmds = createLayout(
+    NAME,
+    OUR_PARAMETER_DEFINITIONS,
+    ORIGIN_PARAMETER_DEFINITIONS,
+    ATTRIBUTES_DEFINITIONS
+)
 export default pmds

@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'GEM'
-const OUR_PARAMETERS = {
+const OUR_PARAMETER_DEFINITIONS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETERS = {
     }
 }
 
-const ORIGIN_PARAMETERS = {
+const ORIGIN_PARAMETER_DEFINITIONS = {
     attractionFormula: {
         type: PARAMETER_TYPE.INT,
         range: [0, Infinity],
@@ -79,7 +79,7 @@ const ORIGIN_PARAMETERS = {
 }
 
 // double* nodesX, double* nodesY
-const ATTRIBUTES = {
+const ATTRIBUTES_DEFINITIONS = {
     node: [
         {
             name: 'nodesX',
@@ -96,5 +96,10 @@ const ATTRIBUTES = {
     sequence: ['nodesX', 'nodesY']
 }
 
-const gem = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, ATTRIBUTES)
+const gem = createLayout(
+    NAME,
+    OUR_PARAMETER_DEFINITIONS,
+    ORIGIN_PARAMETER_DEFINITIONS,
+    ATTRIBUTES_DEFINITIONS
+)
 export default gem

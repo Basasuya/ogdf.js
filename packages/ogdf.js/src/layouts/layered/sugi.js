@@ -2,91 +2,91 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'SUGI'
-const OUR_PARAMETERS = {
+const OUR_PARAMETER_DEFINITIONS = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
-    },
+        default: false
+    }
 }
 
-const ORIGIN_PARAMETERS = {
+const ORIGIN_PARAMETER_DEFINITIONS = {
     alignBaseClasses: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
+        default: false
     },
     alignSiblings: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
+        default: false
     },
     arrangeCCs: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: true,
+        default: true
     },
     fails: {
         type: PARAMETER_TYPE.INT,
         range: [0, Infinity],
-        default: 4,
+        default: 4
     },
     maxThreads: {
         type: PARAMETER_TYPE.INT,
         range: [0, Infinity],
-        default: 1,
+        default: 1
     },
     minDistCC: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 20.0,
+        default: 20.0
     },
     pageRatio: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
-        default: 1.0,
+        default: 1.0
     },
     permuteFirst: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
+        default: false
     },
     runs: {
         type: PARAMETER_TYPE.INT,
         range: [0, Infinity],
-        default: 15,
+        default: 15
     },
     transpose: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: true,
+        default: true
     },
     clusterLayoutType: {
         type: PARAMETER_TYPE.MODULE,
-        module: "HierarchyClusterLayout",
-        default: "Optimal",
+        module: 'HierarchyClusterLayout',
+        default: 'Optimal'
     },
     crossMinType: {
         type: PARAMETER_TYPE.MODULE,
-        module: "LayeredCrossMin",
-        default: "BarycenterHeuristic",
+        module: 'LayeredCrossMin',
+        default: 'BarycenterHeuristic'
     },
     layoutType: {
         type: PARAMETER_TYPE.MODULE,
-        module: "HierarchyLayout",
-        default: "Fast",
+        module: 'HierarchyLayout',
+        default: 'Fast'
     },
     packerType: {
         type: PARAMETER_TYPE.MODULE,
-        module: "CCLayoutPack",
-        default: "TileToRows",
+        module: 'CCLayoutPack',
+        default: 'TileToRows'
     },
     rankingType: {
         type: PARAMETER_TYPE.MODULE,
-        module: "Ranking",
-        default: "LongestPath",
+        module: 'Ranking',
+        default: 'LongestPath'
     }
 }
 
-const sugi = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, {})
+const sugi = createLayout(NAME, OUR_PARAMETER_DEFINITIONS, ORIGIN_PARAMETER_DEFINITIONS, {})
 export default sugi
