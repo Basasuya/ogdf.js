@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'NR'
-const OUR_PARAMETER_DEFINITIONS = {
+const OUR_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETER_DEFINITIONS = {
     }
 }
 
-const ORIGIN_PARAMETER_DEFINITIONS = {
+const ORIGIN_PARAMETER_DEFINITION = {
     bendNormalizationAngle: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [-Infinity, Infinity],
@@ -98,5 +98,5 @@ const ORIGIN_PARAMETER_DEFINITIONS = {
     }
 }
 
-const nr = createLayout(NAME, OUR_PARAMETER_DEFINITIONS, ORIGIN_PARAMETER_DEFINITIONS, {})
+const nr = createLayout(NAME, OUR_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
 export default nr

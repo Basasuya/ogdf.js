@@ -2,25 +2,23 @@ import initOGDF from '../entry/rawogdf'
 import { createWorker } from '../utils/worker-helper'
 import {
     getDefaultParameters,
-    getOriginParameterSequence,
-    getOriginalParameterValues,
+    updateParameters,
+    getParameterEntries,
     PARAMETER_TYPE
 } from '../utils/parameters'
 import { OGDF_MODULES, parameters } from '../utils'
 
 export default function createLayout(
     NAME,
-    OUR_PARAMETER_DEFINITIONS,
-    ORIGIN_PARAMETER_DEFINITIONS,
-    ATTRIBUTES_DEFINITIONS
+    OUR_PARAMETER_DEFINITION,
+    ORIGIN_PARAMETER_DEFINITION,
+    ATTRIBUTES_DEFINITION
 ) {
     // parameters
-    const PARAMETER_DEFINITIONS = {
-        ...ORIGIN_PARAMETER_DEFINITIONS, // parameters defined by ogdf
-        ...OUR_PARAMETER_DEFINITIONS // parameters defined by us, such as useWebWorker, ...
+    const PARAMETER_DEFINITION = {
+        ...ORIGIN_PARAMETER_DEFINITION, // parameters defined by ogdf
+        ...OUR_PARAMETER_DEFINITION // parameters defined by us, such as useWebWorker, ...
     }
-
-    const DEFAULT_PARAMETERS = getDefaultParameters(PARAMETER_DEFINITIONS)
 
     class Layout {
         constructor({ graph, parameters, callback }) {
@@ -33,9 +31,7 @@ export default function createLayout(
             this.graph(graph)
 
             // overwrite default parameters by user defined parameters
-            this._parameters = {
-                ...DEFAULT_PARAMETERS
-            }
+            this._parameters = getDefaultParameters(PARAMETER_DEFINITION)
             this.parameters(parameters)
 
             this._callback = callback
@@ -43,12 +39,14 @@ export default function createLayout(
         }
         run() {
             // ogdf-defined parameters should keep their orders
-            const originParameterValues = getOriginalParameterValues(
+            const parameterEntries = getParameterEntries(
                 this._parameters,
-                ORIGIN_PARAMETER_DEFINITIONS,
-                ORIGIN_PARAMETER_SEQUENCE
+                ORIGIN_PARAMETER_DEFINITION,
+                OUR_PARAMETER_DEFINITION
             )
-            console.log(originParameterValues)
+            const originParameterValues = parameterEntries
+                .filter((entry) => entry.isOriginParameter)
+                .map((entry) => entry.value)
 
             const N = this._graph.nodes.length
             const M = this._graph.links.length
@@ -180,16 +178,33 @@ export default function createLayout(
             if (parameter) {
                 if (typeof parameter == 'object') {
                     // this.parameters({ useHighLevelOptions: true })
-                    this._parameters = {
-                        ...this._parameters,
-                        ...parameter
-                    }
+                    updateParameters(this._parameters, parameter, PARAMETER_DEFINITION)
                 } else if (typeof parameter == 'string') {
                     // e.g., this.parameters("useHighLevelOptions", true)
-                    // e.g., this.parameters("SolarMerger.edgeLengthAdjustment")
+                    // e.g., this.parameters("multilevelBuilderType.module", "EdgeCoverMerger")
+                    // e.g., this.parameters("multilevelBuilderType.edgeLengthAdjustment")
                     const parameterChain = parameter.split('.')
+                    let PD = PARAMETER_DEFINITION
                     let parent = this._parameters
                     for (let i = 0; i < parameterChain.length - 1; i++) {
+                        const module = Object.keys(parent)
+                            .filter((paramName) => {
+                                if (parent[paramName] == parameterChain[i]) {
+                                    // it means parent[paramName] is a module
+                                    return paramName
+                                }
+                            })
+                            .pop()
+                        if (module) {
+                            // parent[module] is a module
+                            if (!(module in OGDF_MODULES)) {
+                                throw Error(
+                                    `OGDFModuleError: Module name ${module} has not been defined, please check OGDF_MODULES.`
+                                )
+                            }
+                            PD = OGDF_MODULES[module]
+                        }
+                        PD = PD[parameterChain[i]]
                         parent = parent[parameterChain[i]]
                         if (!parent || !parent[parameterChain[i + 1]]) {
                             throw Error(
@@ -199,21 +214,9 @@ export default function createLayout(
                     }
                     const chainEnd = parameterChain[parameterChain.length - 1]
                     if (value !== undefined) {
-                        if (parent[parent[chainEnd]]) {
-                            const moduleName = chainEnd
-                            const oldModule = parent[chainEnd]
-                            const newModule = value
-                            if (!(newModule in OGDF_MODULES[moduleName])) {
-                                throw Error(
-                                    `OGDFModuleError: Module ${moduleName} cannot be set to ${newModule}.`
-                                )
-                            }
-                            delete parent[oldModule] // delete old module settings
-                            parent[newModule] = getDefaultParameters(
-                                OGDF_MODULES[moduleName][newModule]
-                            )
-                        }
-                        parent[chainEnd] = value
+                        const newParam = {}
+                        newParam[chainEnd] = value
+                        updateParameters(parent, newParam, PD)
                     } else {
                         return parent[chainEnd]
                     }
@@ -243,8 +246,8 @@ export default function createLayout(
                 }
 
                 // sort attributes according to their order (sequence)
-                const nodeAttributes = ATTRIBUTES_DEFINITIONS.node
-                const linkAttributes = ATTRIBUTES_DEFINITIONS.link
+                const nodeAttributes = ATTRIBUTES_DEFINITION.node
+                const linkAttributes = ATTRIBUTES_DEFINITION.link
                 const unorderedAttributes = {}
                 nodeAttributes?.forEach((attr) => {
                     unorderedAttributes[attr.name] = {
@@ -259,7 +262,7 @@ export default function createLayout(
                     }
                 })
                 this._orderedAttributes = []
-                ATTRIBUTES_DEFINITIONS.sequence?.forEach((name) => {
+                ATTRIBUTES_DEFINITION.sequence?.forEach((name) => {
                     this._orderedAttributes.push(unorderedAttributes[name])
                 }) // ! Ensure the order of attributes
             }

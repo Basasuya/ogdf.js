@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'FM3'
-const OUR_PARAMETER_DEFINITIONS = {
+const OUR_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETER_DEFINITIONS = {
     }
 }
 // should keep identical to the parameter order in src/entry/main.cpp => function fm3()
-const ORIGIN_PARAMETER_DEFINITIONS = {
+const ORIGIN_PARAMETER_DEFINITION = {
     useHighLevelOptions: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -282,6 +282,6 @@ const ORIGIN_PARAMETER_DEFINITIONS = {
     }
 }
 
-const fm3 = createLayout(NAME, OUR_PARAMETER_DEFINITIONS, ORIGIN_PARAMETER_DEFINITIONS, {})
+const fm3 = createLayout(NAME, OUR_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
 
 export default fm3

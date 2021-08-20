@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'FME'
-const OUR_PARAMETER_DEFINITIONS = {
+const OUR_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETER_DEFINITIONS = {
     }
 }
 
-const ORIGIN_PARAMETER_DEFINITIONS = {
+const ORIGIN_PARAMETER_DEFINITION = {
     defaultEdgeLength: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -44,7 +44,7 @@ const ORIGIN_PARAMETER_DEFINITIONS = {
 }
 
 // double* nodesX, double* nodesY
-const ATTRIBUTES_DEFINITIONS = {
+const ATTRIBUTES_DEFINITION = {
     node: [
         {
             name: 'nodesX',
@@ -63,9 +63,9 @@ const ATTRIBUTES_DEFINITIONS = {
 
 const fme = createLayout(
     NAME,
-    OUR_PARAMETER_DEFINITIONS,
-    ORIGIN_PARAMETER_DEFINITIONS,
-    ATTRIBUTES_DEFINITIONS
+    OUR_PARAMETER_DEFINITION,
+    ORIGIN_PARAMETER_DEFINITION,
+    ATTRIBUTES_DEFINITION
 )
 
 export default fme

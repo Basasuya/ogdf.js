@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'PG'
-const OUR_PARAMETER_DEFINITIONS = {
+const OUR_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETER_DEFINITIONS = {
     }
 }
 
-const ORIGIN_PARAMETER_DEFINITIONS = {
+const ORIGIN_PARAMETER_DEFINITION = {
     pageRatio: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -38,5 +38,5 @@ const ORIGIN_PARAMETER_DEFINITIONS = {
     }
 }
 
-const pg = createLayout(NAME, OUR_PARAMETER_DEFINITIONS, ORIGIN_PARAMETER_DEFINITIONS, {})
+const pg = createLayout(NAME, OUR_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
 export default pg
