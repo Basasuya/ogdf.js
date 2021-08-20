@@ -3,7 +3,7 @@ import createLayout from '../creater'
 
 const NAME = 'SM'
 
-const OUR_PARAMETER_DEFINITION = {
+export const OUTER_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -11,7 +11,7 @@ const OUR_PARAMETER_DEFINITION = {
     }
 }
 
-const ORIGIN_PARAMETER_DEFINITION = {
+export const ORIGIN_PARAMETER_DEFINITION = {
     terminationCriterion: {
         type: PARAMETER_TYPE.CATEGORICAL,
         range: ['None', 'PositionDifference', 'Stress'],
@@ -86,7 +86,7 @@ const ATTRIBUTES_DEFINITION = {
 
 const sm = createLayout(
     NAME,
-    OUR_PARAMETER_DEFINITION,
+    OUTER_PARAMETER_DEFINITION,
     ORIGIN_PARAMETER_DEFINITION,
     ATTRIBUTES_DEFINITION
 )

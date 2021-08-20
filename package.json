@@ -8,6 +8,7 @@
         "packages/*"
     ],
     "scripts": {
+        "test": "cd packages/ogdf.js && npm run test",
         "build": "cd packages/ogdf.js && npm run build",
         "bootstrap": "lerna bootstrap",
         "lint": "cd packages/ogdf.js && npm run lint",

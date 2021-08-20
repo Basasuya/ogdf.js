@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'SEKK'
-const OUR_PARAMETER_DEFINITION = {
+export const OUTER_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETER_DEFINITION = {
     }
 }
 
-const ORIGIN_PARAMETER_DEFINITION = {
+export const ORIGIN_PARAMETER_DEFINITION = {
     computeMaxIterations: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -82,7 +82,7 @@ const ATTRIBUTES_DEFINITION = {
 
 const sekk = createLayout(
     NAME,
-    OUR_PARAMETER_DEFINITION,
+    OUTER_PARAMETER_DEFINITION,
     ORIGIN_PARAMETER_DEFINITION,
     ATTRIBUTES_DEFINITION
 )

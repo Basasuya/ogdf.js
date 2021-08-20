@@ -61,18 +61,18 @@ function updateParameters(oldParameters, newParameters, PARAMETER_DEFINITION) {
  *
  * @param {*} parameter
  * @param {*} ORIGIN_PARAMETER_DEFINITION
- * @param {*} OUR_PARAMETER_DEFINITION
- * @returns [{key, value, isOriginParameter}, ...], the order follows the deep first traversal of {...ORIGIN_PARAMETER_DEFINITION, ...OUR_PARAMETER_DEFINITION};
+ * @param {*} OUTER_PARAMETER_DEFINITION
+ * @returns [{key, value, isOriginParameter}, ...], the order follows the deep first traversal of {...ORIGIN_PARAMETER_DEFINITION, ...OUTER_PARAMETER_DEFINITION};
  * !The order of origin parameters should keep same to their order in cpp code
  */
-function getParameterEntries(parameters, ORIGIN_PARAMETER_DEFINITION, OUR_PARAMETER_DEFINITION) {
+function getParameterEntries(parameters, ORIGIN_PARAMETER_DEFINITION, OUTER_PARAMETER_DEFINITION) {
     let entries = []
     const PD = {
         ...ORIGIN_PARAMETER_DEFINITION,
-        ...OUR_PARAMETER_DEFINITION
+        ...OUTER_PARAMETER_DEFINITION
     }
     const ORIPD = ORIGIN_PARAMETER_DEFINITION
-    const OURPD = OUR_PARAMETER_DEFINITION
+    const OURPD = OUTER_PARAMETER_DEFINITION
     Object.keys(ORIPD).forEach((paramName) => {
         iteration(paramName, /*isOriginParameter*/ true)
     })
@@ -106,12 +106,26 @@ function getParameterEntries(parameters, ORIGIN_PARAMETER_DEFINITION, OUR_PARAME
                     entries.push(subEntry)
                 }
             })
-        } else {
+        } else if (PD[paramName].type == PARAMETER_TYPE.CATEGORICAL) {
             entries.push({
                 key: paramName,
-                value: parameters[paramName],
+                value: PD[paramName].range.indexOf(parameters[paramName]),
                 isOriginParameter
             })
+        } else if (PD[paramName]) {
+            // numerical
+            const value = parameters[paramName]
+            if (value >= PD[paramName].range[0] && value <= PD[paramName].range[1]) {
+                entries.push({
+                    key: paramName,
+                    value,
+                    isOriginParameter
+                })
+            } else {
+                throw Error(
+                    `ParameterError: can not set ${paramName} to ${value} with range from ${PD[paramName].range[0]} to ${PD[paramName].range[0]}`
+                )
+            }
         }
     }
     return entries

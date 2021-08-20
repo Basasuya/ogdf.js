@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'PMDS'
-const OUR_PARAMETER_DEFINITION = {
+export const OUTER_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETER_DEFINITION = {
     }
 }
 
-const ORIGIN_PARAMETER_DEFINITION = {
+export const ORIGIN_PARAMETER_DEFINITION = {
     edgeCosts: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -43,7 +43,7 @@ const ATTRIBUTES_DEFINITION = {
 
 const pmds = createLayout(
     NAME,
-    OUR_PARAMETER_DEFINITION,
+    OUTER_PARAMETER_DEFINITION,
     ORIGIN_PARAMETER_DEFINITION,
     ATTRIBUTES_DEFINITION
 )

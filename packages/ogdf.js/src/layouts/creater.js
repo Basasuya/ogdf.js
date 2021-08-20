@@ -10,14 +10,14 @@ import { OGDF_MODULES, parameters } from '../utils'
 
 export default function createLayout(
     NAME,
-    OUR_PARAMETER_DEFINITION,
+    OUTER_PARAMETER_DEFINITION,
     ORIGIN_PARAMETER_DEFINITION,
     ATTRIBUTES_DEFINITION
 ) {
     // parameters
     const PARAMETER_DEFINITION = {
         ...ORIGIN_PARAMETER_DEFINITION, // parameters defined by ogdf
-        ...OUR_PARAMETER_DEFINITION // parameters defined by us, such as useWebWorker, ...
+        ...OUTER_PARAMETER_DEFINITION // parameters defined by us, such as useWebWorker, ...
     }
 
     class Layout {
@@ -42,7 +42,7 @@ export default function createLayout(
             const parameterEntries = getParameterEntries(
                 this._parameters,
                 ORIGIN_PARAMETER_DEFINITION,
-                OUR_PARAMETER_DEFINITION
+                OUTER_PARAMETER_DEFINITION
             )
             const originParameterValues = parameterEntries
                 .filter((entry) => entry.isOriginParameter)
@@ -271,5 +271,8 @@ export default function createLayout(
         }
     }
 
+    Layout.PARAMETER_DEFINITION = PARAMETER_DEFINITION
+    Layout.ORIGIN_PARAMETER_DEFINITION = ORIGIN_PARAMETER_DEFINITION
+    Layout.OUTER_PARAMETER_DEFINITION = OUTER_PARAMETER_DEFINITION
     return Layout
 }

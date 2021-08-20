@@ -21,21 +21,4 @@ import pl from './layouts/planarity/pl'
 
 import * as utils from './utils'
 
-export {
-    dh,
-    fm3,
-    fme,
-    fmme,
-    gem,
-    mul,
-    nr,
-    pmds,
-    segv,
-    sekk,
-    sm,
-    tut,
-    sugi,
-    pg,
-    pl,
-    utils
-}
+export { dh, fm3, fme, fmme, gem, mul, nr, pmds, segv, sekk, sm, tut, sugi, pg, pl, utils }

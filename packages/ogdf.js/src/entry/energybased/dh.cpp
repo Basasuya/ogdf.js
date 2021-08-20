@@ -1,7 +1,7 @@
 #include <ogdf/energybased/DavidsonHarelLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float*) DH(int node_num, int link_num, int* source, int* target, int settings, double attractionWeight, bool iterationNumberAsFactor, double nodeOverlapWeight, int numberOfIterations, double planarityWeight, double preferredEdgeLength, double preferredEdgeLengthMultiplier, double repulsionWeight, int speed, int startTemperature){
+EM_PORT_API(float*) DH(int node_num, int link_num, int* source, int* target, int fixSettings, double attractionWeight, bool iterationNumberAsFactor, double nodeOverlapWeight, int numberOfIterations, double planarityWeight, double preferredEdgeLength, double preferredEdgeLengthMultiplier, double repulsionWeight, int speed, int startTemperature){
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics | GraphAttributes::edgeDoubleWeight);
@@ -20,7 +20,7 @@ EM_PORT_API(float*) DH(int node_num, int link_num, int* source, int* target, int
 	//LayoutModule
 	DavidsonHarelLayout *model = new DavidsonHarelLayout();
 
-	if(settings >= 0) model->fixSettings(static_cast<DavidsonHarelLayout::SettingsParameter>(settings));
+	if(fixSettings >= 0) model->fixSettings(static_cast<DavidsonHarelLayout::SettingsParameter>(fixSettings));
 	model->setAttractionWeight(attractionWeight);
 	model->setIterationNumberAsFactor(iterationNumberAsFactor);
 	model->setNodeOverlapWeight(nodeOverlapWeight);
