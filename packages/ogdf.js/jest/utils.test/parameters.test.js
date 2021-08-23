@@ -7,7 +7,7 @@ const {
 
 describe('Testing getDefaultParameters', () => {
     test("Get dh's default parameters", () => {
-        expect(getDefaultParameters(ogdf.dh.PARAMETER_DEFINITION)).toEqual({
+        expect(getDefaultParameters(ogdf.layouts.energybased.dh.PARAMETER_DEFINITION)).toEqual({
             useWorker: false,
             fixSettings: 'none',
             attractionWeight: 1e2,
@@ -24,7 +24,7 @@ describe('Testing getDefaultParameters', () => {
     })
 
     test("Get mul's default parameters", () => {
-        expect(getDefaultParameters(ogdf.mul.PARAMETER_DEFINITION)).toEqual({
+        expect(getDefaultParameters(ogdf.layouts.energybased.mul.PARAMETER_DEFINITION)).toEqual({
             useWorker: false,
             layoutType: {
                 module: 'Layout.SpringEmbedderGridVariant'
@@ -42,7 +42,7 @@ describe('Testing getDefaultParameters', () => {
     })
 
     test("Get sugi's default parameters", () => {
-        expect(getDefaultParameters(ogdf.sugi.PARAMETER_DEFINITION)).toEqual({
+        expect(getDefaultParameters(ogdf.layouts.layered.sugi.PARAMETER_DEFINITION)).toEqual({
             useWorker: false,
             alignBaseClasses: false,
             alignSiblings: false,
@@ -91,13 +91,13 @@ describe('Testing getDefaultParameters', () => {
 })
 
 describe('Testing updateParameters & getParameterEntries', () => {
-    const fm3 = new ogdf.fm3()
+    const fm3 = new ogdf.layouts.energybased.fm3()
     const fm3DefaultParameters = fm3.parameters()
     test("Get fm3's default parameter entries", () => {
         const entries = getParameterEntries(
             fm3DefaultParameters,
-            ogdf.fm3.ORIGIN_PARAMETER_DEFINITION,
-            ogdf.fm3.OUTER_PARAMETER_DEFINITION
+            ogdf.layouts.energybased.fm3.ORIGIN_PARAMETER_DEFINITION,
+            ogdf.layouts.energybased.fm3.OUTER_PARAMETER_DEFINITION
         )
         const expected = [
             {

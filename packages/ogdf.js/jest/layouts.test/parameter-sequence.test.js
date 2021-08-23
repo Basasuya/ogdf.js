@@ -8,36 +8,26 @@ const { getParameterEntries } = require('../../src/utils/parameters')
 // × Is the order of pg's parameters right (7 ms)
 // × Is the order of pl's parameters right (4 ms)
 
-const layoutNames = Object.keys(ogdf).filter((key) => key !== 'utils')
-const categories = {
-    energybased: [
-        'dh',
-        'fm3',
-        'fme',
-        'fmme',
-        'gem',
-        'mul',
-        'nr',
-        'pmds',
-        'segv',
-        'sekk',
-        'sm',
-        'tut'
-    ],
-    layered: ['sugi'],
-    planarity: ['pg', 'pl']
-}
+const layoutNames = []
+const categories = {}
+Object.keys(ogdf.layouts).forEach((category) => {
+    categories[category] = categories[category] ?? []
+    Object.keys(ogdf.layouts[category]).forEach((layoutName) => {
+        layoutNames.push(layoutName)
+        categories[category].push(layoutName)
+    })
+})
 
 const testCases = layoutNames.map((layoutName) => {
     const category = Object.keys(categories)
         .filter((categoryName) => categories[categoryName].indexOf(layoutName) >= 0)
         .pop()
     const path = `../../src/entry/${category}/${layoutName}.cpp`
-    return { path, layoutName }
+    return { path, category, layoutName }
 })
-testCases.forEach(({ path, layoutName }) => {
+testCases.forEach(({ path, category, layoutName }) => {
     test(`Is the order of ${layoutName}'s parameters correct?`, () => {
-        let Layout = ogdf[layoutName]
+        let Layout = ogdf.layouts[category][layoutName]
 
         const cpp = require(path)
         const parameterLine = cpp.match(
