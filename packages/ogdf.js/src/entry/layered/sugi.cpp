@@ -4,8 +4,7 @@
 #include <ogdf/layered/LongestPathRanking.h>
 #include "../main.h"
 
-EM_PORT_API(float *)
-SUGI(int node_num, int link_num, int *source, int *target, bool alignBaseClasses, bool alignSiblings, bool arrangeCCs, int fails, unsigned int maxThreads, double minDistCC, double pageRatio, bool permuteFirst, int runs, bool transpose, int clusterLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, double weightBalancing, double weightClusters, double weightSegments, int crossMinType, int nRepeats, int verticalStepsBound, int layoutType, bool balanced, bool downward, bool leftToRight, int packerType, int rankingType, int width, int subgraphType, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges)
+EM_PORT_API(float *) SUGI(int node_num, int link_num, int *source, int *target, bool alignBaseClasses, bool alignSiblings, bool arrangeCCs, int fails, unsigned int maxThreads, double minDistCC, double pageRatio, bool permuteFirst, int runs, bool transpose, int clusterLayoutType, bool fixedLayerDistance, double layerDistance, double nodeDistance, double weightBalancing, double weightClusters, double weightSegments, int crossMinType, int nRepeats, int verticalStepsBound, int layoutType, bool balanced, bool downward, bool leftToRight, int packerType, int rankingType, int width, int subgraphType, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges)
 {
 	node *nodes;
 	Graph G;

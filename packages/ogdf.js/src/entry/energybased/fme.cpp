@@ -1,8 +1,7 @@
 #include <ogdf/energybased/FastMultipoleEmbedder.h>
 #include "../main.h"
 
-EM_PORT_API(float *)
-FME(int node_num, int link_num, int *source, int *target, double *nodesX, double *nodesY, float defaultEdgeLength, float defaultNodeSize, uint32_t multipolePrec, uint32_t numberOfThreads, uint32_t numIterations, bool randomize)
+EM_PORT_API(float *) FME(int node_num, int link_num, int *source, int *target, double *nodesX, double *nodesY, float defaultEdgeLength, float defaultNodeSize, uint32_t multipolePrec, uint32_t numberOfThreads, uint32_t numIterations, bool randomize)
 {
     node *nodes;
     Graph G;

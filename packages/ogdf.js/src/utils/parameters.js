@@ -15,7 +15,10 @@ function getDefaultParameters(PARAMETER_DEFINITION, moduleName = null) {
                     `OGDFModuleError: Module name ${module} has not been defined, please check OGDF_MODULES.`
                 )
             }
-            result[key] = getDefaultParameters(OGDF_MODULES[module][moduleChoice], moduleChoice)
+            result[key] = getDefaultParameters(
+                OGDF_MODULES[module][moduleChoice],
+                `${module}.${moduleChoice}`
+            )
         }
     })
     if (moduleName) {
@@ -37,7 +40,7 @@ function updateParameters(oldParameters, newParameters, PARAMETER_DEFINITION) {
                     // only gives a module name, we should generate all parameters by default
                     oldParameters[paramName] = getDefaultParameters(
                         OGDF_MODULES[module][moduleChoice],
-                        moduleChoice
+                        `${module}.${moduleChoice}`
                     )
                 } else {
                     const moduleChoice = newValue.module
@@ -81,44 +84,62 @@ function getParameterEntries(parameters, ORIGIN_PARAMETER_DEFINITION, OUTER_PARA
     })
 
     function iteration(paramName, isOriginParameter) {
-        if (PD[paramName].type === PARAMETER_TYPE.MODULE) {
+        if (!PD[paramName]) {
+            throw Error(`ParameterError: does not has a parameter named ${paramName}.`)
+        }
+
+        if (PD[paramName]?.type === PARAMETER_TYPE.MODULE) {
             const module = PD[paramName].module
             if (!OGDF_MODULES[module] || !OGDF_MODULES.RANGES[module]) {
                 throw Error(
-                    `OGDFModuleError: Module name ${parameters[paramName].module} has not been defined, please check OGDF_MODULES.`
+                    `OGDFModuleError: Module name ${module} has not been defined, please check OGDF_MODULES.`
                 )
             }
-
-            const moduleParameters = parameters[paramName]
-            const subEntries = getParameterEntries(
-                moduleParameters,
-                OGDF_MODULES[module][moduleParameters.module],
-                {}
-            )
-            subEntries.forEach((subEntry) => {
-                if (subEntry[0] == 'module') {
-                    entries.push({
-                        key: paramName,
-                        value: moduleParameters.module,
-                        isOriginParameter: false
-                    })
-                } else {
-                    entries.push(subEntry)
-                }
-            })
-        } else if (PD[paramName].type == PARAMETER_TYPE.CATEGORICAL) {
+            const moduleChoice = (parameters[paramName]?.module ?? PD[paramName].default)
+                .split('.')
+                .pop()
             entries.push({
                 key: paramName,
-                value: PD[paramName].range.indexOf(parameters[paramName]),
+                value: OGDF_MODULES.RANGES[module].indexOf(moduleChoice),
+                type: PARAMETER_TYPE.MODULE,
                 isOriginParameter
             })
-        } else if (PD[paramName]) {
+            Object.entries(OGDF_MODULES[module])
+            OGDF_MODULES.RANGES[module].forEach((moduleChoice) => {
+                const MODULE_DEFINITION = OGDF_MODULES[module][moduleChoice]
+                const moduleParameters = {
+                    ...getDefaultParameters(MODULE_DEFINITION, moduleChoice),
+                    ...parameters[paramName]
+                }
+                const subEntries = getParameterEntries(
+                    moduleParameters,
+                    OGDF_MODULES[module][moduleChoice],
+                    {}
+                )
+                subEntries.forEach((subEntry) => {
+                    if (subEntry.key !== 'module') {
+                        entries.push(subEntry)
+                    }
+                })
+            })
+        } else if (PD[paramName]?.type == PARAMETER_TYPE.CATEGORICAL) {
+            entries.push({
+                key: paramName,
+                value: PD[paramName].range.indexOf(parameters[paramName] ?? PD[paramName].default),
+                type: PD[paramName].type,
+                isOriginParameter
+            })
+        } else if (
+            PD[paramName]?.type == PARAMETER_TYPE.INT ||
+            PD[paramName]?.type == PARAMETER_TYPE.DOUBLE
+        ) {
             // numerical
-            const value = parameters[paramName]
+            const value = parameters[paramName] ?? PD[paramName].default
             if (value >= PD[paramName].range[0] && value <= PD[paramName].range[1]) {
                 entries.push({
                     key: paramName,
                     value,
+                    type: PD[paramName].type,
                     isOriginParameter
                 })
             } else {
@@ -126,6 +147,23 @@ function getParameterEntries(parameters, ORIGIN_PARAMETER_DEFINITION, OUTER_PARA
                     `ParameterError: can not set ${paramName} to ${value} with range from ${PD[paramName].range[0]} to ${PD[paramName].range[0]}`
                 )
             }
+        } else if (PD[paramName]?.type == PARAMETER_TYPE.BOOL) {
+            // numerical
+            const value = parameters[paramName] ?? PD[paramName].default
+            if (value == PD[paramName].range[0] || value == PD[paramName].range[1]) {
+                entries.push({
+                    key: paramName,
+                    value,
+                    type: PD[paramName].type,
+                    isOriginParameter
+                })
+            } else {
+                throw Error(`ParameterError: parameter ${paramName} is not a bool value.`)
+            }
+        } else {
+            throw Error(
+                `ParameterError: ${paramName}'s type is undefined or not defined in PARAMETER_TYPE.`
+            )
         }
     }
     return entries

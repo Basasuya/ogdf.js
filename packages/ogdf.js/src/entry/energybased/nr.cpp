@@ -1,7 +1,7 @@
 #include <ogdf/energybased/NodeRespecterLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float*) NR(int node_num, int link_num, int* source, int* target, double bendNormalizationAngle, double desiredMinEdgeLength, double dummyInsertionThreshold, double gravitation, int initDummiesPerEdge, double initialTemperature, double maxDisturbance, int maxDummiesPerEdge, double minDistCC, double minimalTemperature, int numberOfIterations, double oscillationAngle, double pageRatio, int postProcessing, bool randomInitialPlacement, double repulsionDistance, double temperatureDecreaseOffset) {
+EM_PORT_API(float *) NR(int node_num, int link_num, int* source, int* target, double bendNormalizationAngle, double desiredMinEdgeLength, double dummyInsertionThreshold, double gravitation, int initDummiesPerEdge, double initialTemperature, double maxDisturbance, int maxDummiesPerEdge, double minDistCC, double minimalTemperature, int numberOfIterations, double oscillationAngle, double pageRatio, int postProcessing, bool randomInitialPlacement, double repulsionDistance, double temperatureDecreaseOffset) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);

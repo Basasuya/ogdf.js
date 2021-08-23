@@ -1,7 +1,7 @@
 #include <ogdf/energybased/SpringEmbedderGridVariant.h>
 #include "../main.h"
 
-EM_PORT_API(float*) SEGV(int node_num, int link_num, int* source, int* target, double avgConvergenceFactor, int forceModel, int forceModelImprove, double idealEdgeLength, int iterations, int iterationsImprove, double maxConvergenceFactor, unsigned int maxThreads, double minDistCC, bool noise, double pageRatio, double scaleFunctionFactor, int scaling, double userBoundingBoxXmin, double userBoundingBoxYmin, double userBoundingBoxXmax, double userBoundingBoxYmax) {
+EM_PORT_API(float *) SEGV(int node_num, int link_num, int* source, int* target, double avgConvergenceFactor, int forceModel, int forceModelImprove, double idealEdgeLength, int iterations, int iterationsImprove, double maxConvergenceFactor, unsigned int maxThreads, double minDistCC, bool noise, double pageRatio, double scaleFunctionFactor, int scaling, double userBoundingBoxXmin, double userBoundingBoxYmin, double userBoundingBoxXmax, double userBoundingBoxYmax) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);

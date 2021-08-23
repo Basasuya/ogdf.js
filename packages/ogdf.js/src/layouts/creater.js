@@ -21,7 +21,11 @@ export default function createLayout(
     }
 
     class Layout {
-        constructor({ graph, parameters, callback }) {
+        constructor(configs) {
+            const graph = configs?.graph ?? { nodes: [], links: [] }
+            let parameters = configs?.parameters ?? {}
+            let callback = configs?.callback ?? function () {}
+
             this._sourceIndexArray = []
             this._targetIndexArray = []
             this._orderedAttributes = []
@@ -274,5 +278,6 @@ export default function createLayout(
     Layout.PARAMETER_DEFINITION = PARAMETER_DEFINITION
     Layout.ORIGIN_PARAMETER_DEFINITION = ORIGIN_PARAMETER_DEFINITION
     Layout.OUTER_PARAMETER_DEFINITION = OUTER_PARAMETER_DEFINITION
+    Layout.ATTRIBUTES_DEFINITION = ATTRIBUTES_DEFINITION
     return Layout
 }

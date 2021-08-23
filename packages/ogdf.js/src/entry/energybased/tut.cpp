@@ -1,7 +1,7 @@
 #include <ogdf/energybased/TutteLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float*) TUT(int node_num, int link_num, int* source, int* target, double bboxLeft, double bboxTop, double bboxRight, double bboxBottom) {
+EM_PORT_API(float *) TUT(int node_num, int link_num, int* source, int* target, double bboxLeft, double bboxTop, double bboxRight, double bboxBottom) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);

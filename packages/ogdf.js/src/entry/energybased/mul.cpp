@@ -1,8 +1,7 @@
 #include <ogdf/energybased/MultilevelLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float *)
-MUL(int node_num, int link_num, int *source, int *target, int layoutType, int multilevelBuilderType, int edgeLengthAdjustment, double factor, float searchDepthBase, bool selectByNodeMass, int placerType, bool randomOffset, bool weightedPositionPriority, double circleSize, int nodeSelection, bool radiusFixed, double randomRange)
+EM_PORT_API(float *) MUL(int node_num, int link_num, int *source, int *target, int layoutType, int multilevelBuilderType, int edgeLengthAdjustment, double factor, float searchDepthBase, bool selectByNodeMass, int placerType, bool randomOffset, bool weightedPositionPriority, double circleSize, int nodeSelection, bool radiusFixed, double randomRange)
 {
     node *nodes;
     Graph G;
