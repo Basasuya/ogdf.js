@@ -104,8 +104,8 @@ function getParameterEntries(parameters, ORIGIN_PARAMETER_DEFINITION, OUTER_PARA
                 type: PARAMETER_TYPE.MODULE,
                 isOriginParameter
             })
-            Object.entries(OGDF_MODULES[module])
             OGDF_MODULES.RANGES[module].forEach((moduleChoice) => {
+                console.log(moduleChoice)
                 const MODULE_DEFINITION = OGDF_MODULES[module][moduleChoice]
                 const moduleParameters = {
                     ...getDefaultParameters(MODULE_DEFINITION, moduleChoice),
@@ -118,7 +118,10 @@ function getParameterEntries(parameters, ORIGIN_PARAMETER_DEFINITION, OUTER_PARA
                 )
                 subEntries.forEach((subEntry) => {
                     if (subEntry.key !== 'module') {
-                        entries.push(subEntry)
+                        entries.push({
+                            ...subEntry,
+                            key: `${paramName}_${moduleChoice}_${subEntry.key}`
+                        })
                     }
                 })
             })

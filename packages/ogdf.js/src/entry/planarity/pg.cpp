@@ -1,7 +1,70 @@
 #include <ogdf/planarity/PlanarizationGridLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float *) PG(int node_num, int link_num, int* source, int* target, double pageRatio, double separation, int crossMinType, int globalInternalLibraryLogLevel, int globalLogLevel, int globalMinimumLogLevel, bool globalStatisticMode, int localLogLevel, int localLogMode, unsigned int maxThreads, int permutations, bool timeout, double timeLimit, int inserterType, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int subgraphType, int runs, double randomness, int packerType, int planarLayouterType, int augmenterType, int crossingsBeautifierType, int embedderType, bool useExtendedDepthDefinition, int shellingOrderType, double baseRatio) {
+EM_PORT_API(float *) PG(
+	int node_num,
+	int link_num,
+	int* source,
+	int* target,
+	double pageRatio,
+	double separation,
+	int crossMinType,
+	int crossMinType_SubgraphPlanarizer_globalInternalLibraryLogLevel,
+	int crossMinType_SubgraphPlanarizer_globalLogLevel,
+	int crossMinType_SubgraphPlanarizer_globalMinimumLogLevel,
+	bool crossMinType_SubgraphPlanarizer_globalStatisticMode,
+	int crossMinType_SubgraphPlanarizer_localLogLevel,
+	int crossMinType_SubgraphPlanarizer_localLogMode,
+	unsigned int crossMinType_SubgraphPlanarizer_maxThreads,
+	int crossMinType_SubgraphPlanarizer_permutations,
+	bool crossMinType_SubgraphPlanarizer_timeout,
+	double crossMinType_SubgraphPlanarizer_timeLimit,
+	int crossMinType_SubgraphPlanarizer_inserterType,
+	bool crossMinType_SubgraphPlanarizer_inserterType_FixedEmbedding_keepEmbedding,
+	double crossMinType_SubgraphPlanarizer_inserterType_FixedEmbedding_percentMostCrossed,
+	int crossMinType_SubgraphPlanarizer_inserterType_FixedEmbedding_removeReinsert,
+	double crossMinType_SubgraphPlanarizer_inserterType_FixedEmbedding_timeLimit,
+	double crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_percentMostCrossedFix,
+	double crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_percentMostCrossedVar,
+	int crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_removeReinsertFix,
+	int crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_removeReinsertVar,
+	bool crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_statistics,
+	double crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_timeLimit,
+	double crossMinType_SubgraphPlanarizer_inserterType_VariableEmbedding_percentMostCrossed,
+	int crossMinType_SubgraphPlanarizer_inserterType_VariableEmbedding_removeReinsert,
+	double crossMinType_SubgraphPlanarizer_inserterType_VariableEmbedding_timeLimit,
+	int crossMinType_SubgraphPlanarizer_subgraphType,
+	unsigned int crossMinType_SubgraphPlanarizer_subgraphType_Maximum_maxThreads,
+	double crossMinType_SubgraphPlanarizer_subgraphType_Maximum_timeLimit,
+	unsigned int crossMinType_SubgraphPlanarizer_subgraphType_BoyerMyrvold_maxThreads,
+	double crossMinType_SubgraphPlanarizer_subgraphType_BoyerMyrvold_timeLimit,
+	int crossMinType_SubgraphPlanarizer_subgraphType_BoyerMyrvold_runs,
+	double crossMinType_SubgraphPlanarizer_subgraphType_BoyerMyrvold_randomness,
+	unsigned int crossMinType_SubgraphPlanarizer_subgraphType_Cactus_maxThreads,
+	double crossMinType_SubgraphPlanarizer_subgraphType_Cactus_timeLimit,
+	unsigned int crossMinType_SubgraphPlanarizer_subgraphType_Empty_maxThreads,
+	double crossMinType_SubgraphPlanarizer_subgraphType_Empty_timeLimit,
+	unsigned int crossMinType_SubgraphPlanarizer_subgraphType_Fast_maxThreads,
+	double crossMinType_SubgraphPlanarizer_subgraphType_Fast_timeLimit,
+	int crossMinType_SubgraphPlanarizer_subgraphType_Fast_runs,
+	unsigned int crossMinType_SubgraphPlanarizer_subgraphType_Tree_maxThreads,
+	double crossMinType_SubgraphPlanarizer_subgraphType_Tree_timeLimit,
+	int packerType,
+	int planarLayouterType,
+	double planarLayouterType_Mixed_separation,
+	int planarLayouterType_Mixed_augmenterType,
+	int planarLayouterType_Mixed_crossingsBeautifierType,
+	int planarLayouterType_Mixed_embedderType,
+	double planarLayouterType_Mixed_embedderType_MaxFace_timeLimit,
+	double planarLayouterType_Mixed_embedderType_MinDepth_timeLimit,
+	double planarLayouterType_Mixed_embedderType_MinDepthPiTa_timeLimit,
+	bool planarLayouterType_Mixed_embedderType_MinDepthPiTa_useExtendedDepthDefinition,
+	double planarLayouterType_Mixed_embedderType_OptimalFlexDraw_timeLimit,
+	double planarLayouterType_Mixed_embedderType_Simple_timeLimit,
+	int planarLayouterType_Mixed_shellingOrderType,
+	double planarLayouterType_Mixed_shellingOrderType_Biconnected_baseRatio,
+	double planarLayouterType_Mixed_shellingOrderType_Triconnected_baseRatio
+) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);
@@ -25,13 +88,70 @@ EM_PORT_API(float *) PG(int node_num, int link_num, int* source, int* target, do
 	model->pageRatio(pageRatio);
     model->separation(separation);
 
-	CrossingMinimizationModule* crossMin = getCrossingMinimization(crossMinType, globalStatisticMode, globalLogLevel, globalMinimumLogLevel, globalStatisticMode, localLogLevel, localLogMode, maxThreads, permutations, timeout, timeLimit, inserterType, keepEmbedding, percentMostCrossed, removeReinsert, percentMostCrossedFix, percentMostCrossedVar, removeReinsertFix, removeReinsertVar, statistics, subgraphType, runs, randomness);
+	CrossingMinimizationModule* crossMin = getCrossingMinimization(
+		crossMinType,
+		crossMinType_SubgraphPlanarizer_globalInternalLibraryLogLevel,
+		crossMinType_SubgraphPlanarizer_globalLogLevel,
+		crossMinType_SubgraphPlanarizer_globalMinimumLogLevel,
+		crossMinType_SubgraphPlanarizer_globalStatisticMode,
+		crossMinType_SubgraphPlanarizer_localLogLevel,
+		crossMinType_SubgraphPlanarizer_localLogMode,
+		crossMinType_SubgraphPlanarizer_maxThreads,
+		crossMinType_SubgraphPlanarizer_permutations,
+		crossMinType_SubgraphPlanarizer_timeout,
+		crossMinType_SubgraphPlanarizer_timeLimit,
+		crossMinType_SubgraphPlanarizer_inserterType,
+		crossMinType_SubgraphPlanarizer_inserterType_FixedEmbedding_keepEmbedding,
+		crossMinType_SubgraphPlanarizer_inserterType_FixedEmbedding_percentMostCrossed,
+		crossMinType_SubgraphPlanarizer_inserterType_FixedEmbedding_removeReinsert,
+		crossMinType_SubgraphPlanarizer_inserterType_FixedEmbedding_timeLimit,
+		crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_percentMostCrossedFix,
+		crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_percentMostCrossedVar,
+		crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_removeReinsertFix,
+		crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_removeReinsertVar,
+		crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_statistics,
+		crossMinType_SubgraphPlanarizer_inserterType_MultiEdgeApprox_timeLimit,
+		crossMinType_SubgraphPlanarizer_inserterType_VariableEmbedding_percentMostCrossed,
+		crossMinType_SubgraphPlanarizer_inserterType_VariableEmbedding_removeReinsert,
+		crossMinType_SubgraphPlanarizer_inserterType_VariableEmbedding_timeLimit,
+		crossMinType_SubgraphPlanarizer_subgraphType,
+		crossMinType_SubgraphPlanarizer_subgraphType_Maximum_maxThreads,
+		crossMinType_SubgraphPlanarizer_subgraphType_Maximum_timeLimit,
+		crossMinType_SubgraphPlanarizer_subgraphType_BoyerMyrvold_maxThreads,
+		crossMinType_SubgraphPlanarizer_subgraphType_BoyerMyrvold_timeLimit,
+		crossMinType_SubgraphPlanarizer_subgraphType_BoyerMyrvold_runs,
+		crossMinType_SubgraphPlanarizer_subgraphType_BoyerMyrvold_randomness,
+		crossMinType_SubgraphPlanarizer_subgraphType_Cactus_maxThreads,
+		crossMinType_SubgraphPlanarizer_subgraphType_Cactus_timeLimit,
+		crossMinType_SubgraphPlanarizer_subgraphType_Empty_maxThreads,
+		crossMinType_SubgraphPlanarizer_subgraphType_Empty_timeLimit,
+		crossMinType_SubgraphPlanarizer_subgraphType_Fast_maxThreads,
+		crossMinType_SubgraphPlanarizer_subgraphType_Fast_timeLimit,
+		crossMinType_SubgraphPlanarizer_subgraphType_Fast_runs,
+		crossMinType_SubgraphPlanarizer_subgraphType_Tree_maxThreads,
+		crossMinType_SubgraphPlanarizer_subgraphType_Tree_timeLimit
+	);
 	model->setCrossMin(crossMin);
 
 	CCLayoutPackModule* packer = getCCLayoutPack(packerType);
 	model->setPacker(packer);
 
-	GridLayoutPlanRepModule* planarLayouter = getGridLayoutPlanRep(planarLayouterType, separation, augmenterType, crossingsBeautifierType, embedderType, timeLimit, useExtendedDepthDefinition, shellingOrderType, baseRatio);
+	GridLayoutPlanRepModule* planarLayouter = getGridLayoutPlanRep(
+		planarLayouterType,
+		planarLayouterType_Mixed_separation,
+		planarLayouterType_Mixed_augmenterType,
+		planarLayouterType_Mixed_crossingsBeautifierType,
+		planarLayouterType_Mixed_embedderType,
+		planarLayouterType_Mixed_embedderType_MaxFace_timeLimit,
+		planarLayouterType_Mixed_embedderType_MinDepth_timeLimit,
+		planarLayouterType_Mixed_embedderType_MinDepthPiTa_timeLimit,
+		planarLayouterType_Mixed_embedderType_MinDepthPiTa_useExtendedDepthDefinition,
+		planarLayouterType_Mixed_embedderType_OptimalFlexDraw_timeLimit,
+		planarLayouterType_Mixed_embedderType_Simple_timeLimit,
+		planarLayouterType_Mixed_shellingOrderType,
+		planarLayouterType_Mixed_shellingOrderType_Biconnected_baseRatio,
+		planarLayouterType_Mixed_shellingOrderType_Triconnected_baseRatio
+	);
 	model->setPlanarLayouter(planarLayouter);
 
 	model->call(GA);

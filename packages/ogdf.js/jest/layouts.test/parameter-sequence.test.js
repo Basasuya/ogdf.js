@@ -36,7 +36,7 @@ const testCases = layoutNames.map((layoutName) => {
     return { path, layoutName }
 })
 testCases.forEach(({ path, layoutName }) => {
-    test(`Is the order of ${layoutName}'s parameters right`, () => {
+    test(`Is the order of ${layoutName}'s parameters correct?`, () => {
         let Layout = ogdf[layoutName]
 
         const cpp = require(path)

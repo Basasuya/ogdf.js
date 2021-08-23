@@ -1,7 +1,8 @@
 import { PARAMETER_TYPE } from './parameter-type'
 
 const AcyclicSubgraph = {
-    Dfs: {}, GreedyCycleRemoval: {}
+    Dfs: {},
+    GreedyCycleRemoval: {}
 }
 
 const Augmentation = {
@@ -18,33 +19,33 @@ const CrossingMinimization = {
     SubgraphPlanarizer: {
         globalInternalLibraryLogLevel: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["Minor", "Medium", "Default", "High", "Alarm", "Force"],
-            default: "Alarm"
+            range: ['Minor', 'Medium', 'Default', 'High', 'Alarm', 'Force'],
+            default: 'Alarm'
         },
         globalLogLevel: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["Minor", "Medium", "Default", "High", "Alarm", "Force"],
-            default: "Alarm"
+            range: ['Minor', 'Medium', 'Default', 'High', 'Alarm', 'Force'],
+            default: 'Alarm'
         },
         globalMinimumLogLevel: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["Minor", "Medium", "Default", "High", "Alarm", "Force"],
-            default: "Medium"
+            range: ['Minor', 'Medium', 'Default', 'High', 'Alarm', 'Force'],
+            default: 'Medium'
         },
         globalStatisticMode: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: false,
+            default: false
         },
         localLogLevel: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["Minor", "Medium", "Default", "High", "Alarm", "Force"],
-            default: "Default"
+            range: ['Minor', 'Medium', 'Default', 'High', 'Alarm', 'Force'],
+            default: 'Default'
         },
         localLogMode: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["Global", "GlobalLog", "Log", "Statistic"],
-            default: "Global"
+            range: ['Global', 'GlobalLog', 'Log', 'Statistic'],
+            default: 'Global'
         },
         maxThreads: {
             type: PARAMETER_TYPE.INT,
@@ -59,7 +60,7 @@ const CrossingMinimization = {
         timeout: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         },
         timeLimit: {
             type: PARAMETER_TYPE.INT,
@@ -69,24 +70,23 @@ const CrossingMinimization = {
         },
         inserterType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "EdgeInsertion",
-            default: "VariableEmbedding"
+            module: 'EdgeInsertion',
+            default: 'VariableEmbedding'
         },
         subgraphType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "PlanarSubgraph",
-            default: "Fast"
+            module: 'PlanarSubgraph',
+            default: 'Fast'
         }
     }
 }
-
 
 const EdgeInsertion = {
     FixedEmbedding: {
         keepEmbedding: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: false,
+            default: false
         },
         percentMostCrossed: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -95,8 +95,8 @@ const EdgeInsertion = {
         },
         removeReinsert: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["None", "Inserted", "MostCrossed", "All", "Incremental", "IncInserted"],
-            default: "None"
+            range: ['None', 'Inserted', 'MostCrossed', 'All', 'Incremental', 'IncInserted'],
+            default: 'None'
         },
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -118,18 +118,18 @@ const EdgeInsertion = {
         },
         removeReinsertFix: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["None", "Inserted", "MostCrossed", "All", "Incremental", "IncInserted"],
-            default: "None"
+            range: ['None', 'Inserted', 'MostCrossed', 'All', 'Incremental', 'IncInserted'],
+            default: 'None'
         },
         removeReinsertVar: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["None", "Inserted", "MostCrossed", "All", "Incremental", "IncInserted"],
-            default: "None"
+            range: ['None', 'Inserted', 'MostCrossed', 'All', 'Incremental', 'IncInserted'],
+            default: 'None'
         },
         statistics: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: false,
+            default: false
         },
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -146,8 +146,8 @@ const EdgeInsertion = {
         },
         removeReinsert: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["None", "Inserted", "MostCrossed", "All", "Incremental", "IncInserted"],
-            default: "None"
+            range: ['None', 'Inserted', 'MostCrossed', 'All', 'Incremental', 'IncInserted'],
+            default: 'None'
         },
         timeLimit: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -185,7 +185,7 @@ const Embedder = {
         useExtendedDepthDefinition: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         }
     },
     OptimalFlexDraw: {
@@ -215,23 +215,23 @@ const GridLayoutPlanRep = {
         },
         augmenterType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "Augmentation",
-            default: "PlanarAugmentation"
+            module: 'Augmentation',
+            default: 'PlanarAugmentation'
         },
         crossingsBeautifierType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "MixedModelCrossingsBeautifier",
-            default: "MMDummyCrossingsBeautifier"
+            module: 'MixedModelCrossingsBeautifier',
+            default: 'MMDummyCrossingsBeautifier'
         },
         embedderType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "Embedder",
-            default: "Simple"
+            module: 'Embedder',
+            default: 'Simple'
         },
         shellingOrderType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "ShellingOrder",
-            default: "Biconnected"
+            module: 'ShellingOrder',
+            default: 'Biconnected'
         }
     }
 }
@@ -241,12 +241,12 @@ const HierarchyClusterLayout = {
         fixedLayerDistance: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: false,
+            default: false
         },
         layerDistance: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 3.0,
+            default: 3.0
         },
         nodeDistance: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -256,18 +256,18 @@ const HierarchyClusterLayout = {
         weightBalancing: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 0.1,
+            default: 0.1
         },
         weightClusters: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 0.05,
+            default: 0.05
         },
         weightSegments: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 2.0,
-        },
+            default: 2.0
+        }
     }
 }
 
@@ -276,12 +276,12 @@ const HierarchyLayout = {
         fixedLayerDistance: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: false,
+            default: false
         },
         layerDistance: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 3.0,
+            default: 3.0
         },
         nodeDistance: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -293,7 +293,7 @@ const HierarchyLayout = {
         layerDistance: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 75,
+            default: 75
         },
         nodeDistance: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -303,29 +303,29 @@ const HierarchyLayout = {
         balanced: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         },
         downward: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         },
         leftToRight: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         }
     },
     Optimal: {
         fixedLayerDistance: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: false,
+            default: false
         },
         layerDistance: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 3.0,
+            default: 3.0
         },
         nodeDistance: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -335,13 +335,13 @@ const HierarchyLayout = {
         weightBalancing: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 0.1,
+            default: 0.1
         },
         weightSegments: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 2.0,
-        },
+            default: 2.0
+        }
     }
 }
 
@@ -350,73 +350,73 @@ const InitialPlacer = {
         randomOffset: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         },
         weightedPositionPriority: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: false,
+            default: false
         }
     },
     CirclePlacer: {
         circleSize: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 0.0,
+            default: 0.0
         },
         nodeSelection: {
             type: PARAMETER_TYPE.CATEGORICAL,
-            range: ["New", "Old", "All"],
-            default: "New"
+            range: ['New', 'Old', 'All'],
+            default: 'New'
         },
         radiusFixed: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: false,
+            default: false
         },
         randomOffset: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         }
     },
     MedianPlacer: {
         randomOffset: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         }
     },
     RandomPlacer: {
         randomOffset: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         },
         circleSize: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 0.0,
-        },
+            default: 0.0
+        }
     },
     SolarPlacer: {
         randomOffset: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
-        },
+            default: true
+        }
     },
     ZeroPlacer: {
         randomRange: {
             type: PARAMETER_TYPE.DOUBLE,
             range: [0, Infinity],
-            default: 1.0,
+            default: 1.0
         },
         randomOffset: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
-        },
+            default: true
+        }
     }
 }
 
@@ -446,7 +446,8 @@ const LayeredCrossMin = {
 const Layout = {
     DavidsonHarelLayout: {},
     FMMMLayout: {},
-    FastMultipoleEmbedder: {}, FastMultipoleMultilevelEmbedder: {},
+    FastMultipoleEmbedder: {},
+    FastMultipoleMultilevelEmbedder: {},
     GEMLayout: {},
     NodeRespecterLayout: {},
     PivotMDS: {},
@@ -476,12 +477,12 @@ const LayoutPlanRep = {
         progressive: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         },
         scaling: {
             type: PARAMETER_TYPE.BOOL,
             range: [true, false],
-            default: true,
+            default: true
         },
         separation: {
             type: PARAMETER_TYPE.DOUBLE,
@@ -579,7 +580,7 @@ const PlanarSubgraph = {
             range: [-Infinity, Infinity],
             default: 1000
             // default: -1 if timeLimit < 0 will be unstoppable
-        },
+        }
     },
     BoyerMyrvold: {
         maxThreads: {
@@ -615,7 +616,7 @@ const PlanarSubgraph = {
             range: [-Infinity, Infinity],
             default: 1000
             // default: -1 if timeLimit < 0 will be unstoppable
-        },
+        }
     },
     Empty: {
         maxThreads: {
@@ -628,7 +629,7 @@ const PlanarSubgraph = {
             range: [-Infinity, Infinity],
             default: 1000
             // default: -1 if timeLimit < 0 will be unstoppable
-        },
+        }
     },
     Fast: {
         maxThreads: {
@@ -646,7 +647,7 @@ const PlanarSubgraph = {
             type: PARAMETER_TYPE.INT,
             range: [0, Infinity],
             default: 10
-        },
+        }
     },
     Tree: {
         maxThreads: {
@@ -659,7 +660,7 @@ const PlanarSubgraph = {
             range: [-Infinity, Infinity],
             default: 1000
             // default: -1 if timeLimit < 0 will be unstoppable
-        },
+        }
     }
 }
 
@@ -672,8 +673,8 @@ const Ranking = {
         },
         subgraphType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "AcyclicSubgraph",
-            default: "Dfs"
+            module: 'AcyclicSubgraph',
+            default: 'Dfs'
         }
     },
     LongestPath: {
@@ -704,8 +705,8 @@ const Ranking = {
         },
         subgraphType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "AcyclicSubgraph",
-            default: "Dfs"
+            module: 'AcyclicSubgraph',
+            default: 'Dfs'
         }
     },
     Optimal: {
@@ -716,8 +717,8 @@ const Ranking = {
         },
         subgraphType: {
             type: PARAMETER_TYPE.MODULE,
-            module: "AcyclicSubgraph",
-            default: "Dfs"
+            module: 'AcyclicSubgraph',
+            default: 'Dfs'
         }
     }
 }
@@ -739,30 +740,32 @@ const ShellingOrder = {
     }
 }
 
-
-
-
-const RANGES = {
-    AcyclicSubgraph: ["Dfs", "GreedyCycleRemoval"],
-    Augmentation: ["DfsMakeBiconnected", "PlanarAugmentation", "PlanarAugmentationFix"],
-    CCLayoutPack: ["TileToRows"],
-    CrossingMinimization: ["SubgraphPlanarizer"],
-    EdgeInsertion: ["FixedEmbedding", "MultiEdgeApprox", "VariableEmbedding"],
-    Embedder: ["MaxFace", "MinDepth", "MinDepthPiTa", "OptimalFlexDraw", "Simple"],
-    GridLayoutPlanRep: ["Mixed"],
-    HierarchyClusterLayout: ["Optimal"],
-    HierarchyLayout: ["Fast", "FastSimple", "Optimal"],
-    InitialPlacer: ["BarycenterPlacer", "CirclePlacer", "MedianPlacer", "RandomPlacer", "SolarPlacer", "ZeroPlacer"],
-    LayeredCrossMin: ["BarycenterHeuristic", "GlobalSifting", "GreedyInsertHeuristic", "GreedySwitchHeuristic", "GridSifting", "MedianHeuristic", "SiftingHeuristic", "SplitHeuristic"],
-    Layout: ["DavidsonHarelLayout", "FMMMLayout", "FastMultipoleEmbedder", "FastMultipoleMultilevelEmbedder", "GEMLayout", "NodeRespecterLayout", "PivotMDS", "SpringEmbedderGridVariant", "SpringEmbedderKK", "StressMinimization", "TutteLayout"],
-    LayoutPlanRep: ["Ortho"],
-    MixedModelCrossingsBeautifier: ["MMCBDoubleGrid", "MMCBLocalStretch", "MMDummyCrossingsBeautifier"],
-    MultilevelBuilder: ["EdgeCoverMerger", "IndependentSetMerger", "LocalBiconnectedMerger", "MatchingMerger", "RandomMerger", "SolarMerger"],
-    PlanarSubgraph: ["Maximum", "Cactus", "Empty", "Fast", "Tree"],
-    Ranking: ["CoffmanGraham", "LongestPath", "Optimal"],
-    ShellingOrder: ["Biconnected", "Triconnected"]
+const OGDF_MODULES = {
+    AcyclicSubgraph,
+    Augmentation,
+    CCLayoutPack,
+    CrossingMinimization,
+    EdgeInsertion,
+    Embedder,
+    GridLayoutPlanRep,
+    HierarchyClusterLayout,
+    HierarchyLayout,
+    InitialPlacer,
+    LayeredCrossMin,
+    Layout,
+    LayoutPlanRep,
+    MixedModelCrossingsBeautifier,
+    MultilevelBuilder,
+    PlanarSubgraph,
+    Ranking,
+    ShellingOrder
 }
 
-const OGDF_MODULES = { AcyclicSubgraph, Augmentation, CCLayoutPack, CrossingMinimization, EdgeInsertion, Embedder, GridLayoutPlanRep, HierarchyClusterLayout, HierarchyLayout, InitialPlacer, LayeredCrossMin, Layout, LayoutPlanRep, MixedModelCrossingsBeautifier, MultilevelBuilder, PlanarSubgraph, Ranking, ShellingOrder, RANGES }
+const RANGES = Object.keys(OGDF_MODULES).reduce((ranges, key) => {
+    ranges[key] = Object.keys(OGDF_MODULES[key])
+    return ranges
+}, {})
+
+OGDF_MODULES.RANGES = RANGES
 
 export default OGDF_MODULES
