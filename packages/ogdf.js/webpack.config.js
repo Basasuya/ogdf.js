@@ -1,11 +1,14 @@
 const path = require('path')
 
 module.exports = {
-    entry: './src/index.js',
+    mode: 'production',
+    entry: { ogdf: './src/index.js' },
     output: {
         libraryTarget: 'umd',
-        filename: 'ogdf.js',
-        path: path.resolve(__dirname, 'dist')
+        library: 'ogdf',
+        filename: '[name].js',
+        path: path.resolve(__dirname, 'dist'),
+        umdNamedDefine: true
     },
     devtool: 'source-map',
     watchOptions: {
