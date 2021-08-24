@@ -182,33 +182,19 @@ export default function createLayout(
             if (parameter) {
                 if (typeof parameter == 'object') {
                     // this.parameters({ useHighLevelOptions: true })
-                    updateParameters(this._parameters, parameter, PARAMETER_DEFINITION)
+                    this._parameters = updateParameters(
+                        this._parameters,
+                        parameter,
+                        PARAMETER_DEFINITION
+                    )
                 } else if (typeof parameter == 'string') {
                     // e.g., this.parameters("useHighLevelOptions", true)
                     // e.g., this.parameters("multilevelBuilderType.module", "EdgeCoverMerger")
                     // e.g., this.parameters("multilevelBuilderType.edgeLengthAdjustment")
                     const parameterChain = parameter.split('.')
-                    let PD = PARAMETER_DEFINITION
-                    let parent = this._parameters
+                    const newParam = JSON.stringify(JSON.parse(this._parameters))
+                    let parant = newParam
                     for (let i = 0; i < parameterChain.length - 1; i++) {
-                        const module = Object.keys(parent)
-                            .filter((paramName) => {
-                                if (parent[paramName] == parameterChain[i]) {
-                                    // it means parent[paramName] is a module
-                                    return paramName
-                                }
-                            })
-                            .pop()
-                        if (module) {
-                            // parent[module] is a module
-                            if (!(module in OGDF_MODULES)) {
-                                throw Error(
-                                    `OGDFModuleError: Module name ${module} has not been defined, please check OGDF_MODULES.`
-                                )
-                            }
-                            PD = OGDF_MODULES[module]
-                        }
-                        PD = PD[parameterChain[i]]
                         parent = parent[parameterChain[i]]
                         if (!parent || !parent[parameterChain[i + 1]]) {
                             throw Error(
@@ -218,9 +204,8 @@ export default function createLayout(
                     }
                     const chainEnd = parameterChain[parameterChain.length - 1]
                     if (value !== undefined) {
-                        const newParam = {}
-                        newParam[chainEnd] = value
-                        updateParameters(parent, newParam, PD)
+                        parent[chainEnd] = value
+                        this._parameters = updateParameters(this._parameters, newParam, PD)
                     } else {
                         return parent[chainEnd]
                     }

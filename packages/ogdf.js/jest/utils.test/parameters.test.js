@@ -1,4 +1,5 @@
 const ogdf = require('../../src/index')
+const { OGDF_MODULES } = require('../../src/utils')
 const {
     PARAMETER_TYPE,
     getDefaultParameters,
@@ -28,14 +29,14 @@ describe('Testing getDefaultParameters', () => {
         expect(getDefaultParameters(ogdf.layouts.energybased.mul.PARAMETER_DEFINITION)).toEqual({
             useWorker: false,
             layoutType: {
-                module: 'Layout.SpringEmbedderGridVariant'
+                module: 'SpringEmbedderGridVariant'
             },
             multilevelBuilderType: {
-                module: 'MultilevelBuilder.SolarMerger',
+                module: 'SolarMerger',
                 edgeLengthAdjustment: 0
             },
             placerType: {
-                module: 'InitialPlacer.BarycenterPlacer',
+                module: 'BarycenterPlacer',
                 randomOffset: true,
                 weightedPositionPriority: false
             }
@@ -56,7 +57,7 @@ describe('Testing getDefaultParameters', () => {
             runs: 15,
             transpose: true,
             clusterLayoutType: {
-                module: 'HierarchyClusterLayout.Optimal',
+                module: 'Optimal',
                 fixedLayerDistance: false,
                 layerDistance: 3.0,
                 nodeDistance: 3.0,
@@ -65,26 +66,26 @@ describe('Testing getDefaultParameters', () => {
                 weightSegments: 2.0
             },
             crossMinType: {
-                module: 'LayeredCrossMin.BarycenterHeuristic'
+                module: 'BarycenterHeuristic'
             },
             layoutType: {
-                module: 'HierarchyLayout.Fast',
+                module: 'Fast',
                 fixedLayerDistance: false,
                 layerDistance: 3.0,
                 nodeDistance: 3.0
             },
             packerType: {
-                module: 'CCLayoutPack.TileToRows'
+                module: 'TileToRows'
             },
             rankingType: {
-                module: 'Ranking.LongestPath',
+                module: 'LongestPath',
                 alignBaseClasses: false,
                 alignSiblings: false,
                 optimizeEdgeLength: true,
                 separateDeg0Layer: true,
                 separateMultiEdges: true,
                 subgraphType: {
-                    module: 'AcyclicSubgraph.Dfs'
+                    module: 'Dfs'
                 }
             }
         })
@@ -97,6 +98,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
     const fm3Class = ogdf.layouts.energybased.fm3
     const fm3 = new fm3Class()
     const fm3DefaultParameters = fm3.parameters()
+    let fm3Parameters = fm3DefaultParameters
     const expectedFM3Entries = [
         /* #maptz-fold-region default [Expected default fm3 parameters] */
         {
@@ -383,10 +385,10 @@ describe('Testing updateParameters & getParameterEntries', () => {
     })
 
     test("Get fm3's parameter entries after updateParameters(empty)", () => {
-        updateParameters(fm3DefaultParameters, {}, fm3Class.PARAMETER_DEFINITION)
+        fm3Parameters = updateParameters(fm3Parameters, {}, fm3Class.PARAMETER_DEFINITION)
 
         const entries = getParameterEntries(
-            fm3DefaultParameters,
+            fm3Parameters,
             fm3Class.ORIGIN_PARAMETER_DEFINITION,
             fm3Class.OUTER_PARAMETER_DEFINITION
         )
@@ -402,10 +404,10 @@ describe('Testing updateParameters & getParameterEntries', () => {
             fixedIterations: 1
         }
 
-        updateParameters(fm3DefaultParameters, newParameter, fm3Class.PARAMETER_DEFINITION)
+        fm3Parameters = updateParameters(fm3Parameters, newParameter, fm3Class.PARAMETER_DEFINITION)
 
         const entries = getParameterEntries(
-            fm3DefaultParameters,
+            fm3Parameters,
             fm3Class.ORIGIN_PARAMETER_DEFINITION,
             fm3Class.OUTER_PARAMETER_DEFINITION
         )
@@ -431,6 +433,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
     const sugiClass = ogdf.layouts.layered.sugi
     const sugi = new sugiClass()
     const sugiDefaultParameters = sugi.parameters()
+    let sugiParameters = sugiDefaultParameters
     const expectedSugiEntries = [
         /* #maptz-fold-region default [Expected default sugiyama parameters] */
         {
@@ -720,16 +723,108 @@ describe('Testing updateParameters & getParameterEntries', () => {
     ]
     test("Get sugi's default parameter entries", () => {
         const entries = getParameterEntries(
-            sugiDefaultParameters,
+            sugiParameters,
             sugiClass.ORIGIN_PARAMETER_DEFINITION,
             sugiClass.OUTER_PARAMETER_DEFINITION
         )
         expect(entries).toEqual(expectedSugiEntries)
     })
 
-    test("Get sugi's parameter entries after update", () => {})
+    test("Get sugi's parameter entries after update", () => {
+        const newParameters = {
+            alignBaseClasses: true,
+            fails: 3,
+            minDistCC: 10.5,
+            clusterLayoutType: {
+                fixedLayerDistance: true,
+                layerDistance: 10.5
+            },
+            crossMinType: {
+                module: 'GlobalSifting',
+                nRepeats: 20
+            },
+            layoutType: {
+                layerDistance: 3,
+                nodeDistance: 3,
+                balanced: false,
+                module: 'FastSimple'
+            },
+            rankingType: {
+                subgraphType: {
+                    module: 'GreedyCycleRemoval'
+                },
+                module: 'CoffmanGraham'
+            },
+            useWorker: true
+        }
+        sugiParameters = updateParameters(
+            sugiParameters,
+            newParameters,
+            sugiClass.PARAMETER_DEFINITION
+        )
+        const expectedParameters = {
+            ...sugiDefaultParameters,
+            ...{
+                ...newParameters,
+                clusterLayoutType: {
+                    ...sugiDefaultParameters.clusterLayoutType,
+                    ...newParameters.clusterLayoutType
+                },
+                crossMinType: newParameters.crossMinType,
+                layoutType: {
+                    ...newParameters.layoutType,
+                    downward: true,
+                    leftToRight: true
+                },
+                rankingType: {
+                    ...newParameters.rankingType,
+                    width: 3
+                }
+            }
+        }
+        console.log(expectedParameters)
+        expect(sugiParameters).toEqual(expectedParameters)
+
+        const entries = getParameterEntries(
+            sugiParameters,
+            sugiClass.ORIGIN_PARAMETER_DEFINITION,
+            sugiClass.OUTER_PARAMETER_DEFINITION
+        )
+
+        const newParameterValues = {
+            alignBaseClasses: expectedParameters.alignBaseClasses,
+            fails: expectedParameters.fails,
+            minDistCC: expectedParameters.minDistCC,
+            clusterLayoutType_Optimal_fixedLayerDistance:
+                expectedParameters.clusterLayoutType.fixedLayerDistance,
+            clusterLayoutType_Optimal_layerDistance:
+                expectedParameters.clusterLayoutType.layerDistance,
+            crossMinType: OGDF_MODULES.RANGES[
+                sugiClass.PARAMETER_DEFINITION.crossMinType.module
+            ].indexOf(expectedParameters.crossMinType.module),
+            crossMinType_GlobalSifting_nRepeats: expectedParameters.crossMinType.nRepeats,
+            layoutType: OGDF_MODULES.RANGES[
+                sugiClass.PARAMETER_DEFINITION.layoutType.module
+            ].indexOf(expectedParameters.layoutType.module),
+            layoutType_FastSimple_layerDistance: expectedParameters.layoutType.layerDistance,
+            layoutType_FastSimple_nodeDistance: expectedParameters.layoutType.nodeDistance,
+            layoutType_FastSimple_balanced: expectedParameters.layoutType.balanced,
+            rankingType: OGDF_MODULES.RANGES[
+                sugiClass.PARAMETER_DEFINITION.rankingType.module
+            ].indexOf(expectedParameters.rankingType.module),
+            rankingType_CoffmanGraham_subgraphType: OGDF_MODULES.RANGES[
+                OGDF_MODULES[sugiClass.PARAMETER_DEFINITION.rankingType.module].CoffmanGraham
+                    .subgraphType.module
+            ].indexOf(expectedParameters.rankingType.subgraphType.module),
+            useWorker: expectedParameters.useWorker
+        }
+        expectedSugiEntries.forEach((entry) => {
+            if (entry.key in newParameterValues) {
+                entry.value = newParameterValues[entry.key]
+            }
+        })
+        expect(entries).toEqual(expectedSugiEntries)
+    })
 
     /* #end-maptz-fold-region */
-
-    test('')
 })
