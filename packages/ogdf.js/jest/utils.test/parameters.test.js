@@ -828,6 +828,13 @@ describe('Testing updateParameters & getParameterEntries', () => {
         expect(entries).toEqual(expectedSugiEntries)
     })
 
+    test('Update empty parameter', () => {
+        const result1 = updateParameters({}, {}, sugiClass.PARAMETER_DEFINITION)
+        expect(result1).toEqual(sugiDefaultParameters)
+
+        // const result2 = updateParameters({}, {}, sugiClass.PARAMETER_DEFINITION)
+    })
+
     test("Get sugi's parameter entries after update wrong parameter", () => {
         // TODO
     })

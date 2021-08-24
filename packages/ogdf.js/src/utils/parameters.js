@@ -15,10 +15,7 @@ function getDefaultParameters(PARAMETER_DEFINITION, moduleName = null) {
                     `OGDFModuleError: Module name ${module} has not been defined, please check OGDF_MODULES.`
                 )
             }
-            result[key] = getDefaultParameters(
-                OGDF_MODULES[module][moduleChoice],
-                `${moduleChoice}`
-            )
+            result[key] = getDefaultParameters(OGDF_MODULES[module][moduleChoice], moduleChoice)
         }
     })
     if (moduleName) {
@@ -28,48 +25,110 @@ function getDefaultParameters(PARAMETER_DEFINITION, moduleName = null) {
 }
 
 function updateParameters(oldParameters, newParameters, PARAMETER_DEFINITION) {
-    const copyOldParameters = JSON.parse(JSON.stringify(oldParameters))
-    Object.keys(newParameters).forEach((paramName) => {
-        if (paramName in copyOldParameters) {
-            const newValue = newParameters[paramName]
-            const oldValue = copyOldParameters[paramName]
-            copyOldParameters[paramName] = newValue
-            if (paramName !== 'module') {
-                if (!(paramName in PARAMETER_DEFINITION)) {
-                    throw Error(`${paramName} is not defined in PARAMETER_DEFINITION.`)
+    oldParameters = JSON.parse(JSON.stringify(oldParameters))
+    newParameters = JSON.parse(JSON.stringify(newParameters))
+    const resultParameters = {}
+    Object.keys(PARAMETER_DEFINITION).forEach((paramName) => {
+        if (PARAMETER_DEFINITION[paramName].type !== PARAMETER_TYPE.MODULE) {
+            let value = PARAMETER_DEFINITION[paramName].default
+            if (paramName in newParameters) value = newParameters[paramName]
+            else if (paramName in oldParameters) value = oldParameters[paramName]
+            resultParameters[paramName] = value
+        } else {
+            const module = PARAMETER_DEFINITION[paramName].module
+            let moduleChoice = PARAMETER_DEFINITION[paramName].default
+            // let moduleParameters = getDefaultParameters(
+            //     OGDF_MODULES[module][moduleChoice],
+            //     moduleChoice
+            // )
+
+            // let parametersUsed2Updt = undefined // parameters used to update
+            // if (paramName in newParameters) {
+            //     parametersUsed2Updt = newParameters
+            // } else if (paramName in oldParameters) {
+            //     parametersUsed2Updt = oldParameters
+            // }
+
+            // if (parametersUsed2Updt) {
+            //     const _moduleChoice = moduleChoice
+            //     const modParamUsed2Updt = parametersUsed2Updt[paramName] // module parameter used to update
+            //     if (typeof modParamUsed2Updt == 'string') {
+            //         moduleChoice = modParamUsed2Updt
+            //         modParamUsed2Updt = {}
+            //     } else if (modParamUsed2Updt.module) {
+            //         moduleChoice = modParamUsed2Updt.module
+            //     }
+
+            //     if (!(moduleChoice in OGDF_MODULES[module])) {
+            //         throw Error(
+            //             `OGDFModuleError: Module ${module} cannot be set to ${newValue.module}.`
+            //         )
+            //     }
+
+            //     if (moduleChoice !== _moduleChoice) {
+            //         moduleParameters = getDefaultParameters(
+            //             OGDF_MODULES[module][moduleChoice],
+            //             moduleChoice
+            //         )
+            //     }
+            //     moduleParameters = {
+            //         ...moduleParameters,
+            //         ...modParamUsed2Updt
+            //     }
+            // }
+
+            function prepareModuleParameters(parameters, moduleChoice) {
+                if (typeof parameters == 'string') {
+                    moduleChoice = parameters
+                    parameters = {}
+                } else if (parameters.module) {
+                    moduleChoice = parameters.module
                 }
-                if (PARAMETER_DEFINITION[paramName].type == PARAMETER_TYPE.MODULE) {
-                    const module = PARAMETER_DEFINITION[paramName].module
-                    if (typeof newValue == 'string' && newValue in OGDF_MODULES[module]) {
-                        const moduleChoice = newValue
-                        // only gives a module name, we should generate all parameters by default
-                        copyOldParameters[paramName] = getDefaultParameters(
-                            OGDF_MODULES[module][moduleChoice],
-                            `${moduleChoice}`
-                        )
-                    } else {
-                        const moduleChoice = newValue.module ?? oldValue.module
-                        if (moduleChoice && moduleChoice in OGDF_MODULES[module]) {
-                            copyOldParameters[paramName] = getDefaultParameters(
-                                OGDF_MODULES[module][moduleChoice],
-                                moduleChoice
-                            )
-                            copyOldParameters[paramName] = updateParameters(
-                                copyOldParameters[paramName],
-                                newValue,
-                                OGDF_MODULES[module][moduleChoice]
-                            )
-                        } else {
-                            throw Error(
-                                `OGDFModuleError: Module ${module} cannot be set to ${newValue.module}.`
-                            )
-                        }
-                    }
+
+                if (!(moduleChoice in OGDF_MODULES[module])) {
+                    throw Error(
+                        `OGDFModuleError: Module ${module} cannot be set to ${newValue.module}.`
+                    )
                 }
+
+                let moduleParameters = getDefaultParameters(
+                    OGDF_MODULES[module][moduleChoice],
+                    moduleChoice
+                )
+                moduleParameters = {
+                    ...moduleParameters,
+                    ...parameters
+                }
+                return moduleParameters
             }
+
+            let newModuleParameters = {}
+            let oldModuleParameters = {}
+            if (paramName in oldParameters) {
+                oldModuleParameters = prepareModuleParameters(
+                    oldParameters[paramName],
+                    moduleChoice
+                )
+                moduleChoice = oldModuleParameters.module
+            }
+            if (paramName in newParameters) {
+                newModuleParameters = prepareModuleParameters(
+                    newParameters[paramName],
+                    moduleChoice
+                )
+                moduleChoice = newModuleParameters.module
+            }
+
+            resultParameters[paramName] = updateParameters(
+                oldModuleParameters,
+                newModuleParameters,
+                OGDF_MODULES[module][moduleChoice]
+            )
+            resultParameters[paramName].module = moduleChoice
         }
     })
-    return copyOldParameters
+
+    return resultParameters
 }
 
 /**
