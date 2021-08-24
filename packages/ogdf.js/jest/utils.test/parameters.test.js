@@ -1,4 +1,5 @@
 const ogdf = require('../../src/index')
+const { default: tut } = require('../../src/layouts/energybased/tut')
 const {
     PARAMETER_TYPE,
     getDefaultParameters,
@@ -95,7 +96,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
     const fm3Class = ogdf.layouts.energybased.fm3
     const fm3 = new fm3Class()
     const fm3DefaultParameters = fm3.parameters()
-    const defaultExpected = [
+    const expectedFM3Entries = [
         /* #region default [Expected default fm3 parameters] */
         {
             key: 'useHighLevelOptions',
@@ -377,7 +378,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
             fm3Class.OUTER_PARAMETER_DEFINITION
         )
 
-        expect(entries).toEqual(defaultExpected)
+        expect(entries).toEqual(expectedFM3Entries)
     })
 
     test("Get fm3's parameter entries after updateParameters(empty)", () => {
@@ -389,7 +390,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
             fm3Class.OUTER_PARAMETER_DEFINITION
         )
 
-        expect(entries).toEqual(defaultExpected)
+        expect(entries).toEqual(expectedFM3Entries)
     })
 
     test("Get fm3's parameter entries after updateParameters", () => {
@@ -414,14 +415,311 @@ describe('Testing updateParameters & getParameterEntries', () => {
             unitEdgeLength: 10,
             fixedIterations: 1
         }
-        defaultExpected.forEach((entry) => {
+        expectedFM3Entries.forEach((entry) => {
             if (entry.key in newParameterValue) {
                 entry.value = newParameterValue[entry.key]
             }
         })
 
-        expect(entries).toEqual(defaultExpected)
+        expect(entries).toEqual(expectedFM3Entries)
     })
 
-    // TODO test layouts with embedded modules
+    const sugiClass = ogdf.layouts.layered.sugi
+    const sugi = new sugiClass()
+    const sugiDefaultParameters = sugi.parameters()
+    const expectedSugiEntries = [
+        /* #region default [Expected default sugiyama parameters] */
+        {
+            key: 'alignBaseClasses',
+            value: false,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'alignSiblings',
+            value: false,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'arrangeCCs',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'fails',
+            value: 4,
+            type: PARAMETER_TYPE.INT,
+            isOriginParameter: true
+        },
+        {
+            key: 'maxThreads',
+            value: 1,
+            type: PARAMETER_TYPE.INT,
+            isOriginParameter: true
+        },
+        {
+            key: 'minDistCC',
+            value: 20.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'pageRatio',
+            value: 1.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'permuteFirst',
+            value: false,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'runs',
+            value: 15,
+            type: PARAMETER_TYPE.INT,
+            isOriginParameter: true
+        },
+        {
+            key: 'transpose',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'clusterLayoutType',
+            value: 0,
+            type: PARAMETER_TYPE.MODULE,
+            isOriginParameter: true
+        },
+        {
+            key: 'clusterLayoutType_Optimal_fixedLayerDistance',
+            value: false,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'clusterLayoutType_Optimal_layerDistance',
+            value: 3.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'clusterLayoutType_Optimal_nodeDistance',
+            value: 3.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'clusterLayoutType_Optimal_weightBalancing',
+            value: 0.1,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'clusterLayoutType_Optimal_weightClusters',
+            value: 0.05,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'clusterLayoutType_Optimal_weightSegments',
+            value: 2.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'crossMinType',
+            value: 0,
+            type: PARAMETER_TYPE.MODULE,
+            isOriginParameter: true
+        },
+        {
+            key: 'crossMinType_GlobalSifting_nRepeats',
+            value: 10,
+            type: PARAMETER_TYPE.INT,
+            isOriginParameter: true
+        },
+        {
+            key: 'crossMinType_GridSifting_verticalStepsBound',
+            value: 10,
+            type: PARAMETER_TYPE.INT,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType',
+            value: 0,
+            type: PARAMETER_TYPE.MODULE,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_Fast_fixedLayerDistance',
+            value: false,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_Fast_layerDistance',
+            value: 3.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_Fast_nodeDistance',
+            value: 3.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_FastSimple_layerDistance',
+            value: 75,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_FastSimple_nodeDistance',
+            value: 150,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_FastSimple_balanced',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_FastSimple_downward',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_FastSimple_leftToRight',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+
+        {
+            key: 'layoutType_Optimal_fixedLayerDistance',
+            value: false,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_Optimal_layerDistance',
+            value: 3.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_Optimal_nodeDistance',
+            value: 3.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_Optimal_weightBalancing',
+            value: 0.1,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'layoutType_Optimal_weightSegments',
+            value: 2.0,
+            type: PARAMETER_TYPE.DOUBLE,
+            isOriginParameter: true
+        },
+        {
+            key: 'packerType',
+            value: 0,
+            type: PARAMETER_TYPE.MODULE,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType',
+            value: 1,
+            type: PARAMETER_TYPE.MODULE,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_CoffmanGraham_width',
+            value: 3,
+            type: PARAMETER_TYPE.INT,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_CoffmanGraham_subgraphType',
+            value: 0,
+            type: PARAMETER_TYPE.MODULE,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_LongestPath_alignBaseClasses',
+            value: false,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_LongestPath_alignSiblings',
+            value: false,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_LongestPath_optimizeEdgeLength',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_LongestPath_separateDeg0Layer',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_LongestPath_separateMultiEdges',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_LongestPath_subgraphType',
+            value: 0,
+            type: PARAMETER_TYPE.MODULE,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_Optimal_separateMultiEdges',
+            value: true,
+            type: PARAMETER_TYPE.BOOL,
+            isOriginParameter: true
+        },
+        {
+            key: 'rankingType_Optimal_subgraphType',
+            value: 0,
+            type: PARAMETER_TYPE.MODULE,
+            isOriginParameter: true
+        },
+        {
+            key: 'useWorker',
+            value: false,
+            isOriginParameter: false,
+            type: PARAMETER_TYPE.BOOL
+        }
+        /* #endregion */
+    ]
+    test("Get sugi's default parameter entries", () => {
+        const entries = getParameterEntries(
+            sugiDefaultParameters,
+            sugiClass.ORIGIN_PARAMETER_DEFINITION,
+            sugiClass.OUTER_PARAMETER_DEFINITION
+        )
+        expect(entries).toEqual(expectedSugiEntries)
+    })
 })
