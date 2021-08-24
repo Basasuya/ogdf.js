@@ -792,6 +792,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
         )
 
         const newParameterValues = {
+            /* #maptz-fold-region default */
             alignBaseClasses: expectedParameters.alignBaseClasses,
             fails: expectedParameters.fails,
             minDistCC: expectedParameters.minDistCC,
@@ -817,6 +818,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
                     .subgraphType.module
             ].indexOf(expectedParameters.rankingType.subgraphType.module),
             useWorker: expectedParameters.useWorker
+            /* #end-maptz-fold-region*/
         }
         expectedSugiEntries.forEach((entry) => {
             if (entry.key in newParameterValues) {
@@ -827,6 +829,10 @@ describe('Testing updateParameters & getParameterEntries', () => {
     })
 
     test("Get sugi's parameter entries after update wrong parameter", () => {
+        // TODO
+    })
+
+    test("Get sugi's parameter entries after update parameter out of range", () => {
         // TODO
     })
     /* #end-maptz-fold-region */
