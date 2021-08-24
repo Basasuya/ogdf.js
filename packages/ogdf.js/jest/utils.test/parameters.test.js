@@ -782,7 +782,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
                 }
             }
         }
-        console.log(expectedParameters)
+
         expect(sugiParameters).toEqual(expectedParameters)
 
         const entries = getParameterEntries(
@@ -826,5 +826,8 @@ describe('Testing updateParameters & getParameterEntries', () => {
         expect(entries).toEqual(expectedSugiEntries)
     })
 
+    test("Get sugi's parameter entries after update wrong parameter", () => {
+        // TODO
+    })
     /* #end-maptz-fold-region */
 })
