@@ -1,5 +1,4 @@
 const ogdf = require('../../src/index')
-const { default: tut } = require('../../src/layouts/energybased/tut')
 const {
     PARAMETER_TYPE,
     getDefaultParameters,
@@ -93,11 +92,13 @@ describe('Testing getDefaultParameters', () => {
 })
 
 describe('Testing updateParameters & getParameterEntries', () => {
+    // ! test fm3
+    /* #maptz-fold-region */
     const fm3Class = ogdf.layouts.energybased.fm3
     const fm3 = new fm3Class()
     const fm3DefaultParameters = fm3.parameters()
     const expectedFM3Entries = [
-        /* #region default [Expected default fm3 parameters] */
+        /* #maptz-fold-region default [Expected default fm3 parameters] */
         {
             key: 'useHighLevelOptions',
             value: false,
@@ -368,7 +369,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
             isOriginParameter: false,
             type: PARAMETER_TYPE.BOOL
         }
-        /* #endregion */
+        /* #end-maptz-fold-region */
     ]
 
     test("Get fm3's default parameter entries", () => {
@@ -423,12 +424,15 @@ describe('Testing updateParameters & getParameterEntries', () => {
 
         expect(entries).toEqual(expectedFM3Entries)
     })
+    /* #end-maptz-fold-region */
 
+    // ! test sugiyama
+    /* #maptz-fold-region */
     const sugiClass = ogdf.layouts.layered.sugi
     const sugi = new sugiClass()
     const sugiDefaultParameters = sugi.parameters()
     const expectedSugiEntries = [
-        /* #region default [Expected default sugiyama parameters] */
+        /* #maptz-fold-region default [Expected default sugiyama parameters] */
         {
             key: 'alignBaseClasses',
             value: false,
@@ -712,7 +716,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
             isOriginParameter: false,
             type: PARAMETER_TYPE.BOOL
         }
-        /* #endregion */
+        /* #end-maptz-fold-region */
     ]
     test("Get sugi's default parameter entries", () => {
         const entries = getParameterEntries(
@@ -722,4 +726,10 @@ describe('Testing updateParameters & getParameterEntries', () => {
         )
         expect(entries).toEqual(expectedSugiEntries)
     })
+
+    test("Get sugi's parameter entries after update", () => {})
+
+    /* #end-maptz-fold-region */
+
+    test('')
 })
