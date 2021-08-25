@@ -14,7 +14,8 @@
         "lint": "cd packages/ogdf.js && npm run lint",
         "watch": "cd packages/ogdf.js && npm run watch",
         "build:dashboard": "cd packages/dashboard && npm run build",
-        "watch:dashboard": "cd packages/dashboard && npm run start"
+        "watch:dashboard": "cd packages/dashboard && npm run start",
+        "server": "concurrently \"http-server -a localhost -p 3000\" \"start http://localhost:3000/examples\""
     },
     "repository": {
         "type": "git",
@@ -33,11 +34,13 @@
     },
     "homepage": "https://github.com/ZJUVAI/ogdf.js#readme",
     "devDependencies": {
+        "concurrently": "^6.2.1",
         "eslint": "^6.6.0",
         "eslint-config-prettier": "^6.14.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-jsx-a11y": "^6.3.1",
         "eslint-plugin-prettier": "^3.1.4",
+        "http-server": "^13.0.1",
         "lerna": "^4.0.0",
         "prettier": "^2.3.2"
     }
