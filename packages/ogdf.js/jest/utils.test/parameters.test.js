@@ -93,8 +93,6 @@ describe('Testing getDefaultParameters', () => {
 })
 
 describe('Testing updateParameters & getParameterEntries', () => {
-    // ! test fm3
-    /* #maptz-fold-region */
     const fm3Class = ogdf.layouts.energybased.fm3
     const fm3 = new fm3Class()
     const fm3DefaultParameters = fm3.parameters()
@@ -426,10 +424,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
 
         expect(entries).toEqual(expectedFM3Entries)
     })
-    /* #end-maptz-fold-region */
 
-    // ! test sugiyama
-    /* #maptz-fold-region */
     const sugiClass = ogdf.layouts.layered.sugi
     const sugi = new sugiClass()
     const sugiDefaultParameters = sugi.parameters()
@@ -832,15 +827,94 @@ describe('Testing updateParameters & getParameterEntries', () => {
         const result1 = updateParameters({}, {}, sugiClass.PARAMETER_DEFINITION)
         expect(result1).toEqual(sugiDefaultParameters)
 
-        // const result2 = updateParameters({}, {}, sugiClass.PARAMETER_DEFINITION)
+        const result2 = updateParameters(undefined, undefined, sugiClass.PARAMETER_DEFINITION)
+        expect(result1).toEqual(sugiDefaultParameters)
+
+        const result3 = updateParameters(
+            {},
+            {
+                rankingType: {
+                    subgraphType: 'GreedyCycleRemoval',
+                    module: 'CoffmanGraham'
+                }
+            },
+            sugiClass.PARAMETER_DEFINITION
+        )
+
+        expect(result3).toEqual({
+            ...sugiDefaultParameters,
+            rankingType: {
+                module: 'CoffmanGraham',
+                subgraphType: {
+                    module: 'GreedyCycleRemoval'
+                },
+                width: 3
+            }
+        })
     })
 
     test("Get sugi's parameter entries after update wrong parameter", () => {
-        // TODO
-    })
+        expect(() => {
+            updateParameters(sugiDefaultParameters, {}, undefined)
+        }).toThrow()
 
-    test("Get sugi's parameter entries after update parameter out of range", () => {
-        // TODO
+        expect(updateParameters(sugiDefaultParameters, {}, {})).toEqual({})
+
+        expect(updateParameters({}, { x: 2 }, sugiClass.PARAMETER_DEFINITION)).toEqual(
+            sugiDefaultParameters
+        )
+
+        expect(updateParameters({ x: 2 }, {}, sugiClass.PARAMETER_DEFINITION)).toEqual(
+            sugiDefaultParameters
+        )
+
+        expect(() => {
+            updateParameters({}, { fails: -1 }, sugiClass.PARAMETER_DEFINITION)
+        }).toThrow()
+
+        expect(() => {
+            updateParameters({}, { clusterLayoutType: '' }, pgClass.PARAMETER_DEFINITION)
+        }).toThrow()
+
+        expect(() => {
+            updateParameters(
+                {},
+                { clusterLayoutType: { module: '' } },
+                pgClass.PARAMETER_DEFINITION
+            )
+        }).toThrow()
+
+        expect(() => {
+            updateParameters(
+                {},
+                { rankingType: { module: 'CoffmanGraham', subgraphType: '' } },
+                pgClass.PARAMETER_DEFINITION
+            )
+        }).toThrow()
+
+        expect(() => {
+            updateParameters(
+                {},
+                { rankingType: { module: '', subgraphType: 'GreedyCycleRemoval' } },
+                pgClass.PARAMETER_DEFINITION
+            )
+        }).toThrow()
+
+        expect(() => {
+            updateParameters({}, { permuteFirst: 0 }, sugiClass.PARAMETER_DEFINITION)
+        }).toThrow()
+
+        expect(() => {
+            updateParameters({}, { permuteFirst: null }, sugiClass.PARAMETER_DEFINITION)
+        }).toThrow()
+
+        expect(
+            updateParameters(
+                {},
+                { permuteFirst: undefined } /* undefined parameters will be ignored*/,
+                sugiClass.PARAMETER_DEFINITION
+            )
+        ).toEqual(sugiDefaultParameters)
     })
     /* #end-maptz-fold-region */
 })

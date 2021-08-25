@@ -2,12 +2,6 @@ const ogdf = require('../../src/index')
 const { PARAMETER_TYPE } = require('../../src/utils/parameter-type')
 const { getParameterEntries } = require('../../src/utils/parameters')
 
-// × Is the order of mul's parameters right (11 ms)
-// × Is the order of segv's parameters right (7 ms)
-// × Is the order of sugi's parameters right (7 ms)
-// × Is the order of pg's parameters right (7 ms)
-// × Is the order of pl's parameters right (4 ms)
-
 const layoutNames = []
 const categories = {}
 Object.keys(ogdf.layouts).forEach((category) => {

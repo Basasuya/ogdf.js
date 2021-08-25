@@ -6,7 +6,6 @@ import {
     getParameterEntries,
     PARAMETER_TYPE
 } from '../utils/parameters'
-import { OGDF_MODULES, parameters } from '../utils'
 
 export default function createLayout(
     NAME,
@@ -24,7 +23,7 @@ export default function createLayout(
         constructor(configs) {
             const graph = configs?.graph ?? { nodes: [], links: [] }
             let parameters = configs?.parameters ?? {}
-            let callback = configs?.callback ?? function () {}
+            let callback = configs?.callback ?? function callback() {}
 
             this._sourceIndexArray = []
             this._targetIndexArray = []
@@ -41,7 +40,7 @@ export default function createLayout(
             this._callback = callback
             this.callback(callback)
         }
-        run() {
+        async run() {
             // ogdf-defined parameters should keep their orders
             const parameterEntries = getParameterEntries(
                 this._parameters,
@@ -214,7 +213,10 @@ export default function createLayout(
             return JSON.parse(JSON.stringify(this._parameters))
         }
         callback(callback) {
-            this._callback = typeof callback == 'function' ? callback : () => {}
+            if (callback) {
+                this._callback = typeof callback == 'function' ? callback : () => {}
+            }
+            return this._callback
         }
         graph(graph) {
             if (graph) {

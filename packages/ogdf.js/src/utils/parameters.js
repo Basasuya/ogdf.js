@@ -1,9 +1,21 @@
 import OGDF_MODULES from './modules'
 import { PARAMETER_TYPE } from './parameter-type'
 
+/**
+ * Get default parameters according to PARAMETER_DEFINITION
+ * e.g., getDefaultParameters(ogdf.layouts.layered.sugi.PARAMETER_DEFINITION)
+ * ! Default parameters of OGDF_MODULES can also be computed,
+ * but you should set PARAMETER_DEFINITION to OGDF_MODULES[module],
+ * and set moduleName with your module choice
+ * e.g. getDefaultParamters(OGDF_MODULES['EdgeInsertion']['FixedEmbedding'], 'FixedEmbedding')
+ * @param {object} PARAMETER_DEFINITION
+ * @param {string} moduleName
+ * @returns {object} default parameters
+ */
 function getDefaultParameters(PARAMETER_DEFINITION, moduleName = null) {
     let result = {}
     let PD = PARAMETER_DEFINITION
+    if (!PD) return {}
     Object.keys(PD).forEach((key) => {
         const defaultValue = PD[key].default
         result[key] = defaultValue
@@ -24,61 +36,59 @@ function getDefaultParameters(PARAMETER_DEFINITION, moduleName = null) {
     return result
 }
 
+/**
+ * Update old parameters (oldParameters) with new parameters (newParameters) according to PARAMETER_DEFINITION
+ * ! parameters that not defined in PARAMETER_DEFINITION will be ignored
+ * e.g., updateParameters({}, {x: 1}, ogdf.layouts.layered.sugi.PARAMETER_DEFINITION) will ignore the parameter [x] in newParameters (2nd arg)
+ * updateParameters of OGDF_MODULES is also allowed
+ * we guarantee both oldParameters and newParameters will not be changed in this function
+ * @param {object} oldParameters
+ * @param {object} newParameters
+ * @param {object} PARAMETER_DEFINITION
+ * @returns {object} a copy of updated oldParameters
+ */
 function updateParameters(oldParameters, newParameters, PARAMETER_DEFINITION) {
-    oldParameters = JSON.parse(JSON.stringify(oldParameters))
-    newParameters = JSON.parse(JSON.stringify(newParameters))
+    oldParameters = oldParameters ? JSON.parse(JSON.stringify(oldParameters)) : {}
+    newParameters = newParameters ? JSON.parse(JSON.stringify(newParameters)) : {}
     const resultParameters = {}
+    if (!PARAMETER_DEFINITION) throw Error(`ParameterError: PARAMETER_DEFINITION is not defined.`)
+
     Object.keys(PARAMETER_DEFINITION).forEach((paramName) => {
         if (PARAMETER_DEFINITION[paramName].type !== PARAMETER_TYPE.MODULE) {
             let value = PARAMETER_DEFINITION[paramName].default
+
+            if (paramName in oldParameters) value = oldParameters[paramName]
+
             if (paramName in newParameters) value = newParameters[paramName]
-            else if (paramName in oldParameters) value = oldParameters[paramName]
-            resultParameters[paramName] = value
+
+            const PD = PARAMETER_DEFINITION
+            const isCategorical =
+                PD[paramName].type == PARAMETER_TYPE.CATEGORICAL &&
+                PD[paramName].range.indexOf(value) >= 0
+            const isNumerical =
+                (PD[paramName].type == PARAMETER_TYPE.INT ||
+                    PD[paramName].type == PARAMETER_TYPE.DOUBLE) &&
+                value >= PD[paramName].range[0] &&
+                value <= PD[paramName].range[1] &&
+                value !== Infinity &&
+                value !== -Infinity
+            const isBoolean = PD[paramName].type == PARAMETER_TYPE.BOOL && typeof value == 'boolean'
+
+            if (isCategorical || isNumerical || isBoolean) {
+                resultParameters[paramName] = value
+            } else {
+                throw Error(
+                    `ParameterRangeError: can not set ${paramName} to ${value} with type of ${PD[paramName].type} range in [${PD[paramName].range}].`
+                )
+            }
         } else {
             const module = PARAMETER_DEFINITION[paramName].module
             let moduleChoice = PARAMETER_DEFINITION[paramName].default
-            // let moduleParameters = getDefaultParameters(
-            //     OGDF_MODULES[module][moduleChoice],
-            //     moduleChoice
-            // )
-
-            // let parametersUsed2Updt = undefined // parameters used to update
-            // if (paramName in newParameters) {
-            //     parametersUsed2Updt = newParameters
-            // } else if (paramName in oldParameters) {
-            //     parametersUsed2Updt = oldParameters
-            // }
-
-            // if (parametersUsed2Updt) {
-            //     const _moduleChoice = moduleChoice
-            //     const modParamUsed2Updt = parametersUsed2Updt[paramName] // module parameter used to update
-            //     if (typeof modParamUsed2Updt == 'string') {
-            //         moduleChoice = modParamUsed2Updt
-            //         modParamUsed2Updt = {}
-            //     } else if (modParamUsed2Updt.module) {
-            //         moduleChoice = modParamUsed2Updt.module
-            //     }
-
-            //     if (!(moduleChoice in OGDF_MODULES[module])) {
-            //         throw Error(
-            //             `OGDFModuleError: Module ${module} cannot be set to ${newValue.module}.`
-            //         )
-            //     }
-
-            //     if (moduleChoice !== _moduleChoice) {
-            //         moduleParameters = getDefaultParameters(
-            //             OGDF_MODULES[module][moduleChoice],
-            //             moduleChoice
-            //         )
-            //     }
-            //     moduleParameters = {
-            //         ...moduleParameters,
-            //         ...modParamUsed2Updt
-            //     }
-            // }
 
             function prepareModuleParameters(parameters, moduleChoice) {
                 if (typeof parameters == 'string') {
+                    // supporting set module to be a string
+                    // but the string will be converted into a standard module parameter object
                     moduleChoice = parameters
                     parameters = {}
                 } else if (parameters.module) {
@@ -87,7 +97,7 @@ function updateParameters(oldParameters, newParameters, PARAMETER_DEFINITION) {
 
                 if (!(moduleChoice in OGDF_MODULES[module])) {
                     throw Error(
-                        `OGDFModuleError: Module ${module} cannot be set to ${newValue.module}.`
+                        `ParameterRangeError: Module ${module} cannot be set to ${newValue.module}.`
                     )
                 }
 
@@ -132,12 +142,14 @@ function updateParameters(oldParameters, newParameters, PARAMETER_DEFINITION) {
 }
 
 /**
- *
- * @param {*} parameter
- * @param {*} ORIGIN_PARAMETER_DEFINITION
- * @param {*} OUTER_PARAMETER_DEFINITION
- * @returns [{key, value, isOriginParameter}, ...], the order follows the deep first traversal of {...ORIGIN_PARAMETER_DEFINITION, ...OUTER_PARAMETER_DEFINITION};
- * !The order of origin parameters should keep same to their order in cpp code
+ * get a list of parameters each with its key, value (a numerical/boolean value, categorical value will be converted into numerical), type, and isOriginParameter(means it is defined by the origin cpp library)
+ * same to getDefaultParameters and updateParameters, it can be used with OGDF_MODULES
+ * @param {object} parameter
+ * @param {object} ORIGIN_PARAMETER_DEFINITION
+ * @param {object} OUTER_PARAMETER_DEFINITION
+ * @returns [{key, value, type, isOriginParameter}, ...], the order follows the deep first traversal of {...ORIGIN_PARAMETER_DEFINITION, ...OUTER_PARAMETER_DEFINITION};
+ * !The order of origin parameters should keep same to their order in cpp code,
+ * it will be tested by running `npm run test`
  */
 function getParameterEntries(parameters, ORIGIN_PARAMETER_DEFINITION, OUTER_PARAMETER_DEFINITION) {
     let entries = []
