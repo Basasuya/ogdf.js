@@ -18,27 +18,26 @@
         miserables.links.forEach((link) => {
             link.weight = Math.random()
         })
-        const layout = new ogdf.layouts.energybased.mul({
+        const layout = new ogdf.layouts.layered.sugi({
             graph: miserables,
             parameters: {
                 edgeCosts: 100,
                 numberOfPivots: 250,
                 useEdgeCostsAttribute: true,
-                useWorker: true
-            },
-            callback: (graph) => {
-                // netv.data(graph)
-                netv.data(
-                    NetV.Utils.transformGraphPosition(
-                        graph,
-                        Math.min(width, height) * 0.9,
-                        width / 2,
-                        height / 2
-                    )
-                )
-                netv.draw()
+                useWorker: false
             }
         })
-        layout.run()
+        layout.run().then((graph) => {
+            // netv.data(graph)
+            netv.data(
+                NetV.Utils.transformGraphPosition(
+                    graph,
+                    Math.min(width, height) * 0.9,
+                    width / 2,
+                    height / 2
+                )
+            )
+            netv.draw()
+        })
     </script>
 </html>

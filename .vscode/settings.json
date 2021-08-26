@@ -1,1 +1,19 @@
-{}
+{
+    "maptz.regionfolder": {
+        "[javascript]": {
+            "foldEnd": "/* #end-maptz-fold-region */",
+            "foldEndRegex": "/\\*[\\s]*#end-maptz-fold-region",
+            "foldStart": "/* #maptz-fold-region [NAME] */",
+            "foldStartRegex": "^[\\s]*/\\*[\\s]*#maptz-fold-region[\\s]*(.*)[\\s]*\\*/[\\s]*$",
+            "defaultFoldStartRegex": "^[\\s]*/\\*[\\s]*#maptz-fold-region[\\s]*default\\s(.*)[\\s]*\\*/[\\s]*$",
+            "isFoldedByDefault": false,
+            "foldDefinitions": [
+                {
+                    "foldEndRegex": "\\*+/[\\s]*$",
+                    "foldStartRegex": "^[\\s]*/\\*\\*+",
+                    "isFoldedByDefault": true
+                }
+            ]
+        }
+    }
+}
