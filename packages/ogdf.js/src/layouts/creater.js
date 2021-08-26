@@ -23,7 +23,6 @@ export default function createLayout(
         constructor(configs) {
             const graph = configs?.graph ?? { nodes: [], links: [] }
             let parameters = configs?.parameters ?? {}
-            let callback = configs?.callback ?? function callback() {}
 
             this._sourceIndexArray = []
             this._targetIndexArray = []
@@ -36,11 +35,8 @@ export default function createLayout(
             // overwrite default parameters by user defined parameters
             this._parameters = getDefaultParameters(PARAMETER_DEFINITION)
             this.parameters(parameters)
-
-            this._callback = callback
-            this.callback(callback)
         }
-        async run() {
+        run() {
             // ogdf-defined parameters should keep their orders
             const parameterEntries = getParameterEntries(
                 this._parameters,
@@ -55,21 +51,18 @@ export default function createLayout(
             const M = this._graph.links.length
 
             function createOGDFProcess() {
-                function OGDFProcess(
-                    {
-                        NAME,
-                        PARAMETER_TYPE,
-                        initOGDF,
-                        N,
-                        M,
-                        sourceIndexArray,
-                        targetIndexArray,
-                        orderedAttributes,
-                        originParameterValues
-                    },
-                    callback
-                ) {
-                    initOGDF().then(function (Module) {
+                function OGDFProcess({
+                    NAME,
+                    PARAMETER_TYPE,
+                    initOGDF,
+                    N,
+                    M,
+                    sourceIndexArray,
+                    targetIndexArray,
+                    orderedAttributes,
+                    originParameterValues
+                }) {
+                    return initOGDF().then(function (Module) {
                         let source = Module._malloc(4 * M)
                         let target = Module._malloc(4 * M)
                         for (let i = 0; i < M; ++i) {
@@ -108,7 +101,7 @@ export default function createLayout(
                         Module._free(source)
                         Module._free(target)
                         Module._free_buf(result)
-                        callback(nodes)
+                        return nodes
                     })
                 }
                 if (this?.constructor.name == 'DedicatedWorkerGlobalScope') {
@@ -119,44 +112,45 @@ export default function createLayout(
                         let initOGDF = message.initOGDF
                         eval(`initOGDF = ${initOGDF}`)
                         message.initOGDF = initOGDF
-                        OGDFProcess(message, (nodes) => postMessage(JSON.stringify(nodes)))
+                        OGDFProcess(message).then((nodes) => postMessage(JSON.stringify(nodes)))
                     })
                 }
                 return OGDFProcess
             }
 
-            if (this._parameters.useWorker) {
+            if (this._parameters.useWorker && typeof Worker !== 'undefined') {
                 const worker = createWorker(createOGDFProcess)
 
-                // post data, including functions/parameters/..., into the webworker
-                worker.postMessage(
-                    JSON.stringify({
-                        NAME,
-                        PARAMETER_TYPE,
-                        initOGDF: initOGDF.toString(), // ! Maybe we can put initOGDF out of web worker
-                        N,
-                        M,
-                        sourceIndexArray: this._sourceIndexArray,
-                        targetIndexArray: this._targetIndexArray,
-                        orderedAttributes: this._orderedAttributes,
-                        originParameterValues
-                    })
-                )
-
-                // onmessage listens the returned value from the webworker, namely, the layout
-                worker.onmessage = (e) => {
-                    const nodePositions = JSON.parse(e.data)
-                    for (let i = 0; i < N; ++i) {
-                        this._graph.nodes[i].x = nodePositions[i].x
-                        this._graph.nodes[i].y = nodePositions[i].y
+                return new Promise((resolve, reject) => {
+                    // post data, including functions/parameters/..., into the webworker
+                    worker.postMessage(
+                        JSON.stringify({
+                            NAME,
+                            PARAMETER_TYPE,
+                            initOGDF: initOGDF.toString(),
+                            N,
+                            M,
+                            sourceIndexArray: this._sourceIndexArray,
+                            targetIndexArray: this._targetIndexArray,
+                            orderedAttributes: this._orderedAttributes,
+                            originParameterValues
+                        })
+                    )
+                    // onmessage listens the returned value from the webworker, namely, the layout
+                    worker.onmessage = (e) => {
+                        const nodePositions = JSON.parse(e.data)
+                        for (let i = 0; i < N; ++i) {
+                            this._graph.nodes[i].x = nodePositions[i].x
+                            this._graph.nodes[i].y = nodePositions[i].y
+                        }
+                        worker.terminate()
+                        resolve(this._graph)
                     }
-                    worker.terminate()
-                    this._callback(this._graph)
-                }
+                })
             } else {
                 const OGDFProcess = createOGDFProcess()
-                OGDFProcess(
-                    {
+                return new Promise((resolve, reject) => {
+                    OGDFProcess({
                         NAME,
                         PARAMETER_TYPE,
                         initOGDF,
@@ -166,15 +160,14 @@ export default function createLayout(
                         targetIndexArray: this._targetIndexArray,
                         orderedAttributes: this._orderedAttributes,
                         originParameterValues
-                    },
-                    (nodes) => {
+                    }).then((nodes) => {
                         for (let i = 0; i < N; ++i) {
-                            this._graph.nodes[i]['x'] = nodes[i].x
-                            this._graph.nodes[i]['y'] = nodes[i].y
+                            this._graph.nodes[i].x = nodes[i].x
+                            this._graph.nodes[i].y = nodes[i].y
                         }
-                        this._callback(this._graph)
-                    }
-                )
+                        resolve(this._graph)
+                    })
+                })
             }
         }
         parameters(parameter, value) {
@@ -191,11 +184,11 @@ export default function createLayout(
                     // e.g., this.parameters("multilevelBuilderType.module", "EdgeCoverMerger")
                     // e.g., this.parameters("multilevelBuilderType.edgeLengthAdjustment")
                     const parameterChain = parameter.split('.')
-                    const newParam = JSON.stringify(JSON.parse(this._parameters))
-                    let parant = newParam
+                    const newParam = JSON.parse(JSON.stringify(this._parameters))
+                    let parentObj = newParam
                     for (let i = 0; i < parameterChain.length - 1; i++) {
-                        parent = parent[parameterChain[i]]
-                        if (!parent || !parent[parameterChain[i + 1]]) {
+                        parentObj = parentObj[parameterChain[i]]
+                        if (!parentObj || !parentObj[parameterChain[i + 1]]) {
                             throw Error(
                                 `ParameterError: Cannot find parameter ${parameter} in ${this.name}'s parameters`
                             )
@@ -203,20 +196,14 @@ export default function createLayout(
                     }
                     const chainEnd = parameterChain[parameterChain.length - 1]
                     if (value !== undefined) {
-                        parent[chainEnd] = value
+                        parentObj[chainEnd] = value
                         this._parameters = updateParameters(this._parameters, newParam, PD)
                     } else {
-                        return parent[chainEnd]
+                        return parentObj[chainEnd]
                     }
                 }
             }
             return JSON.parse(JSON.stringify(this._parameters))
-        }
-        callback(callback) {
-            if (callback) {
-                this._callback = typeof callback == 'function' ? callback : () => {}
-            }
-            return this._callback
         }
         graph(graph) {
             if (graph) {
@@ -258,7 +245,7 @@ export default function createLayout(
                 }) // ! Ensure the order of attributes
             }
 
-            return this._graph
+            return JSON.parse(JSON.stringify(this._graph))
         }
     }
 

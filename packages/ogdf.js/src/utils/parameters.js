@@ -86,18 +86,20 @@ function updateParameters(oldParameters, newParameters, PARAMETER_DEFINITION) {
             let moduleChoice = PARAMETER_DEFINITION[paramName].default
 
             function prepareModuleParameters(parameters, moduleChoice) {
-                if (typeof parameters == 'string') {
+                if (typeof parameters == 'object') {
+                    if (parameters.module) {
+                        moduleChoice = parameters.module
+                    }
+                } else {
                     // supporting set module to be a string
                     // but the string will be converted into a standard module parameter object
                     moduleChoice = parameters
                     parameters = {}
-                } else if (parameters.module) {
-                    moduleChoice = parameters.module
                 }
 
                 if (!(moduleChoice in OGDF_MODULES[module])) {
                     throw Error(
-                        `ParameterRangeError: Module ${module} cannot be set to ${newValue.module}.`
+                        `ParameterRangeError: Module ${module} cannot be set to ${moduleChoice}.`
                     )
                 }
 

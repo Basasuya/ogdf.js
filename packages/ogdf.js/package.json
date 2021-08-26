@@ -21,7 +21,7 @@
         "url": "https://raw.githubusercontent.com/ZJUVAI/ogdf.js"
     },
     "scripts": {
-        "test": "jest",
+        "test": "jest --runInBand --detectOpenHandles",
         "build": "webpack",
         "lint": "eslint src/index.js",
         "watch": "webpack --watch"

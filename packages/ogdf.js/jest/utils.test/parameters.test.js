@@ -873,7 +873,7 @@ describe('Testing updateParameters & getParameterEntries', () => {
         }).toThrow()
 
         expect(() => {
-            updateParameters({}, { clusterLayoutType: '' }, pgClass.PARAMETER_DEFINITION)
+            updateParameters({}, { clusterLayoutType: 0 }, pgClass.PARAMETER_DEFINITION)
         }).toThrow()
 
         expect(() => {
