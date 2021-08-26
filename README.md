@@ -1,4 +1,16 @@
-# ogdf.js
+<p align="center">
+  <a href="https://github.com/ZJUVAI/ogdf.js">
+    <img width="200" src="./icon.svg">
+  </a>
+</p>
+
+<h1 align="center">ogdf.js</h1>
+
+<div align="center">
+
+A JavaScript Graph Drawing Library Emscripts the C++ Library [OGDF](https://ogdf.uos.de/).
+
+</div>
 
 ### Introduction
 
