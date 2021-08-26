@@ -15,7 +15,7 @@
         "watch": "cd packages/ogdf.js && npm run watch",
         "build:dashboard": "cd packages/dashboard && npm run build",
         "watch:dashboard": "cd packages/dashboard && npm run start",
-        "server": "concurrently \"http-server -a localhost -p 3000\" \"start http://localhost:3000/examples\""
+        "server": "concurrently \"http-server -a localhost -p 5000\" \"start http://localhost:5000/examples\""
     },
     "repository": {
         "type": "git",

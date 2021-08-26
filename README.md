@@ -41,19 +41,16 @@ Examples can be found in [./examples](./examples). We use [NetV.js](https://gith
 
 ```JavaScript
 // layouts can be called like:
-fm3(/* graph data */ { nodes: facebook.nodes, links: facebook.links },
-    /* parameters */ { qualityVersusSpeed: "GorgeousAndEfficient" },
-    /* callback */ (graph) => {
-        netv.data(graph)
-        netv.draw()
-    }
-)
+const Layout = ogdf.layouts.energebased.fm3
+const fm3 = new Layout()
+fm3.graph(/* graph data */ { nodes: facebook.nodes, links: facebook.links })
+fm3.parameters(/* parameters */ { qualityVersusSpeed: "GorgeousAndEfficient" })
+fm3.run().then(graph => {
+    // ...
+})
 
 // or using import/export
 import * as ogdf from 'ogdfjs'
-ogdf.fm3(/* .... */) {
-    // ...
-}
 ```
 
 ### How to build it?
@@ -142,6 +139,14 @@ _NOTE\*: for Windows users, please use WSL to perform step 1~3._
     # open dashboard
     $ npm run watch:dashboard
     ```
+
+### Server & Testing
+
+```bash
+$ npm run test # run all tests
+$ npm run server # open a local http server to see examples
+$ npm run watch:dashboard # to open the dashboard
+```
 
 ### Progress
 
