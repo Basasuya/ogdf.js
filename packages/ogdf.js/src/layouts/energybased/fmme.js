@@ -2,7 +2,7 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'FMME'
-const OUR_PARAMETERS = {
+export const OUTER_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -10,7 +10,7 @@ const OUR_PARAMETERS = {
     }
 }
 
-const ORIGIN_PARAMETERS = {
+export const ORIGIN_PARAMETER_DEFINITION = {
     maxNumThreads: {
         type: PARAMETER_TYPE.INT,
         range: [0, Infinity],
@@ -20,9 +20,9 @@ const ORIGIN_PARAMETERS = {
         type: PARAMETER_TYPE.INT,
         range: [0, Infinity],
         default: 10
-    },
+    }
 }
 
-const fmme = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, {})
+const fmme = createLayout(NAME, OUTER_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
 
 export default fmme

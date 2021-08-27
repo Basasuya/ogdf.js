@@ -98,33 +98,49 @@ AcyclicSubgraphModule *getAcyclicSubgraph(int type)
     }
 }
 
-RankingModule *getRanking(int type, int width, bool alignBaseClasses, bool alignSiblings, bool optimizeEdgeLength, bool separateDeg0Layer, bool separateMultiEdges, int subgraphType)
-{
-    AcyclicSubgraphModule *subgraph = getAcyclicSubgraph(subgraphType);
+RankingModule *getRanking(
+    int type,
+    int rankingType_CoffmanGraham_width, 
+	int rankingType_CoffmanGraham_subgraphType, 
+	bool rankingType_LongestPath_alignBaseClasses, 
+	bool rankingType_LongestPath_alignSiblings, 
+	bool rankingType_LongestPath_optimizeEdgeLength, 
+	bool rankingType_LongestPath_separateDeg0Layer,
+	bool rankingType_LongestPath_separateMultiEdges,
+	int rankingType_LongestPath_subgraphType,
+    bool rankingType_Optimal_separateMultiEdges,
+	int rankingType_Optimal_subgraphType
+) {
     switch (type)
     {
     case 0:
     {
         CoffmanGrahamRanking *coffmanGrahamRanking = new CoffmanGrahamRanking();
-        coffmanGrahamRanking->width(width);
+        coffmanGrahamRanking->width(rankingType_CoffmanGraham_width);
+        AcyclicSubgraphModule *subgraph = getAcyclicSubgraph(rankingType_CoffmanGraham_subgraphType);
         coffmanGrahamRanking->setSubgraph(subgraph);
         return coffmanGrahamRanking;
     }
     case 1:
     {
         LongestPathRanking *longestPathRanking = new LongestPathRanking();
-        longestPathRanking->alignBaseClasses(alignBaseClasses);
-        longestPathRanking->alignSiblings(alignSiblings);
-        longestPathRanking->optimizeEdgeLength(optimizeEdgeLength);
-        longestPathRanking->separateDeg0Layer(separateDeg0Layer);
-        longestPathRanking->separateMultiEdges(separateMultiEdges);
+        longestPathRanking->alignBaseClasses(rankingType_LongestPath_alignBaseClasses);
+        longestPathRanking->alignSiblings(rankingType_LongestPath_alignSiblings);
+        longestPathRanking->optimizeEdgeLength(rankingType_LongestPath_optimizeEdgeLength);
+        longestPathRanking->separateDeg0Layer(rankingType_LongestPath_separateDeg0Layer);
+        longestPathRanking->separateMultiEdges(rankingType_LongestPath_separateMultiEdges);
+        
+        AcyclicSubgraphModule *subgraph = getAcyclicSubgraph(rankingType_LongestPath_subgraphType);
         longestPathRanking->setSubgraph(subgraph);
+
         return longestPathRanking;
     }
     case 2:
     {
         OptimalRanking *optimalRaking = new OptimalRanking();
-        optimalRaking->separateMultiEdges(separateMultiEdges);
+        optimalRaking->separateMultiEdges(rankingType_Optimal_separateMultiEdges);
+
+        AcyclicSubgraphModule *subgraph = getAcyclicSubgraph(rankingType_Optimal_subgraphType);
         optimalRaking->setSubgraph(subgraph);
         return optimalRaking;
     }
@@ -133,8 +149,11 @@ RankingModule *getRanking(int type, int width, bool alignBaseClasses, bool align
     }
 }
 
-LayeredCrossMinModule *getLayeredCrossMin(int type, int nRepeats, int verticalStepsBound)
-{
+LayeredCrossMinModule *getLayeredCrossMin(
+    int type,
+    int crossMinType_GlobalSifting_nRepeats, 
+	int crossMinType_GridSifting_verticalStepsBound
+) {
     switch (type)
     {
     case 0:
@@ -145,7 +164,7 @@ LayeredCrossMinModule *getLayeredCrossMin(int type, int nRepeats, int verticalSt
     case 1:
     {
         GlobalSifting *globalSifting = new GlobalSifting();
-        globalSifting->nRepeats(nRepeats);
+        globalSifting->nRepeats(crossMinType_GlobalSifting_nRepeats);
         return globalSifting;
     }
     case 2:
@@ -161,7 +180,7 @@ LayeredCrossMinModule *getLayeredCrossMin(int type, int nRepeats, int verticalSt
     case 4:
     {
         GridSifting *gridShifting = new GridSifting();
-        gridShifting->verticalStepsBound(verticalStepsBound);
+        gridShifting->verticalStepsBound(crossMinType_GridSifting_verticalStepsBound);
         return gridShifting;
     }
     case 5:
@@ -184,36 +203,50 @@ LayeredCrossMinModule *getLayeredCrossMin(int type, int nRepeats, int verticalSt
     }
 }
 
-HierarchyLayoutModule *getHierarchyLayout(int type, bool fixedLayerDistance, double layerDistance, double nodeDistance, bool balanced, bool downward, bool leftToRight, double weightBalancing, double weightSegments)
-{
+HierarchyLayoutModule *getHierarchyLayout(
+    int type,
+    bool layoutType_Fast_fixedLayerDistance, 
+	double layoutType_Fast_layerDistance, 
+	double layoutType_Fast_nodeDistance, 
+	double layoutType_FastSimple_layerDistance, 
+	double layoutType_FastSimple_nodeDistance, 
+	bool layoutType_FastSimple_balanced, 
+	bool layoutType_FastSimple_downward,
+	bool layoutType_FastSimple_leftToRight, 
+	bool layoutType_Optimal_fixedLayerDistance, 
+	double layoutType_Optimal_layerDistance, 
+	double layoutType_Optimal_nodeDistance, 
+	double layoutType_Optimal_weightBalancing, 
+	double layoutType_Optimal_weightSegments
+) {
     switch (type)
     {
     case 0:
     {
         FastHierarchyLayout *fastHierarchy = new FastHierarchyLayout();
-        fastHierarchy->fixedLayerDistance(fixedLayerDistance);
-        fastHierarchy->layerDistance(layerDistance);
-        fastHierarchy->nodeDistance(nodeDistance);
+        fastHierarchy->fixedLayerDistance(layoutType_Fast_fixedLayerDistance);
+        fastHierarchy->layerDistance(layoutType_Fast_layerDistance);
+        fastHierarchy->nodeDistance(layoutType_Fast_nodeDistance);
         return fastHierarchy;
     }
     case 1:
     {
         FastSimpleHierarchyLayout *fastSimpleHierarchy = new FastSimpleHierarchyLayout();
-        fastSimpleHierarchy->balanced(balanced);
-        fastSimpleHierarchy->downward(downward);
-        fastSimpleHierarchy->layerDistance(layerDistance);
-        fastSimpleHierarchy->leftToRight(leftToRight);
-        fastSimpleHierarchy->nodeDistance(nodeDistance);
+        fastSimpleHierarchy->balanced(layoutType_FastSimple_balanced);
+        fastSimpleHierarchy->downward(layoutType_FastSimple_downward);
+        fastSimpleHierarchy->layerDistance(layoutType_FastSimple_layerDistance);
+        fastSimpleHierarchy->leftToRight(layoutType_FastSimple_leftToRight);
+        fastSimpleHierarchy->nodeDistance(layoutType_FastSimple_nodeDistance);
         return fastSimpleHierarchy;
     }
     case 2:
     {
         OptimalHierarchyLayout *optimalHierarchyLayout = new OptimalHierarchyLayout();
-        optimalHierarchyLayout->fixedLayerDistance(fixedLayerDistance);
-        optimalHierarchyLayout->layerDistance(layerDistance);
-        optimalHierarchyLayout->nodeDistance(nodeDistance);
-        optimalHierarchyLayout->weightBalancing(weightBalancing);
-        optimalHierarchyLayout->weightSegments(weightSegments);
+        optimalHierarchyLayout->fixedLayerDistance(layoutType_Optimal_fixedLayerDistance);
+        optimalHierarchyLayout->layerDistance(layoutType_Optimal_layerDistance);
+        optimalHierarchyLayout->nodeDistance(layoutType_Optimal_nodeDistance);
+        optimalHierarchyLayout->weightBalancing(layoutType_Optimal_weightBalancing);
+        optimalHierarchyLayout->weightSegments(layoutType_Optimal_weightSegments);
         return optimalHierarchyLayout;
     }
     default:
@@ -221,19 +254,26 @@ HierarchyLayoutModule *getHierarchyLayout(int type, bool fixedLayerDistance, dou
     }
 }
 
-HierarchyClusterLayoutModule *getHierarchyClusterLayout(int type, bool fixedLayerDistance, double layerDistance, double nodeDistance, double weightBalancing, double weightClusters, double weightSegments)
-{
+HierarchyClusterLayoutModule *getHierarchyClusterLayout(
+    int type,
+    bool clusterLayoutType_Optimal_fixedLayerDistance, 
+	double clusterLayoutType_Optimal_layerDistance, 
+	double clusterLayoutType_Optimal_nodeDistance, 
+	double clusterLayoutType_Optimal_weightBalancing, 
+	double clusterLayoutType_Optimal_weightClusters, 
+	double clusterLayoutType_Optimal_weightSegments
+) {
     switch (type)
     {
     case 0:
     {
         OptimalHierarchyClusterLayout *optimalHierarchyClusterLayout = new OptimalHierarchyClusterLayout();
-        optimalHierarchyClusterLayout->fixedLayerDistance(fixedLayerDistance);
-        optimalHierarchyClusterLayout->layerDistance(layerDistance);
-        optimalHierarchyClusterLayout->nodeDistance(nodeDistance);
-        optimalHierarchyClusterLayout->weightBalancing(weightBalancing);
-        optimalHierarchyClusterLayout->weightClusters(weightClusters);
-        optimalHierarchyClusterLayout->weightSegments(weightSegments);
+        optimalHierarchyClusterLayout->fixedLayerDistance(clusterLayoutType_Optimal_fixedLayerDistance);
+        optimalHierarchyClusterLayout->layerDistance(clusterLayoutType_Optimal_layerDistance);
+        optimalHierarchyClusterLayout->nodeDistance(clusterLayoutType_Optimal_nodeDistance);
+        optimalHierarchyClusterLayout->weightBalancing(clusterLayoutType_Optimal_weightBalancing);
+        optimalHierarchyClusterLayout->weightClusters(clusterLayoutType_Optimal_weightClusters);
+        optimalHierarchyClusterLayout->weightSegments(clusterLayoutType_Optimal_weightSegments);
         return optimalHierarchyClusterLayout;
     }
 
@@ -256,39 +296,47 @@ CCLayoutPackModule *getCCLayoutPack(int type)
     }
 }
 
-EmbedderModule *getEmbedder(int type, double timeLimit, bool useExtendedDepthDefinition)
+EmbedderModule *getEmbedder(
+    int type,
+    double MaxFace_timeLimit,
+    double MinDepth_timeLimit,
+    double MinDepthPiTa_timeLimit,
+    bool MinDepthPiTa_useExtendedDepthDefinition,
+    double OptimalFlexDraw_timeLimit,
+    double Simple_timeLimit
+)
 {
     switch (type)
     {
     case 0:
     {
         EmbedderMaxFace *maxFace = new EmbedderMaxFace();
-        maxFace->timeLimit(timeLimit);
+        maxFace->timeLimit(MaxFace_timeLimit);
         return maxFace;
     }
     case 1:
     {
         EmbedderMinDepth *minDepth = new EmbedderMinDepth();
-        minDepth->timeLimit(timeLimit);
+        minDepth->timeLimit(MinDepth_timeLimit);
         return minDepth;
     }
     case 2:
     {
         EmbedderMinDepthPiTa *minDepthPiTa = new EmbedderMinDepthPiTa();
-        minDepthPiTa->timeLimit(timeLimit);
-        minDepthPiTa->useExtendedDepthDefinition(useExtendedDepthDefinition);
+        minDepthPiTa->timeLimit(MinDepthPiTa_timeLimit);
+        minDepthPiTa->useExtendedDepthDefinition(MinDepthPiTa_useExtendedDepthDefinition);
         return minDepthPiTa;
     }
     case 3:
     {
         EmbedderOptimalFlexDraw *optimalFlexDraw = new EmbedderOptimalFlexDraw();
-        optimalFlexDraw->timeLimit(timeLimit); //-1, or >= 0
+        optimalFlexDraw->timeLimit(OptimalFlexDraw_timeLimit); //-1, or >= 0
         return optimalFlexDraw;
     }
     case 4:
     {
         SimpleEmbedder *simple = new SimpleEmbedder();
-        simple->timeLimit(timeLimit);
+        simple->timeLimit(Simple_timeLimit);
         return simple;
     }
     default:
@@ -364,20 +412,23 @@ MixedModelCrossingsBeautifierModule *getMixedModelCrossingsBeautifier(int type)
     }
 }
 
-ShellingOrderModule *getShellingOrder(int type, double baseRatio)
-{
+ShellingOrderModule *getShellingOrder(
+    int type,
+    double Biconnected_baseRatio,
+    double Triconnected_baseRatio
+) {
     switch (type)
     {
     case 0:
     {
         BiconnectedShellingOrder *bi = new BiconnectedShellingOrder();
-        bi->baseRatio(baseRatio);
+        bi->baseRatio(Biconnected_baseRatio);
         return bi;
     }
     case 1:
     {
         TriconnectedShellingOrder *tri = new TriconnectedShellingOrder();
-        tri->baseRatio(baseRatio);
+        tri->baseRatio(Triconnected_baseRatio);
         return tri;
     }
     default:
@@ -385,25 +436,51 @@ ShellingOrderModule *getShellingOrder(int type, double baseRatio)
     }
 }
 
-GridLayoutPlanRepModule *getGridLayoutPlanRep(int type, double separation, int augmenterType, int crossingsBeautifierType, int embedderType, double timeLimit, bool useExtendedDepthDefinition, int shellingOrderType, double baseRatio)
-{
+GridLayoutPlanRepModule *getGridLayoutPlanRep(
+    int type,
+    double Mixed_separation,
+    int Mixed_augmenterType,
+    int Mixed_crossingsBeautifierType,
+    int Mixed_embedderType,
+    double Mixed_embedderType_MaxFace_timeLimit,
+    double Mixed_embedderType_MinDepth_timeLimit,
+    double Mixed_embedderType_MinDepthPiTa_timeLimit,
+    bool Mixed_embedderType_MinDepthPiTa_useExtendedDepthDefinition,
+    double Mixed_embedderType_OptimalFlexDraw_timeLimit,
+    double Mixed_embedderType_Simple_timeLimit,
+    int Mixed_shellingOrderType,
+    double Mixed_shellingOrderType_Biconnected_baseRatio,
+    double Mixed_shellingOrderType_Triconnected_baseRatio
+) {
     switch (type)
     {
     case 0:
     {
         MixedModelLayout *mixed = new MixedModelLayout();
-        mixed->separation(separation);
+        mixed->separation(Mixed_separation);
 
-        AugmentationModule *augmenter = getAugmentation(augmenterType);
+        AugmentationModule *augmenter = getAugmentation(Mixed_augmenterType);
         mixed->setAugmenter(augmenter);
 
-        MixedModelCrossingsBeautifierModule *crossingsBeautifier = getMixedModelCrossingsBeautifier(crossingsBeautifierType);
+        MixedModelCrossingsBeautifierModule *crossingsBeautifier = getMixedModelCrossingsBeautifier(Mixed_crossingsBeautifierType);
         mixed->setCrossingsBeautifier(crossingsBeautifier);
 
-        EmbedderModule *embedder = getEmbedder(embedderType, timeLimit, useExtendedDepthDefinition);
+        EmbedderModule *embedder = getEmbedder(
+            Mixed_embedderType, 
+            Mixed_embedderType_MaxFace_timeLimit,
+            Mixed_embedderType_MinDepth_timeLimit,
+            Mixed_embedderType_MinDepthPiTa_timeLimit,
+            Mixed_embedderType_MinDepthPiTa_useExtendedDepthDefinition,
+            Mixed_embedderType_OptimalFlexDraw_timeLimit,
+            Mixed_embedderType_Simple_timeLimit
+        );
         mixed->setEmbedder(embedder);
 
-        ShellingOrderModule *shellingOrder = getShellingOrder(shellingOrderType, baseRatio);
+        ShellingOrderModule *shellingOrder = getShellingOrder(
+            Mixed_shellingOrderType,
+            Mixed_shellingOrderType_Biconnected_baseRatio,
+            Mixed_shellingOrderType_Triconnected_baseRatio
+        );
         mixed->setShellingOrder(shellingOrder);
 
         return mixed;
@@ -413,36 +490,50 @@ GridLayoutPlanRepModule *getGridLayoutPlanRep(int type, double separation, int a
     }
 }
 
-EdgeInsertionModule *getEdgeInsertion(int type, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double timeLimit, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics)
-{
+EdgeInsertionModule *getEdgeInsertion(
+    int type,
+	bool FixedEmbedding_keepEmbedding,
+	double FixedEmbedding_percentMostCrossed,
+	int FixedEmbedding_removeReinsert,
+	double FixedEmbedding_timeLimit,
+	double MultiEdgeApprox_percentMostCrossedFix,
+	double MultiEdgeApprox_percentMostCrossedVar,
+	int MultiEdgeApprox_removeReinsertFix,
+	int MultiEdgeApprox_removeReinsertVar,
+	bool MultiEdgeApprox_statistics,
+	double MultiEdgeApprox_timeLimit,
+	double VariableEmbedding_percentMostCrossed,
+	int VariableEmbedding_removeReinsert,
+	double VariableEmbedding_timeLimit
+) {
     switch (type)
     {
     case 0:
     {
         FixedEmbeddingInserter *fixed = new FixedEmbeddingInserter();
-        fixed->keepEmbedding(keepEmbedding);
-        fixed->percentMostCrossed(percentMostCrossed);
-        fixed->removeReinsert(static_cast<RemoveReinsertType>(removeReinsert));
-        fixed->timeLimit(timeLimit);
+        fixed->keepEmbedding(FixedEmbedding_keepEmbedding);
+        fixed->percentMostCrossed(FixedEmbedding_percentMostCrossed);
+        fixed->removeReinsert(static_cast<RemoveReinsertType>(FixedEmbedding_removeReinsert));
+        fixed->timeLimit(FixedEmbedding_timeLimit);
         return fixed;
     }
     case 1:
     {
         MultiEdgeApproxInserter *multi = new MultiEdgeApproxInserter();
-        multi->percentMostCrossedFix(percentMostCrossedFix);
-        multi->percentMostCrossedVar(percentMostCrossedVar);
-        multi->removeReinsertFix(static_cast<RemoveReinsertType>(removeReinsertFix));
-        multi->removeReinsertVar(static_cast<RemoveReinsertType>(removeReinsertVar));
-        multi->statistics(statistics);
-        multi->timeLimit(timeLimit);
+        multi->percentMostCrossedFix(MultiEdgeApprox_percentMostCrossedFix);
+        multi->percentMostCrossedVar(MultiEdgeApprox_percentMostCrossedVar);
+        multi->removeReinsertFix(static_cast<RemoveReinsertType>(MultiEdgeApprox_removeReinsertFix));
+        multi->removeReinsertVar(static_cast<RemoveReinsertType>(MultiEdgeApprox_removeReinsertVar));
+        multi->statistics(MultiEdgeApprox_statistics);
+        multi->timeLimit(MultiEdgeApprox_timeLimit);
         return multi;
     }
     case 2:
     {
         VariableEmbeddingInserter *var = new VariableEmbeddingInserter();
-        var->percentMostCrossed(percentMostCrossed);
-        var->removeReinsert(static_cast<RemoveReinsertType>(removeReinsert));
-        var->timeLimit(timeLimit);
+        var->percentMostCrossed(VariableEmbedding_percentMostCrossed);
+        var->removeReinsert(static_cast<RemoveReinsertType>(VariableEmbedding_removeReinsert));
+        var->timeLimit(VariableEmbedding_timeLimit);
         return var;
     }
     default:
@@ -451,51 +542,68 @@ EdgeInsertionModule *getEdgeInsertion(int type, bool keepEmbedding, double perce
 }
 
 template <typename T>
-PlanarSubgraphModule<T> *getPlanarSubgraph(int type, unsigned int maxThreads, double timeLimit, int runs, double randomness)
+PlanarSubgraphModule<T> *getPlanarSubgraph(
+    int type,
+    unsigned int Maximum_maxThreads,
+	double Maximum_timeLimit,
+	unsigned int BoyerMyrvold_maxThreads,
+	double BoyerMyrvold_timeLimit,
+	int BoyerMyrvold_runs,
+	double BoyerMyrvold_randomness,
+	unsigned int Cactus_maxThreads,
+	double Cactus_timeLimit,
+	unsigned int Empty_maxThreads,
+	double Empty_timeLimit,
+	unsigned int Fast_maxThreads,
+	double Fast_timeLimit,
+	int Fast_runs,
+	unsigned int Tree_maxThreads,
+	double Tree_timeLimit
+)
 {
     switch (type)
     {
     case 0:
     {
         MaximumPlanarSubgraph *max = new MaximumPlanarSubgraph();
-        max->maxThreads(maxThreads);
-        max->timeLimit(timeLimit);
+        max->maxThreads(Maximum_maxThreads);
+        max->timeLimit(Maximum_timeLimit);
         return max;
     }
     case 1:
     {
-        PlanarSubgraphBoyerMyrvold *sub = new PlanarSubgraphBoyerMyrvold(runs, randomness);
-        sub->maxThreads(maxThreads);
-        sub->timeLimit(timeLimit);
+        PlanarSubgraphBoyerMyrvold *sub = new PlanarSubgraphBoyerMyrvold(BoyerMyrvold_runs, BoyerMyrvold_randomness);
+        sub->maxThreads(BoyerMyrvold_maxThreads);
+        sub->timeLimit(BoyerMyrvold_timeLimit);
         return sub;
     }
     case 2:
     {
         PlanarSubgraphCactus<T> *sub = new PlanarSubgraphCactus<T>();
-        sub->maxThreads(maxThreads);
-        sub->timeLimit(timeLimit);
+        sub->maxThreads(Cactus_maxThreads);
+        sub->timeLimit(Cactus_timeLimit);
         return sub;
     }
     case 3:
     {
         PlanarSubgraphEmpty<T> *sub = new PlanarSubgraphEmpty<T>();
-        sub->maxThreads(maxThreads);
-        sub->timeLimit(timeLimit);
+        sub->maxThreads(Empty_maxThreads);
+        sub->timeLimit(Empty_timeLimit);
         return sub;
     }
     case 4:
     {
         PlanarSubgraphFast<T> *sub = new PlanarSubgraphFast<T>();
-        sub->maxThreads(maxThreads);
-        sub->timeLimit(timeLimit);
-        sub->runs(runs);
+        sub->maxThreads(Fast_maxThreads);
+        sub->timeLimit(Fast_timeLimit);
+        sub->runs(Fast_runs);
         return sub;
     }
     case 5:
     {
         PlanarSubgraphTree<T> *sub = new PlanarSubgraphTree<T>();
-        sub->maxThreads(maxThreads);
-        sub->timeLimit(timeLimit);
+        sub->maxThreads(Tree_maxThreads);
+        sub->timeLimit(Tree_timeLimit);
         return sub;
     }
     default:
@@ -503,8 +611,49 @@ PlanarSubgraphModule<T> *getPlanarSubgraph(int type, unsigned int maxThreads, do
     }
 }
 
-CrossingMinimizationModule *getCrossingMinimization(int type, int globalInternalLibraryLogLevel, int globalLogLevel, int globalMinimumLogLevel, bool globalStatisticMode, int localLogLevel, int localLogMode, unsigned int maxThreads, int permutations, bool timeout, double timeLimit, int inserterType, bool keepEmbedding, double percentMostCrossed, int removeReinsert, double percentMostCrossedFix, double percentMostCrossedVar, int removeReinsertFix, int removeReinsertVar, bool statistics, int subgraphType, int runs, double randomness)
-{
+CrossingMinimizationModule *getCrossingMinimization(
+    int type,
+    int SubgraphPlanarizer_globalInternalLibraryLogLevel,
+	int SubgraphPlanarizer_globalLogLevel,
+	int SubgraphPlanarizer_globalMinimumLogLevel,
+	bool SubgraphPlanarizer_globalStatisticMode,
+	int SubgraphPlanarizer_localLogLevel,
+	int SubgraphPlanarizer_localLogMode,
+	unsigned int SubgraphPlanarizer_maxThreads,
+	int SubgraphPlanarizer_permutations,
+	bool SubgraphPlanarizer_timeout,
+	double SubgraphPlanarizer_timeLimit,
+	int SubgraphPlanarizer_inserterType,
+	bool SubgraphPlanarizer_inserterType_FixedEmbedding_keepEmbedding,
+	double SubgraphPlanarizer_inserterType_FixedEmbedding_percentMostCrossed,
+	int SubgraphPlanarizer_inserterType_FixedEmbedding_removeReinsert,
+	double SubgraphPlanarizer_inserterType_FixedEmbedding_timeLimit,
+	double SubgraphPlanarizer_inserterType_MultiEdgeApprox_percentMostCrossedFix,
+	double SubgraphPlanarizer_inserterType_MultiEdgeApprox_percentMostCrossedVar,
+	int SubgraphPlanarizer_inserterType_MultiEdgeApprox_removeReinsertFix,
+	int SubgraphPlanarizer_inserterType_MultiEdgeApprox_removeReinsertVar,
+	bool SubgraphPlanarizer_inserterType_MultiEdgeApprox_statistics,
+	double SubgraphPlanarizer_inserterType_MultiEdgeApprox_timeLimit,
+	double SubgraphPlanarizer_inserterType_VariableEmbedding_percentMostCrossed,
+	int SubgraphPlanarizer_inserterType_VariableEmbedding_removeReinsert,
+	double SubgraphPlanarizer_inserterType_VariableEmbedding_timeLimit,
+	int SubgraphPlanarizer_subgraphType,
+	unsigned int SubgraphPlanarizer_subgraphType_Maximum_maxThreads,
+	double SubgraphPlanarizer_subgraphType_Maximum_timeLimit,
+	unsigned int SubgraphPlanarizer_subgraphType_BoyerMyrvold_maxThreads,
+	double SubgraphPlanarizer_subgraphType_BoyerMyrvold_timeLimit,
+	int SubgraphPlanarizer_subgraphType_BoyerMyrvold_runs,
+	double SubgraphPlanarizer_subgraphType_BoyerMyrvold_randomness,
+	unsigned int SubgraphPlanarizer_subgraphType_Cactus_maxThreads,
+	double SubgraphPlanarizer_subgraphType_Cactus_timeLimit,
+	unsigned int SubgraphPlanarizer_subgraphType_Empty_maxThreads,
+	double SubgraphPlanarizer_subgraphType_Empty_timeLimit,
+	unsigned int SubgraphPlanarizer_subgraphType_Fast_maxThreads,
+	double SubgraphPlanarizer_subgraphType_Fast_timeLimit,
+	int SubgraphPlanarizer_subgraphType_Fast_runs,
+	unsigned int SubgraphPlanarizer_subgraphType_Tree_maxThreads,
+	double SubgraphPlanarizer_subgraphType_Tree_timeLimit
+) {
     switch (type)
     {
     case 0:
@@ -516,15 +665,47 @@ CrossingMinimizationModule *getCrossingMinimization(int type, int globalInternal
         // subgraphPlanarizer->globalStatisticMode(globalStatisticMode);
         // subgraphPlanarizer->localLogLevel(static_cast<Logger::Level>(localLogLevel));
         // subgraphPlanarizer->localLogMode(static_cast<Logger::LogMode>(localLogMode));
-        subgraphPlanarizer->maxThreads(maxThreads);
-        subgraphPlanarizer->permutations(permutations);
-        subgraphPlanarizer->setTimeout(timeout);
-        subgraphPlanarizer->timeLimit(timeLimit);
+        subgraphPlanarizer->maxThreads(SubgraphPlanarizer_maxThreads);
+        subgraphPlanarizer->permutations(SubgraphPlanarizer_permutations);
+        subgraphPlanarizer->setTimeout(SubgraphPlanarizer_timeout);
+        subgraphPlanarizer->timeLimit(SubgraphPlanarizer_timeLimit);
 
-        EdgeInsertionModule *inserter = getEdgeInsertion(inserterType, keepEmbedding, percentMostCrossed, removeReinsert, timeLimit, percentMostCrossedFix, percentMostCrossedVar, removeReinsertFix, removeReinsertVar, statistics);
+        EdgeInsertionModule *inserter = getEdgeInsertion(
+            SubgraphPlanarizer_inserterType,
+            SubgraphPlanarizer_inserterType_FixedEmbedding_keepEmbedding,
+            SubgraphPlanarizer_inserterType_FixedEmbedding_percentMostCrossed,
+            SubgraphPlanarizer_inserterType_FixedEmbedding_removeReinsert,
+            SubgraphPlanarizer_inserterType_FixedEmbedding_timeLimit,
+            SubgraphPlanarizer_inserterType_MultiEdgeApprox_percentMostCrossedFix,
+            SubgraphPlanarizer_inserterType_MultiEdgeApprox_percentMostCrossedVar,
+            SubgraphPlanarizer_inserterType_MultiEdgeApprox_removeReinsertFix,
+            SubgraphPlanarizer_inserterType_MultiEdgeApprox_removeReinsertVar,
+            SubgraphPlanarizer_inserterType_MultiEdgeApprox_statistics,
+            SubgraphPlanarizer_inserterType_MultiEdgeApprox_timeLimit,
+            SubgraphPlanarizer_inserterType_VariableEmbedding_percentMostCrossed,
+            SubgraphPlanarizer_inserterType_VariableEmbedding_removeReinsert,
+            SubgraphPlanarizer_inserterType_VariableEmbedding_timeLimit
+        );
         subgraphPlanarizer->setInserter(inserter);
 
-        PlanarSubgraphModule<int> *subgraph = getPlanarSubgraph<int>(subgraphType, maxThreads, timeLimit, runs, randomness);
+        PlanarSubgraphModule<int> *subgraph = getPlanarSubgraph<int>(
+            SubgraphPlanarizer_subgraphType,
+            SubgraphPlanarizer_subgraphType_Maximum_maxThreads,
+            SubgraphPlanarizer_subgraphType_Maximum_timeLimit,
+            SubgraphPlanarizer_subgraphType_BoyerMyrvold_maxThreads,
+            SubgraphPlanarizer_subgraphType_BoyerMyrvold_timeLimit,
+            SubgraphPlanarizer_subgraphType_BoyerMyrvold_runs,
+            SubgraphPlanarizer_subgraphType_BoyerMyrvold_randomness,
+            SubgraphPlanarizer_subgraphType_Cactus_maxThreads,
+            SubgraphPlanarizer_subgraphType_Cactus_timeLimit,
+            SubgraphPlanarizer_subgraphType_Empty_maxThreads,
+            SubgraphPlanarizer_subgraphType_Empty_timeLimit,
+            SubgraphPlanarizer_subgraphType_Fast_maxThreads,
+            SubgraphPlanarizer_subgraphType_Fast_timeLimit,
+            SubgraphPlanarizer_subgraphType_Fast_runs,
+            SubgraphPlanarizer_subgraphType_Tree_maxThreads,
+            SubgraphPlanarizer_subgraphType_Tree_timeLimit
+        );
         subgraphPlanarizer->setSubgraph(subgraph);
 
         return subgraphPlanarizer;
@@ -534,49 +715,62 @@ CrossingMinimizationModule *getCrossingMinimization(int type, int globalInternal
     }
 }
 
-MultilevelBuilder *getMultilevelBuilder(int type, int edgeLengthAdjustment, double factor, float searchDepthBase, bool selectByNodeMass)
+MultilevelBuilder *getMultilevelBuilder(
+    int type, 
+    int multilevelBuilderType_EdgeCoverMerger_edgeLengthAdjustment, 
+    double multilevelBuilderType_EdgeCoverMerger_factor, 
+    int multilevelBuilderType_IndependentSetMerger_edgeLengthAdjustment, 
+    float multilevelBuilderType_IndependentSetMerger_searchDepthBase, 
+    int multilevelBuilderType_LocalBiconnectedMerger_edgeLengthAdjustment, 
+    double multilevelBuilderType_LocalBiconnectedMerger_factor, 
+    int multilevelBuilderType_MatchingMerger_edgeLengthAdjustment, 
+    bool multilevelBuilderType_MatchingMerger_selectByNodeMass, 
+    int multilevelBuilderType_RandomMerger_edgeLengthAdjustment, 
+    double multilevelBuilderType_RandomMerger_factor, 
+    int multilevelBuilderType_SolarMerger_edgeLengthAdjustment
+)
 {
     switch (type)
     {
     case 0:
     {
         EdgeCoverMerger *merger = new EdgeCoverMerger();
-        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
-        merger->setFactor(factor);
+        merger->setEdgeLengthAdjustment(multilevelBuilderType_EdgeCoverMerger_edgeLengthAdjustment);
+        merger->setFactor(multilevelBuilderType_EdgeCoverMerger_factor);
         return merger;
     }
     case 1:
     {
         IndependentSetMerger *merger = new IndependentSetMerger();
-        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
-        merger->setSearchDepthBase(searchDepthBase);
+        merger->setEdgeLengthAdjustment(multilevelBuilderType_IndependentSetMerger_edgeLengthAdjustment);
+        merger->setSearchDepthBase(multilevelBuilderType_IndependentSetMerger_searchDepthBase);
         return merger;
     }
     case 2:
     {
         LocalBiconnectedMerger *merger = new LocalBiconnectedMerger();
-        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
-        merger->setFactor(factor);
+        merger->setEdgeLengthAdjustment(multilevelBuilderType_LocalBiconnectedMerger_edgeLengthAdjustment);
+        merger->setFactor(multilevelBuilderType_LocalBiconnectedMerger_factor);
         return merger;
     }
     case 3:
     {
         MatchingMerger *merger = new MatchingMerger();
-        merger->selectByNodeMass(selectByNodeMass);
-        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
+        merger->setEdgeLengthAdjustment(multilevelBuilderType_MatchingMerger_edgeLengthAdjustment);
+        merger->selectByNodeMass(multilevelBuilderType_MatchingMerger_selectByNodeMass);
         return merger;
     }
     case 4:
     {
         RandomMerger *merger = new RandomMerger();
-        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
-        merger->setFactor(factor);
+        merger->setEdgeLengthAdjustment(multilevelBuilderType_RandomMerger_edgeLengthAdjustment);
+        merger->setFactor(multilevelBuilderType_RandomMerger_factor);
         return merger;
     }
     case 5:
     {
         SolarMerger *merger = new SolarMerger();
-        merger->setEdgeLengthAdjustment(edgeLengthAdjustment);
+        merger->setEdgeLengthAdjustment(multilevelBuilderType_SolarMerger_edgeLengthAdjustment);
         return merger;
     }
     default:
@@ -584,50 +778,63 @@ MultilevelBuilder *getMultilevelBuilder(int type, int edgeLengthAdjustment, doub
     }
 }
 
-InitialPlacer *getInitialPlacer(int type, bool randomOffset, bool weightedPositionPriority, double circleSize, int nodeSelection, bool radiusFixed, double randomRange)
-{
+InitialPlacer *getInitialPlacer(
+    int type,
+    bool placerType_BarycenterPlacer_randomOffset, 
+    bool placerType_BarycenterPlacer_weightedPositionPriority, 
+    double placerType_CirclePlacer_circleSize, 
+    int placerType_CirclePlacer_nodeSelection, 
+    bool placerType_CirclePlacer_radiusFixed, 
+    bool placerType_CirclePlacer_randomOffset, 
+    bool placerType_MedianPlacer_randomOffset, 
+    bool placerType_RandomPlacer_randomOffset, 
+    double placerType_RandomPlacer_circleSize, 
+    bool placerType_SolarPlacer_randomOffset, 
+    double placerType_ZeroPlacer_randomRange,
+    bool placerType_ZeroPlacer_randomOffset
+) {
     switch (type)
     {
     case 0:
     {
         BarycenterPlacer *placer = new BarycenterPlacer();
-        placer->setRandomOffset(randomOffset);
-        placer->weightedPositionPriority(weightedPositionPriority);
+        placer->setRandomOffset(placerType_BarycenterPlacer_randomOffset);
+        placer->weightedPositionPriority(placerType_BarycenterPlacer_weightedPositionPriority);
         return placer;
     }
     case 1:
     {
         CirclePlacer *placer = new CirclePlacer();
-        placer->setCircleSize(circleSize);
-        placer->setNodeSelection(static_cast<CirclePlacer::NodeSelection>(nodeSelection));
-        placer->setRadiusFixed(radiusFixed);
-        placer->setRandomOffset(randomOffset);
+        placer->setCircleSize(placerType_CirclePlacer_circleSize);
+        placer->setNodeSelection(static_cast<CirclePlacer::NodeSelection>(placerType_CirclePlacer_nodeSelection));
+        placer->setRadiusFixed(placerType_CirclePlacer_radiusFixed);
+        placer->setRandomOffset(placerType_CirclePlacer_randomOffset);
         return placer;
     }
     case 2:
     {
         MedianPlacer *placer = new MedianPlacer();
-        placer->setRandomOffset(randomOffset);
+        placer->setRandomOffset(placerType_MedianPlacer_randomOffset);
         return placer;
     }
     case 3:
     {
         RandomPlacer *placer = new RandomPlacer();
-        placer->setRandomOffset(randomOffset);
-        placer->setCircleSize(circleSize);
+        placer->setRandomOffset(placerType_RandomPlacer_randomOffset);
+        placer->setCircleSize(placerType_RandomPlacer_circleSize);
         return placer;
     }
     case 4:
     {
         SolarPlacer *placer = new SolarPlacer();
-        placer->setRandomOffset(randomOffset);
+        placer->setRandomOffset(placerType_SolarPlacer_randomOffset);
         return placer;
     }
     case 5:
     {
         ZeroPlacer *placer = new ZeroPlacer();
-        placer->setRandomRange(randomRange);
-        placer->setRandomOffset(randomOffset);
+        placer->setRandomRange(placerType_ZeroPlacer_randomRange);
+        placer->setRandomOffset(placerType_ZeroPlacer_randomOffset);
         return placer;
     }
     default:

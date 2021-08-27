@@ -3,7 +3,7 @@ import createLayout from '../creater'
 
 const NAME = 'SM'
 
-const OUR_PARAMETERS = {
+export const OUTER_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -11,7 +11,7 @@ const OUR_PARAMETERS = {
     }
 }
 
-const ORIGIN_PARAMETERS = {
+export const ORIGIN_PARAMETER_DEFINITION = {
     terminationCriterion: {
         type: PARAMETER_TYPE.CATEGORICAL,
         range: ['None', 'PositionDifference', 'Stress'],
@@ -60,7 +60,7 @@ const ORIGIN_PARAMETERS = {
 }
 
 // double* edgesWeight, double* nodesX, double* nodesY,
-const ATTRIBUTES = {
+const ATTRIBUTES_DEFINITION = {
     node: [
         {
             name: 'nodesX',
@@ -84,5 +84,10 @@ const ATTRIBUTES = {
     // sequence: ['nodesX', 'nodesY']
 }
 
-const sm = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, ATTRIBUTES)
+const sm = createLayout(
+    NAME,
+    OUTER_PARAMETER_DEFINITION,
+    ORIGIN_PARAMETER_DEFINITION,
+    ATTRIBUTES_DEFINITION
+)
 export default sm

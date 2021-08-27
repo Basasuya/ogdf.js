@@ -1,7 +1,7 @@
 #include <ogdf/energybased/SpringEmbedderKK.h>
 #include "../main.h"
 
-EM_PORT_API(float*) SEKK(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, double* nodesWidth, double* nodesHeight, bool computeMaxIterations, double desLength, int globalIterationFactor, int maxGlobalIterations, int maxLocalIterations, double stopTolerance, bool useLayout, double zeroLength) {
+EM_PORT_API(float *) SEKK(int node_num, int link_num, int* source, int* target, double* nodesX, double* nodesY, double* nodesWidth, double* nodesHeight, bool computeMaxIterations, double desLength, int globalIterationFactor, int maxGlobalIterations, int maxLocalIterations, double stopTolerance, bool useLayout, double zeroLength) {
 	node* nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);

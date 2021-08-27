@@ -2,15 +2,15 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import createLayout from '../creater'
 
 const NAME = 'TUT'
-const OUR_PARAMETERS = {
+export const OUTER_PARAMETER_DEFINITION = {
     useWorker: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
-        default: false,
-    },
+        default: false
+    }
 }
 
-const ORIGIN_PARAMETERS = {
+export const ORIGIN_PARAMETER_DEFINITION = {
     bboxLeft: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -30,8 +30,8 @@ const ORIGIN_PARAMETERS = {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
         default: 250.0
-    },
+    }
 }
 
-const tut = createLayout(NAME, OUR_PARAMETERS, ORIGIN_PARAMETERS, {})
+const tut = createLayout(NAME, OUTER_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
 export default tut
