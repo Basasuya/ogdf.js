@@ -152,12 +152,20 @@ _NOTE\*: for Windows users, please use WSL to perform step 1~3._
     $ npm run watch:dashboard
     ```
 
-### Server & Testing
+#### Server & Testing
 
 ```bash
 $ npm run test # run all tests
 $ npm run server # open a local http server to see examples
 $ npm run watch:dashboard # to open the dashboard
+```
+
+#### Publish
+
+```bash
+$ npm install -g lerna # if you didn't install lerna globally
+$ lerna version [major | minor | patch | premajor | preminor | prepatch | prerelease]
+$ lerna publish
 ```
 
 ### Progress
