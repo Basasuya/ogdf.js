@@ -4,11 +4,12 @@
 name: Publish Packages
 
 on:
-    release:
-        type: created
-    # create:
-    #     tags:
-    #         - 'ogdfjs/**'
+    # release:
+    #     type: created
+
+    create:
+        tags:
+            - 'ogdfjs/**'
 
     # push:
     #     branches:
