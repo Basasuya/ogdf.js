@@ -4,6 +4,3 @@
 
 npm-debug.log
 node_modules/
-
-packages/ogdf.js/dist/ogdf.js
-packages/ogdf.js/dist/ogdf.js.map

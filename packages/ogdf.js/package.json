@@ -15,6 +15,7 @@
         "registry": "https://registry.npmjs.org/"
     },
     "main": "src/index.js",
+    "unpkg": "dist/ogdf.js",
     "directories": {},
     "repository": {
         "type": "git",
