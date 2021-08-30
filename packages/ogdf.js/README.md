@@ -49,7 +49,7 @@ Some layout algorithms are supported now:
 
 -   [ClusterOrtho](https://ogdf.uos.de/doc/classogdf_1_1_cluster_ortho_layout.html): Represents a planar orthogonal drawing algorithm for c-planar, c-connected clustered graphs.
 
-Examples can be found in [./examples](https://github.com/ZJUVAI/ogdf.js/tree/master/examples). We use [NetV.js](https://github.com/ZJUVAG/NetV.js) to render the graph.
+Examples can be found in [examples](https://github.com/ZJUVAI/ogdf.js/tree/master/examples). We use [NetV.js](https://github.com/ZJUVAG/NetV.js) to render the graph.
 
 ```JavaScript
 // layouts can be called like:

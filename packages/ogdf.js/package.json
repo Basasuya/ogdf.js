@@ -1,7 +1,7 @@
 {
     "name": "ogdfjs",
-    "version": "0.1.0",
-    "description": "Using Emscripten to encapsulate OGDF layout functions to JavaScript code",
+    "version": "0.1.15",
+    "description": "A JavaScript Graph Drawing Library Emscripts the C++ Library [OGDF](https://ogdf.uos.de/)",
     "keywords": [
         "graph",
         "visualization",
@@ -9,16 +9,16 @@
         "layout"
     ],
     "author": "JackieAnxis <jackieanxis@gmail.com>",
-    "homepage": "https://raw.githubusercontent.com/ZJUVAI/ogdf.js#readme",
+    "homepage": "https://github.com/ZJUVAI/ogdf.js",
     "license": "MIT",
-    "main": "src/index.js",
-    "directories": {},
     "publishConfig": {
         "registry": "https://registry.npmjs.org/"
     },
+    "main": "src/index.js",
+    "directories": {},
     "repository": {
         "type": "git",
-        "url": "https://raw.githubusercontent.com/ZJUVAI/ogdf.js"
+        "url": "git+https://github.com/ZJUVAI/ogdf.js.git"
     },
     "scripts": {
         "test": "jest --runInBand --detectOpenHandles",
@@ -40,5 +40,6 @@
         "jest-raw-loader": "^1.0.1",
         "webpack": "^5.48.0",
         "webpack-cli": "^4.7.2"
-    }
+    },
+    "gitHead": "b438ef54bd74ababba096d92a025389f4a8272fc"
 }
