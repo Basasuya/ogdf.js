@@ -2,7 +2,7 @@
     "name": "ogdfjs",
     "version": "0.1.0",
     "private": true,
-    "description": "Using Emscripten to encapsulate OGDF layout functions to JavaScript code",
+    "description": "A JavaScript Graph Drawing Library Emscripts the C++ Library [OGDF](https://ogdf.uos.de/)",
     "main": "src/index.js",
     "workspaces": [
         "packages/*"
