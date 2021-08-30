@@ -1,6 +1,6 @@
 {
     "name": "ogdfjs",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "description": "A JavaScript Graph Drawing Library Emscripts the C++ Library [OGDF](https://ogdf.uos.de/)",
     "keywords": [
         "graph",
