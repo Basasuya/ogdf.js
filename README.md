@@ -20,6 +20,20 @@ We now aim to use [emscripten](https://emscripten.org/) to compile the **Layout*
 
 ### How to use
 
+-   npm ([ogdfjs](https://www.npmjs.com/package/ogdfjs)):
+
+    ```bash
+    $ npm install ogdfjs
+    ```
+
+-   unpkg: [ogdf.js](https://unpkg.com/ogdfjs)
+
+    ```html
+    <script src="https://unpkg.com/ogdfjs"></script>
+    ```
+
+### Layout Supported
+
 Some layout algorithms are supported now:
 
 ##### Energy-based Layout Algorithms

@@ -20,6 +20,20 @@ We now aim to use [emscripten](https://emscripten.org/) to compile the **Layout*
 
 ### How to use
 
+-   npm ([ogdfjs](https://www.npmjs.com/package/ogdfjs)):
+
+    ```bash
+    $ npm install ogdfjs
+    ```
+
+-   unpkg: [ogdf.js](https://unpkg.com/ogdfjs)
+
+    ```html
+    <script src="https://unpkg.com/ogdfjs"></script>
+    ```
+
+### Layout Supported
+
 Some layout algorithms are supported now:
 
 ##### Energy-based Layout Algorithms
@@ -49,7 +63,7 @@ Some layout algorithms are supported now:
 
 -   [ClusterOrtho](https://ogdf.uos.de/doc/classogdf_1_1_cluster_ortho_layout.html): Represents a planar orthogonal drawing algorithm for c-planar, c-connected clustered graphs.
 
-Examples can be found in [examples](https://github.com/ZJUVAI/ogdf.js/tree/master/examples). We use [NetV.js](https://github.com/ZJUVAG/NetV.js) to render the graph.
+Examples can be found in [./examples](https://github.com/ZJUVAI/ogdf.js/tree/master/examples). We use [NetV.js](https://github.com/ZJUVAG/NetV.js) to render the graph.
 
 ```JavaScript
 // layouts can be called like:
