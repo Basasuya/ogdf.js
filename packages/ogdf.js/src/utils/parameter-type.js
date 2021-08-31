@@ -1,8 +1,7 @@
-
 export const PARAMETER_TYPE = {
-    MODULE: "MODULE",
-    CATEGORICAL: "CATEGORICAL",
-    INT: "INT",
-    DOUBLE: "DOUBLE",
-    BOOL: "BOOL",
+    MODULE: 'MODULE',
+    CATEGORICAL: 'CATEGORICAL',
+    INT: 'INT',
+    DOUBLE: 'DOUBLE',
+    BOOL: 'BOOL'
 }

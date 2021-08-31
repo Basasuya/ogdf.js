@@ -5,6 +5,5 @@ import planarity from './layouts/planarity'
 
 import * as utils from './utils'
 
-const layouts = { energybased, layered, misclayout, planarity }
-
+const layouts = { energybased, layered, planarity }
 export { layouts, utils }

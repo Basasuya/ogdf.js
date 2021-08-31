@@ -1,0 +1,63 @@
+# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
+# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+
+name: Publish Packages
+
+on:
+    # release:
+    #     type: created
+
+    create:
+        tags:
+            - 'ogdfjs/**'
+
+    # push:
+    #     branches:
+    #         - master
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: 14
+            - run: npm ci
+            - run: npm run bootstrap
+            - run: npm test
+
+    publish-npm:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  node-version: 14
+                  registry-url: https://registry.npmjs.org/
+            - run: npm ci
+            - run: git config --global user.email "jackieanxis@gmail.com"
+            - run: git config --global user.name "JackieAnxis"
+            - run: lerna publish from-git --no-push --yes
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+    # publish-gpr:
+    #     needs: build
+    #     runs-on: ubuntu-latest
+    #     permissions:
+    #         contents: read
+    #         packages: write
+    #     steps:
+    #         - uses: actions/checkout@v2
+    #         - uses: actions/setup-node@v2
+    #           with:
+    #               node-version: 14
+    #               registry-url: https://npm.pkg.github.com/
+    #         - run: npm ci
+    #         - run: git config --global user.email "jackieanxis@gmail.com"
+    #         - run: git config --global user.name "JackieAnxis"
+    #         - run: lerna publish patch --no-push --yes --registry https://npm.pkg.github.com/
+    #           env:
+    #               NODE_AUTH_TOKEN: ${{secrets.GHP_TOKEN}}
