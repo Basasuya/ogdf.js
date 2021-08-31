@@ -15,6 +15,7 @@ import { PARAMETER_TYPE } from './parameter-type'
 function getDefaultParameters(PARAMETER_DEFINITION, moduleName = null) {
     let result = {}
     let PD = PARAMETER_DEFINITION
+
     if (!PD) return {}
     Object.keys(PD).forEach((key) => {
         const defaultValue = PD[key].default

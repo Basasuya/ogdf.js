@@ -4,9 +4,16 @@
 name: Publish Packages
 
 on:
-    push:
-        branches:
-            - master
+    # release:
+    #     type: created
+
+    create:
+        tags:
+            - 'ogdfjs/**'
+
+    # push:
+    #     branches:
+    #         - master
 
 jobs:
     build:
@@ -30,23 +37,27 @@ jobs:
                   node-version: 14
                   registry-url: https://registry.npmjs.org/
             - run: npm ci
-            - run: lerna publish
+            - run: git config --global user.email "jackieanxis@gmail.com"
+            - run: git config --global user.name "JackieAnxis"
+            - run: lerna publish from-git --no-push --yes
               env:
-                  NODE_AUTH_TOKEN: 5a7c9c08-177e-4d65-8e9d-b29372c48844
+                  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-    publish-gpr:
-        needs: build
-        runs-on: ubuntu-latest
-        permissions:
-            contents: read
-            packages: write
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: 14
-                  registry-url: https://npm.pkg.github.com/
-            - run: npm ci
-            - run: lerna publish
-              env:
-                  NODE_AUTH_TOKEN: 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
+    # publish-gpr:
+    #     needs: build
+    #     runs-on: ubuntu-latest
+    #     permissions:
+    #         contents: read
+    #         packages: write
+    #     steps:
+    #         - uses: actions/checkout@v2
+    #         - uses: actions/setup-node@v2
+    #           with:
+    #               node-version: 14
+    #               registry-url: https://npm.pkg.github.com/
+    #         - run: npm ci
+    #         - run: git config --global user.email "jackieanxis@gmail.com"
+    #         - run: git config --global user.name "JackieAnxis"
+    #         - run: lerna publish patch --no-push --yes --registry https://npm.pkg.github.com/
+    #           env:
+    #               NODE_AUTH_TOKEN: ${{secrets.GHP_TOKEN}}
