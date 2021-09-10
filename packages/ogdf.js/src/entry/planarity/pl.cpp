@@ -1,13 +1,31 @@
 #include <ogdf/planarity/PlanarizationLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float *) PL(
-	int node_num, 
-	int link_num, 
-	int* source, 
-	int* target, 
-	int minCliqueSize, 
-	double pageRatio, 
+EM_PORT_API(PlanarizationLayout *)
+LayoutModule_PlanarizationLayout(int minCliqueSize, double pageRatio, CrossingMinimizationModule *crossMin, CCLayoutPackModule *packer, EmbedderModule *embedder, LayoutPlanRepModule *planarLayouter)
+{
+	//LayoutModule
+	PlanarizationLayout *model = new PlanarizationLayout();
+
+	model->minCliqueSize(minCliqueSize);
+	model->pageRatio(pageRatio);
+
+	model->setCrossMin(crossMin);
+	model->setPacker(packer);
+	model->setEmbedder(embedder);
+	model->setPlanarLayouter(planarLayouter);
+
+	return model;
+}
+
+EM_PORT_API(float *)
+PL(
+	int node_num,
+	int link_num,
+	int *source,
+	int *target,
+	int minCliqueSize,
+	double pageRatio,
 	int crossMinType,
 	int crossMinType_SubgraphPlanarizer_globalInternalLibraryLogLevel,
 	int crossMinType_SubgraphPlanarizer_globalLogLevel,
@@ -49,35 +67,36 @@ EM_PORT_API(float *) PL(
 	int crossMinType_SubgraphPlanarizer_subgraphType_Fast_runs,
 	unsigned int crossMinType_SubgraphPlanarizer_subgraphType_Tree_maxThreads,
 	double crossMinType_SubgraphPlanarizer_subgraphType_Tree_timeLimit,
-	int embedderType, 
+	int embedderType,
 	double embedderType_MaxFace_timeLimit,
-    double embedderType_MinDepth_timeLimit,
-    double embedderType_MinDepthPiTa_timeLimit,
-    bool embedderType_MinDepthPiTa_useExtendedDepthDefinition,
-    double embedderType_OptimalFlexDraw_timeLimit,
-    double embedderType_Simple_timeLimit,
-	int packerType, 
-	int planarLayouterType, 
+	double embedderType_MinDepth_timeLimit,
+	double embedderType_MinDepthPiTa_timeLimit,
+	bool embedderType_MinDepthPiTa_useExtendedDepthDefinition,
+	double embedderType_OptimalFlexDraw_timeLimit,
+	double embedderType_Simple_timeLimit,
+	int packerType,
+	int planarLayouterType,
 	int planarLayouterType_Ortho_bendBound,
 	double planarLayouterType_Ortho_cOverhang,
-	double planarLayouterType_Ortho_margin, 
-	bool planarLayouterType_Ortho_progressive, 
-	bool planarLayouterType_Ortho_scaling, 
-	double planarLayouterType_Ortho_separation
-) {
-	node* nodes;
+	double planarLayouterType_Ortho_margin,
+	bool planarLayouterType_Ortho_progressive,
+	bool planarLayouterType_Ortho_scaling,
+	double planarLayouterType_Ortho_separation)
+{
+	node *nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);
-	
 
 	nodes = new node[node_num];
-	for (int i = 0; i < node_num; i++){
+	for (int i = 0; i < node_num; i++)
+	{
 		nodes[i] = G.newNode();
 	}
 
 	edge e;
 
-	for (int i = 0; i < link_num; i++) {
+	for (int i = 0; i < link_num; i++)
+	{
 		e = G.newEdge(nodes[source[i]], nodes[target[i]]);
 		GA.bends(e);
 	}
@@ -88,7 +107,7 @@ EM_PORT_API(float *) PL(
 	model->minCliqueSize(minCliqueSize);
 	model->pageRatio(pageRatio);
 
-	CrossingMinimizationModule* crossMin = getCrossingMinimization(
+	CrossingMinimizationModule *crossMin = getCrossingMinimization(
 		crossMinType,
 		crossMinType_SubgraphPlanarizer_globalInternalLibraryLogLevel,
 		crossMinType_SubgraphPlanarizer_globalLogLevel,
@@ -129,42 +148,40 @@ EM_PORT_API(float *) PL(
 		crossMinType_SubgraphPlanarizer_subgraphType_Fast_timeLimit,
 		crossMinType_SubgraphPlanarizer_subgraphType_Fast_runs,
 		crossMinType_SubgraphPlanarizer_subgraphType_Tree_maxThreads,
-		crossMinType_SubgraphPlanarizer_subgraphType_Tree_timeLimit
-	);
+		crossMinType_SubgraphPlanarizer_subgraphType_Tree_timeLimit);
 	model->setCrossMin(crossMin);
 
-	EmbedderModule* embedder = getEmbedder(
-		embedderType, 
+	EmbedderModule *embedder = getEmbedder(
+		embedderType,
 		embedderType_MaxFace_timeLimit,
 		embedderType_MinDepth_timeLimit,
 		embedderType_MinDepthPiTa_timeLimit,
 		embedderType_MinDepthPiTa_useExtendedDepthDefinition,
 		embedderType_OptimalFlexDraw_timeLimit,
-		embedderType_Simple_timeLimit
-	);
+		embedderType_Simple_timeLimit);
 	model->setEmbedder(embedder);
 
-	CCLayoutPackModule* packer = getCCLayoutPack(packerType);
+	CCLayoutPackModule *packer = getCCLayoutPack(packerType);
 	model->setPacker(packer);
 
-	LayoutPlanRepModule* planarLayouter = getLayoutPlanRep(
-		planarLayouterType, 
-		planarLayouterType_Ortho_bendBound, 
-		planarLayouterType_Ortho_cOverhang, 
-		planarLayouterType_Ortho_margin, 
-		planarLayouterType_Ortho_progressive, 
-		planarLayouterType_Ortho_scaling, 
-		planarLayouterType_Ortho_separation
-	);
+	LayoutPlanRepModule *planarLayouter = getLayoutPlanRep(
+		planarLayouterType,
+		planarLayouterType_Ortho_bendBound,
+		planarLayouterType_Ortho_cOverhang,
+		planarLayouterType_Ortho_margin,
+		planarLayouterType_Ortho_progressive,
+		planarLayouterType_Ortho_scaling,
+		planarLayouterType_Ortho_separation);
 	model->setPlanarLayouter(planarLayouter);
 
 	model->call(GA);
-	
-	float* re = (float*)malloc(node_num * 2 * 4);
-    for(int i = 0; i < node_num; ++i) {
-        re[i * 2] = GA.x(nodes[i]);
-        re[i * 2 + 1] = GA.y(nodes[i]);
-    }
 
-    return re;
+	float *re = (float *)malloc(node_num * 2 * 4);
+	for (int i = 0; i < node_num; ++i)
+	{
+		re[i * 2] = GA.x(nodes[i]);
+		re[i * 2 + 1] = GA.y(nodes[i]);
+	}
+
+	return re;
 }

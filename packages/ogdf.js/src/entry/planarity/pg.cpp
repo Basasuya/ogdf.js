@@ -1,11 +1,28 @@
 #include <ogdf/planarity/PlanarizationGridLayout.h>
 #include "../main.h"
 
-EM_PORT_API(float *) PG(
+EM_PORT_API(PlanarizationGridLayout *)
+LayoutModule_PlanarizationGridLayout(double pageRatio, double separation, CrossingMinimizationModule *crossMin, CCLayoutPackModule *packer, GridLayoutPlanRepModule *planarLayouter)
+{
+	//LayoutModule
+	PlanarizationGridLayout *model = new PlanarizationGridLayout();
+
+	model->pageRatio(pageRatio);
+	model->separation(separation);
+
+	model->setCrossMin(crossMin);
+	model->setPacker(packer);
+	model->setPlanarLayouter(planarLayouter);
+
+	return model;
+}
+
+EM_PORT_API(float *)
+PG(
 	int node_num,
 	int link_num,
-	int* source,
-	int* target,
+	int *source,
+	int *target,
 	double pageRatio,
 	double separation,
 	int crossMinType,
@@ -63,32 +80,33 @@ EM_PORT_API(float *) PG(
 	double planarLayouterType_Mixed_embedderType_Simple_timeLimit,
 	int planarLayouterType_Mixed_shellingOrderType,
 	double planarLayouterType_Mixed_shellingOrderType_Biconnected_baseRatio,
-	double planarLayouterType_Mixed_shellingOrderType_Triconnected_baseRatio
-) {
-	node* nodes;
+	double planarLayouterType_Mixed_shellingOrderType_Triconnected_baseRatio)
+{
+	node *nodes;
 	Graph G;
 	GraphAttributes GA(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics);
-	
 
 	nodes = new node[node_num];
-	for (int i = 0; i < node_num; i++){
+	for (int i = 0; i < node_num; i++)
+	{
 		nodes[i] = G.newNode();
 	}
 
 	edge e;
 
-	for (int i = 0; i < link_num; i++) {
+	for (int i = 0; i < link_num; i++)
+	{
 		e = G.newEdge(nodes[source[i]], nodes[target[i]]);
 		GA.bends(e);
 	}
 
 	//LayoutModule
 	PlanarizationGridLayout *model = new PlanarizationGridLayout();
-	
-	model->pageRatio(pageRatio);
-    model->separation(separation);
 
-	CrossingMinimizationModule* crossMin = getCrossingMinimization(
+	model->pageRatio(pageRatio);
+	model->separation(separation);
+
+	CrossingMinimizationModule *crossMin = getCrossingMinimization(
 		crossMinType,
 		crossMinType_SubgraphPlanarizer_globalInternalLibraryLogLevel,
 		crossMinType_SubgraphPlanarizer_globalLogLevel,
@@ -129,14 +147,13 @@ EM_PORT_API(float *) PG(
 		crossMinType_SubgraphPlanarizer_subgraphType_Fast_timeLimit,
 		crossMinType_SubgraphPlanarizer_subgraphType_Fast_runs,
 		crossMinType_SubgraphPlanarizer_subgraphType_Tree_maxThreads,
-		crossMinType_SubgraphPlanarizer_subgraphType_Tree_timeLimit
-	);
+		crossMinType_SubgraphPlanarizer_subgraphType_Tree_timeLimit);
 	model->setCrossMin(crossMin);
 
-	CCLayoutPackModule* packer = getCCLayoutPack(packerType);
+	CCLayoutPackModule *packer = getCCLayoutPack(packerType);
 	model->setPacker(packer);
 
-	GridLayoutPlanRepModule* planarLayouter = getGridLayoutPlanRep(
+	GridLayoutPlanRepModule *planarLayouter = getGridLayoutPlanRep(
 		planarLayouterType,
 		planarLayouterType_Mixed_separation,
 		planarLayouterType_Mixed_augmenterType,
@@ -150,17 +167,17 @@ EM_PORT_API(float *) PG(
 		planarLayouterType_Mixed_embedderType_Simple_timeLimit,
 		planarLayouterType_Mixed_shellingOrderType,
 		planarLayouterType_Mixed_shellingOrderType_Biconnected_baseRatio,
-		planarLayouterType_Mixed_shellingOrderType_Triconnected_baseRatio
-	);
+		planarLayouterType_Mixed_shellingOrderType_Triconnected_baseRatio);
 	model->setPlanarLayouter(planarLayouter);
 
 	model->call(GA);
-	
-	float* re = (float*)malloc(node_num * 2 * 4);
-    for(int i = 0; i < node_num; ++i) {
-        re[i * 2] = GA.x(nodes[i]);
-        re[i * 2 + 1] = GA.y(nodes[i]);
-    }
 
-    return re;
+	float *re = (float *)malloc(node_num * 2 * 4);
+	for (int i = 0; i < node_num; ++i)
+	{
+		re[i * 2] = GA.x(nodes[i]);
+		re[i * 2 + 1] = GA.y(nodes[i]);
+	}
+
+	return re;
 }

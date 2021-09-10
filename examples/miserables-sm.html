@@ -4,7 +4,7 @@
         <div id="main" />
     </body>
     <script src="https://unpkg.com/netv/build/NetV.js"></script>
-    <script src="../../packages/ogdf.js/dist/ogdf.js"></script>
+    <script src="../packages/ogdf.js/dist/ogdf.js"></script>
     <script>
         const width = 500
         const height = 500
@@ -18,7 +18,17 @@
         miserables.links.forEach((link) => {
             link.weight = Math.random()
         })
-        const layout = new ogdf.layouts.layered.sugi({
+        // const layout = new ogdf.layouts.layered.sugi({
+        //     graph: miserables,
+        //     parameters: {
+        //         edgeCosts: 100,
+        //         numberOfPivots: 250,
+        //         useEdgeCostsAttribute: true,
+        //         useWorker: false
+        //     }
+        // })
+        let layout = new ogdf.Layout({
+            LayoutType: ogdf.Layout.SugiyamaLayout,
             graph: miserables,
             parameters: {
                 edgeCosts: 100,
@@ -27,7 +37,7 @@
                 useWorker: false
             }
         })
-        layout.run().then((graph) => {
+        const callback = (graph) => {
             // netv.data(graph)
             netv.data(
                 NetV.Utils.transformGraphPosition(
@@ -38,6 +48,7 @@
                 )
             )
             netv.draw()
-        })
+        }
+        layout.run().then(callback)
     </script>
 </html>

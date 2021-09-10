@@ -1,7 +1,20 @@
 #include <ogdf/energybased/FastMultipoleEmbedder.h>
 #include "../main.h"
 
-EM_PORT_API(float *) FMME(int node_num, int link_num, int *source, int *target, int maxNumThreads, int multilevelUntilNumNodesAreLess)
+EM_PORT_API(FastMultipoleMultilevelEmbedder *)
+LayoutModule_FastMultipoleMultilevelEmbedder(int maxNumThreads, int multilevelUntilNumNodesAreLess)
+{
+    //LayoutModule
+    FastMultipoleMultilevelEmbedder *model = new FastMultipoleMultilevelEmbedder();
+
+    model->maxNumThreads(maxNumThreads);
+    model->multilevelUntilNumNodesAreLess(multilevelUntilNumNodesAreLess);
+
+    return model;
+}
+
+EM_PORT_API(float *)
+FMME(int node_num, int link_num, int *source, int *target, int maxNumThreads, int multilevelUntilNumNodesAreLess)
 {
     node *nodes;
     Graph G;
