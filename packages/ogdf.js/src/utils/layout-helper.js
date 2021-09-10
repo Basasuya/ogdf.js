@@ -10,42 +10,43 @@ function createLayout(layoutModule, graphModule) {
     return { LayoutModule: layoutModule, GraphType: graphModule }
 }
 
-class Layout {
+class LayoutRenderer {
     constructor(config) {
-        this._parameters = config?.parameters || {}
-        this._graph = config?.graph || {}
-        if (config?.LayoutType) this.layout(config.LayoutType)
-        else this.layout(Layout.FMMMLayout)
+        this.parameters = config?.parameters || {}
+        this.graph = config?.graph || {}
+        if (config?.LayoutType) this.setLayout(config.LayoutType)
+        else this.setLayout(Layout.FMMMLayout)
     }
-    parameters(parameters) {
-        this._parameters = parameters
-        this._layout.parameters(this._parameters)
+    setParameters(parameters) {
+        this.parameters = parameters
+        this.layout.parameters(this.parameters)
     }
-    graph(graph) {
-        this._graph = graph
+    setGraph(graph) {
+        this.graph = graph
+        this.renderer = new (LayoutType.GraphType)(this.graph)
     }
     run() {
-        return this._GA.run(this._layout)
+        return this.renderer.run(this.layout)
     }
-    layout(LayoutType) {
+    setLayout(LayoutType) {
         // this._layout?.free()
-        this._layout = new (LayoutType.LayoutModule)(this._parameters)
-        this._GA = new (LayoutType.GraphType)(this._graph)
+        this.layout = new (LayoutType.LayoutModule)(this.parameters)
+        this.renderer = new (LayoutType.GraphType)(this.graph)
     }
 }
-Layout.DavidsonHarelLayout = createLayout(LayoutModule.DavidsonHarelLayout, Graph.BaseGraph)
-Layout.FMMMLayout = createLayout(LayoutModule.FMMMLayout, Graph.BaseGraph)
-Layout.FastMultipoleEmbedder = createLayout(LayoutModule.FastMultipoleEmbedder, Graph.NodeLinkGraph)
-Layout.FastMultipoleMultilevelEmbedder = createLayout(LayoutModule.FastMultipoleMultilevelEmbedder, Graph.BaseGraph)
-Layout.GEMLayout = createLayout(LayoutModule.GEMLayout, Graph.NodeLinkGraph)
-Layout.NodeRespecterLayout = createLayout(LayoutModule.NodeRespecterLayout, Graph.BaseGraph)
-Layout.PivotMDS = createLayout(LayoutModule.PivotMDS, Graph.LinkWeightGraph)
-Layout.PlanarizationGridLayout = createLayout(LayoutModule.PlanarizationGridLayout, Graph.BaseGraph)
-Layout.PlanarizationLayout = createLayout(LayoutModule.PlanarizationLayout, Graph.BaseGraph)
-Layout.SpringEmbedderGridVariant = createLayout(LayoutModule.SpringEmbedderGridVariant, Graph.BaseGraph)
-Layout.SpringEmbedderKK = createLayout(LayoutModule.SpringEmbedderKK, Graph.NodeSizeLinkGraph)
-Layout.StressMinimization = createLayout(LayoutModule.StressMinimization, Graph.NodeLinkWeightGraph)
-Layout.SugiyamaLayout = createLayout(LayoutModule.SugiyamaLayout, Graph.BaseGraph)
-Layout.TutteLayout = createLayout(LayoutModule.TutteLayout, Graph.BaseGraph)
+LayoutRenderer.DavidsonHarelLayout = createLayout(LayoutModule.DavidsonHarelLayout, Graph.BaseGraph)
+LayoutRenderer.FMMMLayout = createLayout(LayoutModule.FMMMLayout, Graph.BaseGraph)
+LayoutRenderer.FastMultipoleEmbedder = createLayout(LayoutModule.FastMultipoleEmbedder, Graph.NodeLinkGraph)
+LayoutRenderer.FastMultipoleMultilevelEmbedder = createLayout(LayoutModule.FastMultipoleMultilevelEmbedder, Graph.BaseGraph)
+LayoutRenderer.GEMLayout = createLayout(LayoutModule.GEMLayout, Graph.NodeLinkGraph)
+LayoutRenderer.NodeRespecterLayout = createLayout(LayoutModule.NodeRespecterLayout, Graph.BaseGraph)
+LayoutRenderer.PivotMDS = createLayout(LayoutModule.PivotMDS, Graph.LinkWeightGraph)
+LayoutRenderer.PlanarizationGridLayout = createLayout(LayoutModule.PlanarizationGridLayout, Graph.BaseGraph)
+LayoutRenderer.PlanarizationLayout = createLayout(LayoutModule.PlanarizationLayout, Graph.BaseGraph)
+LayoutRenderer.SpringEmbedderGridVariant = createLayout(LayoutModule.SpringEmbedderGridVariant, Graph.BaseGraph)
+LayoutRenderer.SpringEmbedderKK = createLayout(LayoutModule.SpringEmbedderKK, Graph.NodeSizeLinkGraph)
+LayoutRenderer.StressMinimization = createLayout(LayoutModule.StressMinimization, Graph.NodeLinkWeightGraph)
+LayoutRenderer.SugiyamaLayout = createLayout(LayoutModule.SugiyamaLayout, Graph.BaseGraph)
+LayoutRenderer.TutteLayout = createLayout(LayoutModule.TutteLayout, Graph.BaseGraph)
 
-export default Layout
+export default LayoutRenderer

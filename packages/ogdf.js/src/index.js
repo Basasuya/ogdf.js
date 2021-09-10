@@ -8,7 +8,7 @@ import * as utils from './utils'
 import * as Module from './module'
 import * as Basic from './basic'
 
-import Layout from './utils/layout-helper'
+import LayoutRenderer from './utils/layout-helper'
 
 const layouts = { energybased, layered, planarity }
-export { layouts, utils, Module, Basic, Layout }
+export { layouts, utils, Module, Basic, LayoutRenderer }

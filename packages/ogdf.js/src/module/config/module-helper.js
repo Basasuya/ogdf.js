@@ -2,28 +2,30 @@ import { PARAMETER_TYPE } from '../../utils/parameters'
 import * as deepmerge from 'deepmerge'
 
 export default function createModule(NAME, MODULE_DIRECTORY) {
-    class OgdfModule {
+    class BaseModule {
+        static BaseModuleName = NAME
+        static ModuleName = NAME
+        static PARAMETERS = {}
+        static PARAMETER_DEFINITION = {}
+        static SEQUENCE = []
         constructor() {
-            this.ModuleName = NAME
-            this.BaseModuleName = NAME
-            this._sequence = []
             this._parameters = {}
         }
         malloc(OGDFModule) {
-            let params = this._sequence.map(name => {
-                let type = this._PARAMETERS[name].type
+            let params = this.constructor.SEQUENCE.map(name => {
+                let type = this.constructor.PARAMETERS[name].type
                 if (type === PARAMETER_TYPE.CATEGORICAL) {
-                    return this._PARAMETERS[name].range.indexOf(this[name])
+                    return this.constructor.PARAMETERS[name].range.indexOf(this[name])
                 } else if (type === PARAMETER_TYPE.MODULE) {
                     return this[name].malloc(OGDFModule)
                 } else return this[name]
             })
-            this._buffer = OGDFModule[`_${this.BaseModuleName}_${this.ModuleName}`](...params)
+            this._buffer = OGDFModule[`_${this.constructor.BaseModuleName}_${this.constructor.ModuleName}`](...params)
             return this._buffer
         }
         free() {
-            this._sequence.forEach(name => {
-                let type = this._PARAMETERS[name].type
+            this.constructor.SEQUENCE.forEach(name => {
+                let type = this.constructor.PARAMETERS[name].type
                 if (type === PARAMETER_TYPE.MODULE) {
                     return this[name].free()
                 }
@@ -35,21 +37,21 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             if (parameter) {
                 if (typeof parameter == 'object') {
                     // this.parameters({ useHighLevelOptions: true })
-                    for (let paramName of this._sequence) {
-                        if (this._PARAMETERS[paramName].type === PARAMETER_TYPE.MODULE) {
-                            if (!this._PARAMETERS[paramName].module)
-                                throw Error(`OGDFModuleDependencyError: Module ${NAME}.${this.ModuleName} needs dependency ${this._PARAMETERS[paramName].module}.`)
-                            const PD = this._PARAMETERS[paramName].default.PARAMETER_DEFINITION
+                    for (let paramName of this.constructor.SEQUENCE) {
+                        if (this.constructor.PARAMETERS[paramName].type === PARAMETER_TYPE.MODULE) {
+                            if (!this.constructor.PARAMETERS[paramName].module)
+                                throw Error(`OGDFModuleDependencyError: Module ${NAME}.${this.constructor.ModuleName} needs dependency ${this.constructor.PARAMETERS[paramName].module}.`)
+                            const PD = this.constructor.PARAMETERS[paramName].default.PARAMETER_DEFINITION
                             let params = {}
                             Object.keys(PD).forEach(key => {
                                 if (PD[key].type === PARAMETER_TYPE.MODULE) params[key] = new (PD[key].default)()
                                 else params[key] = PD[key].default
                             })
                             params = deepmerge(params, parameter[paramName] || {})
-                            this[paramName] = new (this._PARAMETERS[paramName].default)(params)
+                            this[paramName] = new (this.constructor.PARAMETERS[paramName].default)(params)
                         }
                         else {
-                            this[paramName] = parameter[paramName] || MODULE_DIRECTORY[this.ModuleName][paramName].default
+                            this[paramName] = parameter[paramName] || MODULE_DIRECTORY[this.constructor.ModuleName][paramName].default
                         }
                         this._parameters[paramName] = this[paramName]
                     }
@@ -57,7 +59,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                     // e.g., this.parameters("useHighLevelOptions", true)
                     // e.g., this.parameters("multilevelBuilderType.module", "EdgeCoverMerger")
                     // e.g., this.parameters("multilevelBuilderType.edgeLengthAdjustment")
-                    if (this._sequence.indexOf(parameter) >= 0)
+                    if (this.constructor.SEQUENCE.indexOf(parameter) >= 0)
                         this._parameters[paramName] = this[paramName] = value
                 }
             }
@@ -65,18 +67,38 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
         }
     }
     for (let MODULE_NAME in MODULE_DIRECTORY) {
-        OgdfModule[MODULE_NAME] = class extends OgdfModule {
+        class Module extends BaseModule {
+            static ModuleName = MODULE_NAME
+            static PARAMETERS = MODULE_DIRECTORY[MODULE_NAME]
+            static PARAMETER_DEFINITION = MODULE_DIRECTORY[MODULE_NAME]
+            static SEQUENCE = Object.keys(MODULE_DIRECTORY[MODULE_NAME])
             constructor(configs = {}) {
                 super()
-                this.ModuleName = MODULE_NAME
-                this._PARAMETERS = MODULE_DIRECTORY[MODULE_NAME]
-                this._sequence = Object.keys(MODULE_DIRECTORY[MODULE_NAME])
-                this._parameters = {}
                 this.parameters(configs)
             }
         }
-        OgdfModule[MODULE_NAME].PARAMETER_DEFINITION = MODULE_DIRECTORY[MODULE_NAME]
+        BaseModule[MODULE_NAME] = new Proxy(Module, {
+            construct(target, args) {
+                return new Proxy(new target(...args), {
+                    get(target, param) {
+                        return target[param]
+                    },
+                    set(target, param, value) {
+                        if (param[0] === '_') {
+                            target[param] = value
+                            return true
+                        }
+                        if (target.constructor.PARAMETERS[param].type === PARAMETER_TYPE.MODULE && !value instanceof target.constructor.PARAMETERS[param]) {
+                            console.error(`${target.constructor.ModuleName}.${param} needs an ${target.constructor.ModuleName} object, but got ${value.constructor.ModuleName}`)
+                            return false
+                        }
+                        target[param] = value
+                        target._parameters[param] = value
+                        return true
+                    }
+                })
+            }
+        })
     }
-    OgdfModule.NAME = NAME
-    return OgdfModule
+    return BaseModule
 }
