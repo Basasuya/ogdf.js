@@ -5,10 +5,10 @@ import planarity from './layouts/planarity'
 
 import * as utils from './utils'
 
-import * as module from './layouts/module'
-import * as math from './layouts/math'
+import * as Module from './module'
+import * as Basic from './basic'
 
-import Layout from './layouts/layout-helper'
+import Layout from './utils/layout-helper'
 
 const layouts = { energybased, layered, planarity }
-export { layouts, utils, module, math, Layout }
+export { layouts, utils, Module, Basic, Layout }
