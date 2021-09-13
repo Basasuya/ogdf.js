@@ -88,12 +88,13 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                             target[param] = value
                             return true
                         }
-                        if (target.constructor.PARAMETERS[param].type === PARAMETER_TYPE.MODULE && !value instanceof target.constructor.PARAMETERS[param]) {
+                        if (target.constructor.PARAMETERS[param].type === PARAMETER_TYPE.MODULE && !value instanceof target.constructor.PARAMETERS[param].module) {
                             console.error(`${target.constructor.ModuleName}.${param} needs an ${target.constructor.ModuleName} object, but got ${value.constructor.ModuleName}`)
                             return false
                         }
                         target[param] = value
-                        target._parameters[param] = value
+                        if (target.constructor.SEQUENCE.indexOf(param) >= 0)
+                            target._parameters[param] = value
                         return true
                     }
                 })

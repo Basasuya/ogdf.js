@@ -1,5 +1,7 @@
 import { Graph } from "../basic";
 import { LayoutModule } from "../module";
+import initOGDF from '../entry/rawogdf'
+import { createWorker } from './worker-helper'
 
 /**
  * 
@@ -12,26 +14,133 @@ function createLayout(layoutModule, graphModule) {
 
 class LayoutRenderer {
     constructor(config) {
-        this.parameters = config?.parameters || {}
-        this.graph = config?.graph || {}
-        if (config?.LayoutType) this.setLayout(config.LayoutType)
-        else this.setLayout(Layout.FMMMLayout)
+        this._parameters = config?.parameters || {}
+        this._graph = config?.graph || {}
+        this._useWorker = false
+        if (config?.LayoutType) this.layout(config.LayoutType)
+        else this.layout(Layout.FMMMLayout)
     }
-    setParameters(parameters) {
-        this.parameters = parameters
-        this.layout.parameters(this.parameters)
+    useWorker(useWorker) {
+        this._useWorker = useWorker
     }
-    setGraph(graph) {
-        this.graph = graph
-        this.renderer = new (LayoutType.GraphType)(this.graph)
+    parameters(parameters) {
+        if (parameters) {
+            this._parameters = parameters
+            this._layout.parameters(this._parameters)
+        }
+        return this._parameters
+    }
+    graph(graph) {
+        if (graph) {
+            this._graph = graph
+            this._graphAttributes = new (LayoutType.GraphType)(this._graph)
+        }
+        return this._graph
     }
     run() {
-        return this.renderer.run(this.layout)
+        function createOGDFProcess() {
+            function OGDFProcess({
+                Module,
+                functionName,
+                layoutAddr,
+                GA
+            }) {
+                const result = Module[functionName](
+                    layoutAddr,
+                    ...GA
+                ) // ! Ensure the order of attributes/parameters
+                const nodes = []
+                for (let i = 0; i < N; ++i) {
+                    nodes[i] = {}
+                    nodes[i]['x'] = Module.HEAPF32[(result >> 2) + i * 2]
+                    nodes[i]['y'] = Module.HEAPF32[(result >> 2) + i * 2 + 1]
+                }
+                Module._free_buf(result)
+                return nodes
+            }
+            if (this?.constructor.name == 'DedicatedWorkerGlobalScope') {
+                console.log('Webworker is working...')
+                // if it is executed in webworker
+                addEventListener('message', (e) => {
+                    let message = JSON.parse(e.data)
+                    let initOGDF = message.initOGDF
+                    eval(`initOGDF = ${initOGDF}`)
+                    message.initOGDF = initOGDF
+                    OGDFProcess(message).then((nodes) => postMessage(JSON.stringify(nodes)))
+                })
+            }
+            return OGDFProcess
+        }
+        let self = this
+        return initOGDF().then(function (Module) {
+            const layoutAddr = self._layout.malloc(Module)
+            const GA = self._graphAttributes.malloc(Module)
+            const functionName = `_${self._graphAttributes.constructor.BaseModuleName}_${self._graphAttributes.constructor.ModuleName}`
+            if (self._useWorker && typeof Worker !== 'undefined') {
+                const worker = createWorker(createOGDFProcess)
+
+                return new Promise((resolve, reject) => {
+                    // post data, including functions/parameters/..., into the webworker
+                    worker.postMessage(
+                        JSON.stringify({
+                            Module: Module.toString(),
+                            functionName,
+                            layoutAddr,
+                            GA
+                        })
+                    )
+                    // onmessage listens the returned value from the webworker, namely, the layout
+                    worker.onmessage = (e) => {
+                        const nodePositions = JSON.parse(e.data)
+                        for (let i = 0; i < N; ++i) {
+                            self._graph.nodes[i].x = nodePositions[i].x
+                            self._graph.nodes[i].y = nodePositions[i].y
+                        }
+                        worker.terminate()
+                        resolve(self._graph)
+                    }
+                })
+            } else {
+                // const OGDFProcess = createOGDFProcess()
+                // return new Promise((resolve, reject) => {
+                //     OGDFProcess({
+                //         initOGDF,
+                //         functionName,
+                //         layoutAddr,
+                //         GA
+                //     }).then((nodes) => {
+                //         for (let i = 0; i < N; ++i) {
+                //             self._graph.nodes[i].x = nodes[i].x
+                //             self._graph.nodes[i].y = nodes[i].y
+                //         }
+                //         resolve(self._graph)
+                //     })
+                // })
+                const result = Module[functionName](
+                    layoutAddr,
+                    ...GA
+                ) // ! Ensure the order of attributes/parameters
+                const nodes = []
+                for (let i = 0; i < self._graph.nodes.length; ++i) {
+                    nodes[i] = {}
+                    nodes[i]['x'] = Module.HEAPF32[(result >> 2) + i * 2]
+                    nodes[i]['y'] = Module.HEAPF32[(result >> 2) + i * 2 + 1]
+                }
+                Module._free_buf(result)
+                return new Promise((resolve, reject) => {
+                    for (let i = 0; i < self._graph.nodes.length; ++i) {
+                        self._graph.nodes[i].x = nodes[i].x
+                        self._graph.nodes[i].y = nodes[i].y
+                    }
+                    resolve(self._graph)
+                })
+            }
+        })
     }
-    setLayout(LayoutType) {
+    layout(LayoutType) {
         // this._layout?.free()
-        this.layout = new (LayoutType.LayoutModule)(this.parameters)
-        this.renderer = new (LayoutType.GraphType)(this.graph)
+        this._layout = new (LayoutType.LayoutModule)(this._parameters)
+        this._graphAttributes = new (LayoutType.GraphType)(this._graph)
     }
 }
 LayoutRenderer.DavidsonHarelLayout = createLayout(LayoutModule.DavidsonHarelLayout, Graph.BaseGraph)
