@@ -3,22 +3,13 @@ import { LayoutModule } from "../module";
 import initOGDF from '../entry/rawogdf'
 import { createWorker } from './worker-helper'
 
-/**
- * 
- * @param {LayoutModule} layoutModule 
- * @param {Graph} graphModule
- */
-function createLayout(layoutModule, graphModule) {
-    return { LayoutModule: layoutModule, GraphType: graphModule }
-}
-
 class LayoutRenderer {
     constructor(config) {
         this._parameters = config?.parameters || {}
         this._graph = config?.graph || {}
         this._useWorker = false
-        if (config?.LayoutType) this.layout(config.LayoutType)
-        else this.layout(Layout.FMMMLayout)
+        if (config?.Layout) this.layout(config.Layout)
+        else this.layout()
     }
     useWorker(useWorker) {
         this._useWorker = useWorker
@@ -137,10 +128,28 @@ class LayoutRenderer {
             }
         })
     }
-    layout(LayoutType) {
+    layout(layout) {
         // this._layout?.free()
-        this._layout = new (LayoutType.LayoutModule)(this._parameters)
-        this._graphAttributes = new (LayoutType.GraphType)(this._graph)
+        if (layout) {
+            this._layout = new (layout.LayoutModule)(this._parameters)
+            this._graphAttributes = new (layout.GraphType)(this._graph)
+        }
+        else {
+            this._layout = new (this.constructor.LayoutModule)(this._parameters)
+            this._graphAttributes = new (this.constructor.GraphType)(this._graph)
+        }
+    }
+}
+
+/**
+ * 
+ * @param {LayoutModule} layoutModule 
+ * @param {Graph} graphType
+ */
+function createLayout(layoutModule, graphType) {
+    return class extends LayoutRenderer {
+        static LayoutModule = layoutModule
+        static GraphType = graphType
     }
 }
 LayoutRenderer.DavidsonHarelLayout = createLayout(LayoutModule.DavidsonHarelLayout, Graph.BaseGraph)
