@@ -1,4 +1,4 @@
-import createModule from "./module-helper";
+import createModule from "../module-helper";
 import AcyclicSubgraphModule from './AcyclicSubgraph'
 import { PARAMETER_TYPE } from "../../utils/parameter-type";
 const NAME = "RankingModule"

@@ -1,16 +1,9 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
-import createLayout from '../creater'
+import CrossingMinimizationModule from '../../module/config/CrossingMinimization'
+import CCLayoutPackModule from '../../module/config/CCLayoutPack'
+import GridLayoutPlanRepModule from '../../module/config/GridLayoutPlanRep'
 
-const NAME = 'PG'
-export const OUTER_PARAMETER_DEFINITION = {
-    useWorker: {
-        type: PARAMETER_TYPE.BOOL,
-        range: [true, false],
-        default: false
-    }
-}
-
-export const ORIGIN_PARAMETER_DEFINITION = {
+export default {
     pageRatio: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -23,20 +16,17 @@ export const ORIGIN_PARAMETER_DEFINITION = {
     },
     crossMinType: {
         type: PARAMETER_TYPE.MODULE,
-        module: 'CrossingMinimization',
-        default: 'SubgraphPlanarizer'
+        module: CrossingMinimizationModule,
+        default: CrossingMinimizationModule.SubgraphPlanarizer
     },
     packerType: {
         type: PARAMETER_TYPE.MODULE,
-        module: 'CCLayoutPack',
-        default: 'TileToRows'
+        module: CCLayoutPackModule,
+        default: CCLayoutPackModule.TileToRowsCCPacker
     },
     planarLayouterType: {
         type: PARAMETER_TYPE.MODULE,
-        module: 'GridLayoutPlanRep',
-        default: 'Mixed'
+        module: GridLayoutPlanRepModule,
+        default: GridLayoutPlanRepModule.MixedModelLayout
     }
 }
-
-const pg = createLayout(NAME, OUTER_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
-export default pg

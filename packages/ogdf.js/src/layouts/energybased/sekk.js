@@ -1,16 +1,6 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
-import createLayout from '../creater'
 
-const NAME = 'SEKK'
-export const OUTER_PARAMETER_DEFINITION = {
-    useWorker: {
-        type: PARAMETER_TYPE.BOOL,
-        range: [true, false],
-        default: false
-    }
-}
-
-export const ORIGIN_PARAMETER_DEFINITION = {
+export default {
     computeMaxIterations: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -52,38 +42,3 @@ export const ORIGIN_PARAMETER_DEFINITION = {
         default: -1.0
     }
 }
-
-const ATTRIBUTES_DEFINITION = {
-    node: [
-        {
-            name: 'nodesX',
-            mapper: (node) => node.x,
-            type: PARAMETER_TYPE.DOUBLE
-        },
-        {
-            name: 'nodesY',
-            mapper: (node) => node.y,
-            type: PARAMETER_TYPE.DOUBLE
-        },
-        {
-            name: 'nodesWidth',
-            mapper: (node) => ('width' in node ? node.width : 1),
-            type: PARAMETER_TYPE.DOUBLE
-        },
-        {
-            name: 'nodesHeight',
-            mapper: (node) => ('height' in node ? node.height : 1),
-            type: PARAMETER_TYPE.DOUBLE
-        }
-    ],
-    link: [],
-    sequence: ['nodesX', 'nodesY', 'nodesWidth', 'nodesHeight']
-}
-
-const sekk = createLayout(
-    NAME,
-    OUTER_PARAMETER_DEFINITION,
-    ORIGIN_PARAMETER_DEFINITION,
-    ATTRIBUTES_DEFINITION
-)
-export default sekk

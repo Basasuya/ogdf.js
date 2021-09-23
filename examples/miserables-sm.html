@@ -27,17 +27,15 @@
         //         useWorker: false
         //     }
         // })
-        let renderer = new ogdf.LayoutRenderer({
-            Layout: ogdf.LayoutRenderer.SugiyamaLayout,
+        let layout = new ogdf.Layout.SugiyamaLayout({
             graph: miserables,
             parameters: {
                 edgeCosts: 100,
                 numberOfPivots: 250,
                 useEdgeCostsAttribute: true,
-                crossMinType: new ogdf.Module.CrossingMinimizationModule.SubgraphPlanarizer({
-                    timeLimit: 2000
-                })
-            }
+                crossMinType: new ogdf.Module.LayeredCrossMinModule.MedianHeuristic()
+            },
+            useWorker: false
         })
         const callback = (graph) => {
             // netv.data(graph)
@@ -51,6 +49,6 @@
             )
             netv.draw()
         }
-        renderer.run().then(callback)
+        layout.run().then(callback)
     </script>
 </html>

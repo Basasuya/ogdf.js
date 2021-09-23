@@ -1,4 +1,4 @@
-import createModule from "./module-helper";
+import createModule from "../module-helper";
 
 const NAME = "MixedModelCrossingsBeautifierModule"
 

@@ -1,16 +1,6 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
-import createLayout from '../creater'
-
-const NAME = 'FM3'
-export const OUTER_PARAMETER_DEFINITION = {
-    useWorker: {
-        type: PARAMETER_TYPE.BOOL,
-        range: [true, false],
-        default: false
-    }
-}
 // should keep identical to the parameter order in src/entry/main.cpp => function fm3()
-export const ORIGIN_PARAMETER_DEFINITION = {
+export default {
     useHighLevelOptions: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -282,6 +272,3 @@ export const ORIGIN_PARAMETER_DEFINITION = {
     }
 }
 
-const fm3 = createLayout(NAME, OUTER_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
-
-export default fm3

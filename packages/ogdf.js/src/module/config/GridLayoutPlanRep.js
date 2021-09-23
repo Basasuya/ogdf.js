@@ -1,4 +1,4 @@
-import createModule from "./module-helper";
+import createModule from "../module-helper";
 import AugmentationModule from './Augmentation'
 import MixedModelCrossingsBeautifier from './MixedModelCrossingsBeautifier'
 import Embedder from './Embedder'

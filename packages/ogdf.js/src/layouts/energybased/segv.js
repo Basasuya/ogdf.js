@@ -1,16 +1,6 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
-import createLayout from '../creater'
 
-const NAME = 'SEGV'
-export const OUTER_PARAMETER_DEFINITION = {
-    useWorker: {
-        type: PARAMETER_TYPE.BOOL,
-        range: [true, false],
-        default: false
-    }
-}
-
-export const ORIGIN_PARAMETER_DEFINITION = {
+export default {
     avgConvergenceFactor: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -112,5 +102,3 @@ export const ORIGIN_PARAMETER_DEFINITION = {
     }
 }
 
-const segv = createLayout(NAME, OUTER_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
-export default segv

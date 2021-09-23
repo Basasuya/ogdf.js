@@ -1,16 +1,11 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
-import createLayout from '../creater'
+import HierarchyClusterLayoutModule from '../../module/config/HierarchyClusterLayout'
+import LayeredCrossMinModule from '../../module/config/LayeredCrossMin'
+import HierarchyLayoutModule from '../../module/config/HierarchyLayout'
+import CCLayoutPackModule from '../../module/config/CCLayoutPack'
+import RankingModule from '../../module/config/Ranking'
 
-const NAME = 'SUGI'
-export const OUTER_PARAMETER_DEFINITION = {
-    useWorker: {
-        type: PARAMETER_TYPE.BOOL,
-        range: [true, false],
-        default: false
-    }
-}
-
-export const ORIGIN_PARAMETER_DEFINITION = {
+export default {
     alignBaseClasses: {
         type: PARAMETER_TYPE.BOOL,
         range: [true, false],
@@ -63,30 +58,27 @@ export const ORIGIN_PARAMETER_DEFINITION = {
     },
     clusterLayoutType: {
         type: PARAMETER_TYPE.MODULE,
-        module: 'HierarchyClusterLayout',
-        default: 'Optimal'
+        module: HierarchyClusterLayoutModule,
+        default: HierarchyClusterLayoutModule.OptimalHierarchyClusterLayout
     },
     crossMinType: {
         type: PARAMETER_TYPE.MODULE,
-        module: 'LayeredCrossMin',
-        default: 'BarycenterHeuristic'
+        module: LayeredCrossMinModule,
+        default: LayeredCrossMinModule.BarycenterHeuristic
     },
     layoutType: {
         type: PARAMETER_TYPE.MODULE,
-        module: 'HierarchyLayout',
-        default: 'Fast'
+        module: HierarchyLayoutModule,
+        default: HierarchyLayoutModule.FastHierarchyLayout
     },
     packerType: {
         type: PARAMETER_TYPE.MODULE,
-        module: 'CCLayoutPack',
-        default: 'TileToRows'
+        module: CCLayoutPackModule,
+        default: CCLayoutPackModule.TileToRowsCCPacker
     },
     rankingType: {
         type: PARAMETER_TYPE.MODULE,
-        module: 'Ranking',
-        default: 'LongestPath'
+        module: RankingModule,
+        default: RankingModule.LongestPathRanking
     }
 }
-
-const sugi = createLayout(NAME, OUTER_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
-export default sugi

@@ -1,16 +1,6 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
-import createLayout from '../creater'
 
-const NAME = 'TUT'
-export const OUTER_PARAMETER_DEFINITION = {
-    useWorker: {
-        type: PARAMETER_TYPE.BOOL,
-        range: [true, false],
-        default: false
-    }
-}
-
-export const ORIGIN_PARAMETER_DEFINITION = {
+export default {
     bboxLeft: {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
@@ -33,5 +23,3 @@ export const ORIGIN_PARAMETER_DEFINITION = {
     }
 }
 
-const tut = createLayout(NAME, OUTER_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
-export default tut

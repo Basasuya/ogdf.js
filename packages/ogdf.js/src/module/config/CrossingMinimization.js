@@ -1,5 +1,5 @@
 import EdgeInsertionModule from "./EdgeInsertion";
-import createModule from "./module-helper";
+import createModule from "../module-helper";
 import PlanarSubgraphModule from "./PlanarSubgraph";
 import { PARAMETER_TYPE } from "../../utils/parameter-type";
 

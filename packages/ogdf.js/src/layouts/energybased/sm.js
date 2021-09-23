@@ -1,17 +1,6 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
-import createLayout from '../creater'
 
-const NAME = 'SM'
-
-export const OUTER_PARAMETER_DEFINITION = {
-    useWorker: {
-        type: PARAMETER_TYPE.BOOL,
-        range: [true, false],
-        default: false
-    }
-}
-
-export const ORIGIN_PARAMETER_DEFINITION = {
+export default {
     terminationCriterion: {
         type: PARAMETER_TYPE.CATEGORICAL,
         range: ['None', 'PositionDifference', 'Stress'],
@@ -58,36 +47,3 @@ export const ORIGIN_PARAMETER_DEFINITION = {
         default: false
     }
 }
-
-// double* edgesWeight, double* nodesX, double* nodesY,
-const ATTRIBUTES_DEFINITION = {
-    node: [
-        {
-            name: 'nodesX',
-            mapper: (node) => ('x' in node ? node.x : 0),
-            type: PARAMETER_TYPE.DOUBLE
-        },
-        {
-            name: 'nodesY',
-            mapper: (node) => ('y' in node ? node.y : 0),
-            type: PARAMETER_TYPE.DOUBLE
-        }
-    ],
-    link: [
-        {
-            name: 'edgesWeight',
-            mapper: (link) => ('weight' in link ? link.weight : 1),
-            type: PARAMETER_TYPE.DOUBLE
-        }
-    ],
-    sequence: ['edgesWeight', 'nodesX', 'nodesY']
-    // sequence: ['nodesX', 'nodesY']
-}
-
-const sm = createLayout(
-    NAME,
-    OUTER_PARAMETER_DEFINITION,
-    ORIGIN_PARAMETER_DEFINITION,
-    ATTRIBUTES_DEFINITION
-)
-export default sm

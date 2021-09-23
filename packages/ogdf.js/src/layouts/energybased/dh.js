@@ -1,16 +1,6 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
-import createLayout from '../creater'
 
-export const NAME = 'DH'
-export const OUTER_PARAMETER_DEFINITION = {
-    useWorker: {
-        type: PARAMETER_TYPE.BOOL,
-        range: [true, false],
-        default: false
-    }
-}
-
-export const ORIGIN_PARAMETER_DEFINITION = {
+export default {
     fixSettings: {
         type: PARAMETER_TYPE.CATEGORICAL,
         range: ['standard', 'repulse', 'planar'],
@@ -68,6 +58,3 @@ export const ORIGIN_PARAMETER_DEFINITION = {
     }
 }
 
-const dh = createLayout(NAME, OUTER_PARAMETER_DEFINITION, ORIGIN_PARAMETER_DEFINITION, {})
-
-export default dh
