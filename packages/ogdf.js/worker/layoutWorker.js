@@ -2,7 +2,6 @@ importScripts("/packages/ogdf.js/dist/ogdf.js")
 importScripts("/packages/ogdf.js/src/entry/rawogdf.js")
 function OGDFProcess({ layoutName, layoutParams, graphType, graph }) {
     return initOGDF().then(function (Module) {
-        //参数依然存在问题
         let layout = new (ogdf.Module.LayoutModule[layoutName])(layoutParams.parameters)
         let graphAttributes = new (ogdf.Basic.Graph[graphType])(graph)
         let layoutAddr = layout.malloc(Module)
