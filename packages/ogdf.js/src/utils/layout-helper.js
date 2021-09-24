@@ -104,7 +104,6 @@ class LayoutRenderer {
                 // if it is executed in webworker
                 addEventListener('message', (e) => {
                     let message = JSON.parse(e.data)
-                    console.log(message)
                     let initOGDF = message.initOGDF
                     eval(`initOGDF = ${initOGDF}`)
                     message.initOGDF = initOGDF
