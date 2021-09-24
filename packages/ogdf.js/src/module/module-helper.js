@@ -3,16 +3,39 @@ import * as deepmerge from 'deepmerge'
 class VirtualModule { }
 export default function createModule(NAME, MODULE_DIRECTORY) {
     class BaseModule extends VirtualModule {
+        /**
+         * the base class name of ogdf module
+         */
         static BaseModuleName = NAME
+        /**
+         * the class name of ogdf module
+         */
         static ModuleName = NAME
+        /**
+         * the same as parameter definition
+         */
         static PARAMETERS = {}
+        /**
+         * parameter definition
+         */
         static PARAMETER_DEFINITION = {}
+        /**
+         * parameter sequence
+         */
         static SEQUENCE = []
+        /**
+         * default parameters
+         */
         static DEFAULT_PARAMETERS = {}
         constructor() {
             super()
             this._parameters = {}
         }
+        /**
+         * create an object correspond to ogdf entry
+         * @param {*} OGDFModule initialized ogdf entry module
+         * @returns the address of buffer
+         */
         malloc(OGDFModule) {
             let params = this.constructor.SEQUENCE.map(name => {
                 let type = this.constructor.PARAMETERS[name].type
@@ -35,6 +58,12 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             OGDFModule[`__delete`](this._buffer)
             this._buffer = undefined
         }
+        /**
+         * get or set parameters of module object
+         * @param {*} parameter 
+         * @param {*} value 
+         * @returns parameters
+         */
         parameters(parameter, value) {
             if (parameter) {
                 if (typeof parameter == 'object') {
@@ -75,6 +104,10 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             }
             return this._parameters
         }
+        /**
+         * get json object for using
+         * @returns json object
+         */
         json() {
             let self = this
             let json = {

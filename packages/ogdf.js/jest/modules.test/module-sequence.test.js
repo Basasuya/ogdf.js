@@ -1,9 +1,9 @@
 const ogdf = require('../../src/index')
 
 Object.keys(ogdf.Module).forEach((baseModuleName) => {
+    if (baseModuleName !== 'CrossingMinimizationModule') return
     describe(`Testing ${baseModuleName}`, () => {
         ogdf.Module[baseModuleName].SubModuleList.forEach((moduleName) => {
-            if (baseModuleName !== 'CrossingMinimizationModule') return
             const path = `../../src/module/src/${baseModuleName.replace("Module", "")}.cpp`
             test(`Is the order of ${baseModuleName}.${moduleName}'s parameters correct?`, () => {
                 const Module = ogdf.Module[baseModuleName][moduleName]

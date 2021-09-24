@@ -1,33 +1,28 @@
 const ogdf = require('../../src/index')
-const { getDefaultParameters, updateParameters } = require('../../src/utils/parameters')
 const miserables = require('../data/miserables.json')
 
-const Layout = ogdf.layouts.layered.sugi
+const Layout = ogdf.Layout.SugiyamaLayout
 const layout = new Layout()
 const defaultParameters = layout.parameters()
 const trivialTesterDefinedParameters = {
     alignBaseClasses: true,
     fails: 3,
     minDistCC: 10.5,
-    clusterLayoutType: {
+    clusterLayout: new ogdf.Module.HierarchyClusterLayoutModule.OptimalHierarchyClusterLayout({
         fixedLayerDistance: true,
         layerDistance: 10.5
-    },
-    crossMinType: {
-        module: 'GlobalSifting',
+    }),
+    crossMin: new ogdf.Module.LayeredCrossMinModule.GlobalSifting({
         nRepeats: 20
-    },
-    layoutType: {
+    }),
+    layout: new ogdf.Module.HierarchyLayoutModule.FastSimpleHierarchyLayout({
         layerDistance: 3,
         nodeDistance: 3,
-        balanced: false,
-        module: 'FastSimple'
-    },
-    rankingType: {
-        subgraphType: 'GreedyCycleRemoval',
-        module: 'CoffmanGraham'
-    },
-    useWorker: true
+        balanced: false
+    }),
+    ranking: new ogdf.Module.RankingModule.CoffmanGrahamRanking({
+        subgraph: new ogdf.Module.AcyclicSubgraphModule.GreedyCycleRemoval(),
+    })
 }
 const EXPECTED_STATE = {
     THROW: 'THROW',
@@ -53,34 +48,34 @@ const wrongTesterDefinedParametersList = [
         out: {
             state: EXPECTED_STATE.THROW,
             expected: {
-                arguments: ['rankingType'],
-                return: defaultParameters.rankingType
+                arguments: ['ranking'],
+                return: defaultParameters.ranking
             }
         }
     },
     {
         in: {
-            rankingType: {
-                subgraphType: 1
+            ranking: {
+                subgraph: 1
             }
         },
         out: {
             state: EXPECTED_STATE.THROW,
             expected: {
-                arguments: ['rankingType.subgraphType'],
-                return: defaultParameters.rankingType.subgraphType
+                arguments: ['ranking.subgraph'],
+                return: defaultParameters.ranking.subgraph
             }
         }
     },
     {
         in: {
-            rankingType: { module: 'CoffmanGraham', subgraphType: '' }
+            ranking: { module: 'CoffmanGraham', subgraph: '' }
         },
         out: {
             state: EXPECTED_STATE.THROW,
             expected: {
-                arguments: ['rankingType.subgraphType'],
-                return: defaultParameters.rankingType.subgraphType
+                arguments: ['ranking.subgraph'],
+                return: defaultParameters.ranking.subgraph
             }
         }
     },
@@ -133,9 +128,7 @@ describe('Testing layout.run()', () => {
     })
 
     test('Using worker', () => {
-        layout.parameters({
-            useWorker: true
-        })
+        layout.useWorker(true)
 
         computedGraph = { nodes: [], links: [] }
 
@@ -185,17 +178,16 @@ describe('Testing layout.parameters()', () => {
     //! it is not tested whether parameters are correctly passed into cpp code
     test('Default parameters', () => {
         layout.parameters(defaultParameters)
-        expect(layout.parameters()).toEqual(getDefaultParameters(Layout.PARAMETER_DEFINITION))
+        expect(layout.parameters()).toEqual(Layout.DEFAULT_PARAMETERS)
     })
 
     test('Trivial changing parameters', () => {
         layout.parameters(defaultParameters)
         expect(layout.parameters(trivialTesterDefinedParameters)).toEqual(
-            updateParameters(
-                defaultParameters,
-                trivialTesterDefinedParameters,
-                Layout.PARAMETER_DEFINITION
-            )
+            {
+                ...defaultParameters,
+                ...trivialTesterDefinedParameters,
+            }
         )
     })
 

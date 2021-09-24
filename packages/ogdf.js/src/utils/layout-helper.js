@@ -9,6 +9,9 @@ class LayoutRenderer {
         this._layout = new (this.constructor.LayoutModule)(this._parameters)
         this._graphAttributes = new (this.constructor.GraphType)(this._graph)
         this._useWorker = config?.useWorker || false
+        this._layout.constructor.SEQUENCE.forEach(paramName => {
+            this[paramName] = this._layout[paramName]
+        })
     }
     useWorker(useWorker) {
         this._useWorker = useWorker
@@ -18,7 +21,7 @@ class LayoutRenderer {
             this._parameters = parameters
             this._layout.parameters(this._parameters)
         }
-        return this._parameters
+        return this._layout.parameters()
     }
     graph(graph) {
         if (graph) {
@@ -87,10 +90,31 @@ class LayoutRenderer {
  * @param {Graph} graphType
  */
 function createLayout(layoutModule, graphType) {
-    return class extends LayoutRenderer {
+    class Layout extends LayoutRenderer {
         static LayoutModule = layoutModule
         static GraphType = graphType
+        static LayoutName = layoutModule.ModuleName
+        static PARAMETERS = layoutModule.PARAMETERS
+        static PARAMETER_DEFINITION = layoutModule.PARAMETER_DEFINITION
+        static SEQUENCE = layoutModule.SEQUENCE
+        static DEFAULT_PARAMETERS = layoutModule.DEFAULT_PARAMETERS
     }
+    let LayoutProxy = new Proxy(Layout, {
+        construct(target, args) {
+            return new Proxy(new target(...args), {
+                get(target, param) {
+                    return target[param]
+                },
+                set(target, param, value) {
+                    target[param] = value
+                    if (target._layout.constructor.SEQUENCE.indexOf(param) >= 0)
+                        target._layout[param] = value
+                    return true
+                }
+            })
+        }
+    })
+    return LayoutProxy
 }
 const DavidsonHarelLayout = createLayout(LayoutModule.DavidsonHarelLayout, Graph.BaseGraph)
 const FMMMLayout = createLayout(LayoutModule.FMMMLayout, Graph.BaseGraph)

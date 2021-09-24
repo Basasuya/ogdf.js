@@ -18,22 +18,13 @@
         miserables.links.forEach((link) => {
             link.weight = Math.random()
         })
-        // const layout = new ogdf.layouts.layered.sugi({
-        //     graph: miserables,
-        //     parameters: {
-        //         edgeCosts: 100,
-        //         numberOfPivots: 250,
-        //         useEdgeCostsAttribute: true,
-        //         useWorker: false
-        //     }
-        // })
         let layout = new ogdf.Layout.SugiyamaLayout({
             graph: miserables,
             parameters: {
                 edgeCosts: 100,
                 numberOfPivots: 250,
                 useEdgeCostsAttribute: true,
-                crossMinType: new ogdf.Module.LayeredCrossMinModule.MedianHeuristic()
+                crossMin: new ogdf.Module.LayeredCrossMinModule.MedianHeuristic()
             },
             useWorker: false
         })

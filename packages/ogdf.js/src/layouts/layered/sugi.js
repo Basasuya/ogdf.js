@@ -56,27 +56,27 @@ export default {
         range: [true, false],
         default: true
     },
-    clusterLayoutType: {
+    clusterLayout: {
         type: PARAMETER_TYPE.MODULE,
         module: HierarchyClusterLayoutModule,
         default: HierarchyClusterLayoutModule.OptimalHierarchyClusterLayout
     },
-    crossMinType: {
+    crossMin: {
         type: PARAMETER_TYPE.MODULE,
         module: LayeredCrossMinModule,
         default: LayeredCrossMinModule.BarycenterHeuristic
     },
-    layoutType: {
+    layout: {
         type: PARAMETER_TYPE.MODULE,
         module: HierarchyLayoutModule,
         default: HierarchyLayoutModule.FastHierarchyLayout
     },
-    packerType: {
+    packer: {
         type: PARAMETER_TYPE.MODULE,
         module: CCLayoutPackModule,
         default: CCLayoutPackModule.TileToRowsCCPacker
     },
-    rankingType: {
+    ranking: {
         type: PARAMETER_TYPE.MODULE,
         module: RankingModule,
         default: RankingModule.LongestPathRanking

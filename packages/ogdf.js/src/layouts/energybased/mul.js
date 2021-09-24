@@ -13,17 +13,17 @@ export const OUTER_PARAMETER_DEFINITION = {
 }
 
 export const ORIGIN_PARAMETER_DEFINITION = {
-    layoutType: {
+    layout: {
         type: PARAMETER_TYPE.MODULE,
         module: LayoutModule,
         default: LayoutModule.SpringEmbedderGridVariant
     },
-    multilevelBuilderType: {
+    multilevelBuilder: {
         type: PARAMETER_TYPE.MODULE,
         module: MultilevelBuilder,
         default: MultilevelBuilder.SolarMerger
     },
-    placerType: {
+    placer: {
         type: PARAMETER_TYPE.MODULE,
         module: InitialPlacer,
         default: InitialPlacer.BarycenterPlacer

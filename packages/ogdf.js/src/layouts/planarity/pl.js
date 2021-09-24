@@ -15,22 +15,22 @@ export default {
         range: [0, Infinity],
         default: 1.0
     },
-    crossMinType: {
+    crossMin: {
         type: PARAMETER_TYPE.MODULE,
         module: CrossingMinimizationModule,
         default: CrossingMinimizationModule.SubgraphPlanarizer
     },
-    embedderType: {
+    embedder: {
         type: PARAMETER_TYPE.MODULE,
         module: EmbedderModule,
         default: EmbedderModule.SimpleEmbedder
     },
-    packerType: {
+    packer: {
         type: PARAMETER_TYPE.MODULE,
         module: CCLayoutPackModule,
         default: CCLayoutPackModule.TileToRowsCCPacker
     },
-    planarLayouterType: {
+    planarLayouter: {
         type: PARAMETER_TYPE.MODULE,
         module: LayoutPlanRepModule,
         default: LayoutPlanRepModule.OrthoLayout
