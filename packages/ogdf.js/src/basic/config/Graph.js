@@ -47,6 +47,11 @@ class Graph {
         })
         return [N, M, source, target, ...mallocAttributes]
     }
+    json() {
+        const N = this._nodesNum
+        const M = this._linksNum
+        return [N, M, this._sourceIndexArray, this._targetIndexArray, this._orderedAttributes]
+    }
     graph(graph) {
         if (graph) {
             this._graph = graph

@@ -115,7 +115,8 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                     BaseModuleName: this.constructor.BaseModuleName,
                     ModuleName: this.constructor.ModuleName,
                 },
-                parameters: {}
+                parameters: {},
+                PARAMETER_DEFINITION: this.constructor.PARAMETER_DEFINITION
             }
             this.constructor.SEQUENCE.forEach((name) => {
                 let P = this.constructor.PARAMETERS[name]
