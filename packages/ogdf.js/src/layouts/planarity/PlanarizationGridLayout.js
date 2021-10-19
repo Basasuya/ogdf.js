@@ -1,4 +1,4 @@
-import { PARAMETER_TYPE } from '../../utils/parameters'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
 import CrossingMinimizationModule from '../../module/config/CrossingMinimization'
 import CCLayoutPackModule from '../../module/config/CCLayoutPack'
 import GridLayoutPlanRepModule from '../../module/config/GridLayoutPlanRep'

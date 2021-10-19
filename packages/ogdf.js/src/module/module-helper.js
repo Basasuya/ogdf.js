@@ -1,4 +1,4 @@
-import { PARAMETER_TYPE } from '../utils/parameters'
+import { PARAMETER_TYPE } from '../utils/parameter-type'
 import deepmerge from 'deepmerge'
 class VirtualModule {}
 export default function createModule(NAME, MODULE_DIRECTORY) {

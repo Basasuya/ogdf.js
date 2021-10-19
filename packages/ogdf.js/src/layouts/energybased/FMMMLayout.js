@@ -1,4 +1,4 @@
-import { PARAMETER_TYPE } from '../../utils/parameters'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
 // should keep identical to the parameter order in src/entry/main.cpp => function fm3()
 export default {
     useHighLevelOptions: {

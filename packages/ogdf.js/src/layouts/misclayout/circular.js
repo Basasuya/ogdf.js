@@ -1,4 +1,4 @@
-import { PARAMETER_TYPE } from '../../utils/parameters'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
 
 //double minDistCC, double minDistCircle, double minDistLevel, double minDistSibling, double pageRatio
 export default {

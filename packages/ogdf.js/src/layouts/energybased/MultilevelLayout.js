@@ -1,4 +1,4 @@
-import { PARAMETER_TYPE } from '../../utils/parameters'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
 import LayoutModule from '../../module/config/Layout'
 import MultilevelBuilder from '../../module/config/MultilevelBuilder'
 import InitialPlacer from '../../module/config/InitialPlacer'

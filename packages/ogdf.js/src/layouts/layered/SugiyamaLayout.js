@@ -1,4 +1,4 @@
-import { PARAMETER_TYPE } from '../../utils/parameters'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
 import HierarchyClusterLayoutModule from '../../module/config/HierarchyClusterLayout'
 import LayeredCrossMinModule from '../../module/config/LayeredCrossMin'
 import HierarchyLayoutModule from '../../module/config/HierarchyLayout'
