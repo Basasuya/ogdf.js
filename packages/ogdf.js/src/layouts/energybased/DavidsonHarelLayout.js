@@ -57,4 +57,3 @@ export default {
         default: 500
     }
 }
-

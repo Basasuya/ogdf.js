@@ -26,6 +26,5 @@ export default {
         type: PARAMETER_TYPE.DOUBLE,
         range: [0, Infinity],
         default: 1.0
-    },
+    }
 }
-

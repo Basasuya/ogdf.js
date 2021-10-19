@@ -1,4 +1,4 @@
 // layered
-import sugi from './sugi'
+import SugiyamaLayout from './SugiyamaLayout'
 
-export default { sugi }
+export default { SugiyamaLayout }

@@ -1,9 +1,9 @@
-import EdgeInsertionModule from "./EdgeInsertion";
-import createModule from "../module-helper";
-import PlanarSubgraphModule from "./PlanarSubgraph";
-import { PARAMETER_TYPE } from "../../utils/parameter-type";
+import EdgeInsertionModule from './EdgeInsertion'
+import createModule from '../module-helper'
+import PlanarSubgraphModule from './PlanarSubgraph'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
 
-const NAME = "CrossingMinimizationModule"
+const NAME = 'CrossingMinimizationModule'
 
 const MODULE_DIRECTORY = {
     SubgraphPlanarizer: {

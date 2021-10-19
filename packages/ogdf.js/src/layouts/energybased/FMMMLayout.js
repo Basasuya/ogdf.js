@@ -271,4 +271,3 @@ export default {
         default: 4
     }
 }
-

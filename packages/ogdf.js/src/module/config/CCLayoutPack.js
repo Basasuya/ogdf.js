@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
+import createModule from '../module-helper'
 
-const NAME = "CCLayoutPackModule"
+const NAME = 'CCLayoutPackModule'
 
 const MODULE_DIRECTORY = {
     TileToRowsCCPacker: {}

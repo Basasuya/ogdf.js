@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
+import createModule from '../module-helper'
 
-const NAME = "MixedModelCrossingsBeautifierModule"
+const NAME = 'MixedModelCrossingsBeautifierModule'
 
 const MODULE_DIRECTORY = {
     MMCBDoubleGrid: {},

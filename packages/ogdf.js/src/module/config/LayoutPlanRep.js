@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
-import { PARAMETER_TYPE } from "../../utils/parameter-type";
-const NAME = "LayoutPlanRepModule"
+import createModule from '../module-helper'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
+const NAME = 'LayoutPlanRepModule'
 
 const MODULE_DIRECTORY = {
     OrthoLayout: {

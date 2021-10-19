@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
+import createModule from '../module-helper'
 
-const NAME = "AcyclicSubgraphModule"
+const NAME = 'AcyclicSubgraphModule'
 
 const MODULE_DIRECTORY = {
     DfsAcyclicSubgraph: {},

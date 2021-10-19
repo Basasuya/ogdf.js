@@ -1,6 +1,6 @@
 import { PARAMETER_TYPE } from '../utils/parameters'
 import deepmerge from 'deepmerge'
-class VirtualModule { }
+class VirtualModule {}
 export default function createModule(NAME, MODULE_DIRECTORY) {
     class BaseModule extends VirtualModule {
         /**
@@ -37,7 +37,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
          * @returns the address of buffer
          */
         malloc(OGDFModule) {
-            let params = this.constructor.SEQUENCE.map(name => {
+            let params = this.constructor.SEQUENCE.map((name) => {
                 let type = this.constructor.PARAMETERS[name].type
                 if (type === PARAMETER_TYPE.CATEGORICAL) {
                     return this.constructor.PARAMETERS[name].range.indexOf(this[name])
@@ -45,11 +45,13 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                     return this[name].malloc(OGDFModule)
                 } else return this[name]
             })
-            this._buffer = OGDFModule[`_${this.constructor.BaseModuleName}_${this.constructor.ModuleName}`](...params)
+            this._buffer = OGDFModule[
+                `_${this.constructor.BaseModuleName}_${this.constructor.ModuleName}`
+            ](...params)
             return this._buffer
         }
         free() {
-            this.constructor.SEQUENCE.forEach(name => {
+            this.constructor.SEQUENCE.forEach((name) => {
                 let type = this.constructor.PARAMETERS[name].type
                 if (type === PARAMETER_TYPE.MODULE) {
                     return this[name].free()
@@ -60,37 +62,56 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
         }
         /**
          * get or set parameters of module object
-         * @param {*} parameter 
-         * @param {*} value 
+         * @param {*} parameter
+         * @param {*} value
          * @returns parameters
          */
         parameters(parameter, value) {
             if (parameter) {
+                // parameter setter
                 if (typeof parameter == 'object') {
                     // this.parameters({ useHighLevelOptions: true })
                     for (let paramName of this.constructor.SEQUENCE) {
                         if (this.constructor.PARAMETERS[paramName].type === PARAMETER_TYPE.MODULE) {
                             if (!this.constructor.PARAMETERS[paramName].module)
-                                throw Error(`OGDFModuleDependencyError: Module ${NAME}.${this.constructor.ModuleName} should be a constructor but found ${this.constructor.PARAMETERS[paramName].module}.`)
-                            if (parameter[paramName] && parameter[paramName].static && parameter[paramName].static.ModuleName && parameter[paramName].parameters) {
-                                this[paramName] = new (this.constructor.PARAMETERS[paramName].module[parameter[paramName].static.ModuleName])(parameter[paramName].parameters)
+                                throw Error(
+                                    `OGDFModuleDependencyError: Module ${NAME}.${this.constructor.ModuleName} should be a constructor but found ${this.constructor.PARAMETERS[paramName].module}.`
+                                )
+                            if (
+                                parameter[paramName] &&
+                                parameter[paramName].static &&
+                                parameter[paramName].static.ModuleName &&
+                                parameter[paramName].parameters
+                            ) {
+                                this[paramName] = new this.constructor.PARAMETERS[paramName].module[
+                                    parameter[paramName].static.ModuleName
+                                ](parameter[paramName].parameters)
                                 this._parameters[paramName] = this[paramName]
                                 continue
                             }
                             if (parameter[paramName] instanceof VirtualModule) {
-                                if (parameter[paramName] instanceof this.constructor.PARAMETERS[paramName].module) {
+                                if (
+                                    parameter[paramName] instanceof
+                                    this.constructor.PARAMETERS[paramName].module
+                                ) {
                                     this[paramName] = parameter[paramName]
                                     this._parameters[paramName] = this[paramName]
                                     continue
-                                }
-                                else throw Error(`OGDFModuleTypeError: ${parameter[paramName]} needs a ${this.constructor.PARAMETERS[paramName].module.BaseModuleName} object, but got ${parameter[paramName].constructor.BaseModuleName}`)
+                                } else
+                                    throw Error(
+                                        `OGDFModuleTypeError: ${parameter[paramName]} needs a ${this.constructor.PARAMETERS[paramName].module.BaseModuleName} object, but got ${parameter[paramName].constructor.BaseModuleName}`
+                                    )
                             }
-                            let params = this.constructor.PARAMETERS[paramName].default.DEFAULT_PARAMETERS
+                            let params =
+                                this.constructor.PARAMETERS[paramName].default.DEFAULT_PARAMETERS
                             params = deepmerge(params, parameter[paramName] || {})
-                            this[paramName] = new (this.constructor.PARAMETERS[paramName].default)(params)
-                        }
-                        else {
-                            this[paramName] = parameter[paramName] || MODULE_DIRECTORY[this.constructor.ModuleName][paramName].default
+                            this[paramName] = new this.constructor.PARAMETERS[paramName].default(
+                                params
+                            )
+                        } else {
+                            this[paramName] =
+                                parameter[paramName] ||
+                                MODULE_DIRECTORY[this.constructor.ModuleName][paramName].default
                         }
                         this._parameters[paramName] = this[paramName]
                     }
@@ -113,7 +134,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             let json = {
                 static: {
                     BaseModuleName: this.constructor.BaseModuleName,
-                    ModuleName: this.constructor.ModuleName,
+                    ModuleName: this.constructor.ModuleName
                 },
                 parameters: {},
                 PARAMETER_DEFINITION: this.constructor.PARAMETER_DEFINITION
@@ -136,8 +157,8 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             static DEFAULT_PARAMETERS = (() => {
                 let params = {}
                 const PD = MODULE_DIRECTORY[MODULE_NAME]
-                Object.keys(PD).forEach(key => {
-                    if (PD[key].type === PARAMETER_TYPE.MODULE) params[key] = new (PD[key].default)()
+                Object.keys(PD).forEach((key) => {
+                    if (PD[key].type === PARAMETER_TYPE.MODULE) params[key] = new PD[key].default()
                     else params[key] = PD[key].default
                 })
                 return params
@@ -162,8 +183,10 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                             if (value instanceof target.constructor.PARAMETERS[param].module) {
                                 target[param] = value
                                 return true
-                            }
-                            else throw Error(`OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}`)
+                            } else
+                                throw Error(
+                                    `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}`
+                                )
                         }
                         target[param] = value
                         if (target.constructor.SEQUENCE.indexOf(param) >= 0)

@@ -1,17 +1,9 @@
-import initOGDF from '../../entry/rawogdf'
-import { createWorker } from '../../utils/worker-helper'
-import {
-    getDefaultParameters,
-    updateParameters,
-    getParameterEntries,
-    PARAMETER_TYPE
-} from '../../utils/parameters'
+import { PARAMETER_TYPE } from '../../utils/parameters'
 
 class Graph {
-    static BaseModuleName = "Graph"
-    static ModuleName = "BaseGraph"
+    static BaseModuleName = 'Graph'
+    static ModuleName = 'BaseGraph'
     constructor(graph) {
-
         this._sourceIndexArray = []
         this._targetIndexArray = []
         this._orderedAttributes = []
@@ -55,15 +47,15 @@ class Graph {
     graph(graph) {
         if (graph) {
             this._graph = graph
-            this._nodesNum = this._graph.nodes.length
-            this._linksNum = this._graph.links.length
+            this._nodesNum = this._nodesNum
+            this._linksNum = this._linksNum
         }
         return JSON.parse(JSON.stringify(this._graph))
     }
 }
 
 class BaseGraph extends Graph {
-    static ModuleName = "BaseGraph"
+    static ModuleName = 'BaseGraph'
     constructor(graph) {
         super(graph)
     }
@@ -79,7 +71,7 @@ class BaseGraph extends Graph {
 
             this._sourceIndexArray = []
             this._targetIndexArray = []
-            for (let i = 0; i < this._graph.links.length; ++i) {
+            for (let i = 0; i < this._linksNum; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
             }
@@ -89,17 +81,15 @@ class BaseGraph extends Graph {
 }
 
 class NodeLinkGraph extends Graph {
-    static ModuleName = "NodeLinkGraph"
+    static ModuleName = 'NodeLinkGraph'
     constructor(graph) {
         super(graph)
     }
     graph(graph) {
         super.graph(graph)
         if (graph) {
-            this._graph = graph
-
             const id2index = {}
-            for (let i = 0; i < this._graph.nodes.length; ++i) {
+            for (let i = 0; i < this._nodesNum; ++i) {
                 if (this._graph.nodes[i]['id'] in id2index) {
                     throw Error('Duplicated Node ID') // duplicated node id is not allowed
                 } else id2index[this._graph.nodes[i]['id']] = i
@@ -107,7 +97,7 @@ class NodeLinkGraph extends Graph {
 
             this._sourceIndexArray = []
             this._targetIndexArray = []
-            for (let i = 0; i < this._graph.links.length; ++i) {
+            for (let i = 0; i < this._linksNum; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
             }
@@ -115,14 +105,14 @@ class NodeLinkGraph extends Graph {
             this._nodesXArray = []
             this._nodesYArray = []
 
-            for (let i = 0; i < this._graph.nodes.length; ++i) {
+            for (let i = 0; i < this._nodesNum; ++i) {
                 this._nodesXArray.push(this._graph.nodes[i].x)
                 this._nodesYArray.push(this._graph.nodes[i].y)
             }
 
             this._orderedAttributes = [
                 { type: PARAMETER_TYPE.DOUBLE, value: this._nodesXArray },
-                { type: PARAMETER_TYPE.DOUBLE, value: this._nodesYArray },
+                { type: PARAMETER_TYPE.DOUBLE, value: this._nodesYArray }
             ]
         }
 
@@ -131,7 +121,7 @@ class NodeLinkGraph extends Graph {
 }
 
 class LinkWeightGraph extends Graph {
-    static ModuleName = "LinkWeightGraph"
+    static ModuleName = 'LinkWeightGraph'
     constructor(graph) {
         super(graph)
     }
@@ -141,7 +131,7 @@ class LinkWeightGraph extends Graph {
             this._graph = graph
 
             const id2index = {}
-            for (let i = 0; i < this._graph.nodes.length; ++i) {
+            for (let i = 0; i < this._nodesNum; ++i) {
                 if (this._graph.nodes[i]['id'] in id2index) {
                     throw Error('Duplicated Node ID') // duplicated node id is not allowed
                 } else id2index[this._graph.nodes[i]['id']] = i
@@ -150,23 +140,21 @@ class LinkWeightGraph extends Graph {
             this._sourceIndexArray = []
             this._targetIndexArray = []
             this._linkWeightArray = []
-            for (let i = 0; i < this._graph.links.length; ++i) {
+            for (let i = 0; i < this._linksNum; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
                 this._linkWeightArray.push(this._graph.links[i].weight || 1.0)
             }
         }
 
-        this._orderedAttributes = [
-            { type: PARAMETER_TYPE.DOUBLE, value: this._linkWeightArray }
-        ]
+        this._orderedAttributes = [{ type: PARAMETER_TYPE.DOUBLE, value: this._linkWeightArray }]
 
         return JSON.parse(JSON.stringify(this._graph))
     }
 }
 
 class NodeLinkWeightGraph extends Graph {
-    static ModuleName = "NodeLinkWeightGraph"
+    static ModuleName = 'NodeLinkWeightGraph'
     constructor(graph) {
         super(graph)
     }
@@ -176,7 +164,7 @@ class NodeLinkWeightGraph extends Graph {
             this._graph = graph
 
             const id2index = {}
-            for (let i = 0; i < this._graph.nodes.length; ++i) {
+            for (let i = 0; i < this._nodesNum; ++i) {
                 if (this._graph.nodes[i]['id'] in id2index) {
                     throw Error('Duplicated Node ID') // duplicated node id is not allowed
                 } else id2index[this._graph.nodes[i]['id']] = i
@@ -185,7 +173,7 @@ class NodeLinkWeightGraph extends Graph {
             this._sourceIndexArray = []
             this._targetIndexArray = []
             this._linkWeightArray = []
-            for (let i = 0; i < this._graph.links.length; ++i) {
+            for (let i = 0; i < this._linksNum; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
                 this._linkWeightArray.push(this._graph.links[i].weight || 1.0)
@@ -194,7 +182,7 @@ class NodeLinkWeightGraph extends Graph {
             this._nodesXArray = []
             this._nodesYArray = []
 
-            for (let i = 0; i < this._graph.nodes.length; ++i) {
+            for (let i = 0; i < this._nodesNum; ++i) {
                 this._nodesXArray.push(this._graph.nodes[i].x)
                 this._nodesYArray.push(this._graph.nodes[i].y)
             }
@@ -211,7 +199,7 @@ class NodeLinkWeightGraph extends Graph {
 }
 
 class NodeSizeLinkGraph extends Graph {
-    static ModuleName = "NodeSizeLinkGraph"
+    static ModuleName = 'NodeSizeLinkGraph'
     constructor(graph) {
         super(graph)
     }
@@ -221,7 +209,7 @@ class NodeSizeLinkGraph extends Graph {
             this._graph = graph
 
             const id2index = {}
-            for (let i = 0; i < this._graph.nodes.length; ++i) {
+            for (let i = 0; i < this._nodesNum; ++i) {
                 if (this._graph.nodes[i]['id'] in id2index) {
                     throw Error('Duplicated Node ID') // duplicated node id is not allowed
                 } else id2index[this._graph.nodes[i]['id']] = i
@@ -229,7 +217,7 @@ class NodeSizeLinkGraph extends Graph {
 
             this._sourceIndexArray = []
             this._targetIndexArray = []
-            for (let i = 0; i < this._graph.links.length; ++i) {
+            for (let i = 0; i < this._linksNum; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
             }
@@ -239,7 +227,7 @@ class NodeSizeLinkGraph extends Graph {
             this._nodesWidthArray = []
             this._nodesHeightArray = []
 
-            for (let i = 0; i < this._graph.nodes.length; ++i) {
+            for (let i = 0; i < this._nodesNum; ++i) {
                 this._nodesXArray.push(this._graph.nodes[i].x)
                 this._nodesYArray.push(this._graph.nodes[i].y)
                 this._nodesWidthArray.push(this._graph.nodes[i].width)

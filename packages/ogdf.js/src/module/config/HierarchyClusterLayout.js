@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
-import { PARAMETER_TYPE } from "../../utils/parameter-type";
-const NAME = "HierarchyClusterLayoutModule"
+import createModule from '../module-helper'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
+const NAME = 'HierarchyClusterLayoutModule'
 
 const MODULE_DIRECTORY = {
     OptimalHierarchyClusterLayout: {

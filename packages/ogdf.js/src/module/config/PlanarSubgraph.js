@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
-import { PARAMETER_TYPE } from "../../utils/parameter-type";
-const NAME = "PlanarSubgraphModule"
+import createModule from '../module-helper'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
+const NAME = 'PlanarSubgraphModule'
 
 const MODULE_DIRECTORY = {
     MaximumPlanarSubgraph: {

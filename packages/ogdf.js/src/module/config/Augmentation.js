@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
+import createModule from '../module-helper'
 
-const NAME = "AugmentationModule"
+const NAME = 'AugmentationModule'
 
 const MODULE_DIRECTORY = {
     DfsMakeBiconnected: {},

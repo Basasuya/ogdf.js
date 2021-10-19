@@ -1,11 +1,11 @@
-import createModule from "../module-helper";
+import createModule from '../module-helper'
 import AugmentationModule from './Augmentation'
 import MixedModelCrossingsBeautifier from './MixedModelCrossingsBeautifier'
 import Embedder from './Embedder'
-import ShellingOrderModule from "./ShellingOrder";
-import { PARAMETER_TYPE } from "../../utils/parameter-type";
+import ShellingOrderModule from './ShellingOrder'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
 
-const NAME = "GridLayoutPlanRepModule"
+const NAME = 'GridLayoutPlanRepModule'
 
 const MODULE_DIRECTORY = {
     MixedModelLayout: {

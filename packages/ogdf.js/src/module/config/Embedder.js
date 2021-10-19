@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
-import { PARAMETER_TYPE } from "../../utils/parameter-type";
-const NAME = "EmbedderModule"
+import createModule from '../module-helper'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
+const NAME = 'EmbedderModule'
 
 const MODULE_DIRECTORY = {
     EmbedderMaxFace: {

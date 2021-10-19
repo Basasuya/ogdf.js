@@ -1,6 +1,5 @@
 import { PARAMETER_TYPE } from '../../utils/parameters'
 
-
 export default {
     maxNumThreads: {
         type: PARAMETER_TYPE.INT,

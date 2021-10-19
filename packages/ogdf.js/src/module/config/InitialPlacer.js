@@ -1,6 +1,6 @@
-import createModule from "../module-helper";
-import { PARAMETER_TYPE } from "../../utils/parameter-type";
-const NAME = "InitialPlacer"
+import createModule from '../module-helper'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
+const NAME = 'InitialPlacer'
 
 const MODULE_DIRECTORY = {
     BarycenterPlacer: {

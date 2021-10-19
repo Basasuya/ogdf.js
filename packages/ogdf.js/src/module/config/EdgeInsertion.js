@@ -1,7 +1,7 @@
-import createModule from "../module-helper";
-import { PARAMETER_TYPE } from "../../utils/parameter-type";
+import createModule from '../module-helper'
+import { PARAMETER_TYPE } from '../../utils/parameter-type'
 
-const NAME = "EdgeInsertionModule"
+const NAME = 'EdgeInsertionModule'
 
 const MODULE_DIRECTORY = {
     FixedEmbeddingInserter: {

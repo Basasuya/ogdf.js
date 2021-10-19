@@ -24,8 +24,9 @@
         "layout"
     ],
     "devDependencies": {
+        "babel-eslint": "^10.1.0",
         "concurrently": "^6.2.1",
-        "eslint": "^6.6.0",
+        "eslint": "^7.11.0",
         "eslint-config-prettier": "^6.14.0",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-jsx-a11y": "^6.3.1",

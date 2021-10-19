@@ -21,7 +21,7 @@ const trivialTesterDefinedParameters = {
         balanced: false
     }),
     ranking: new ogdf.Module.RankingModule.CoffmanGrahamRanking({
-        subgraph: new ogdf.Module.AcyclicSubgraphModule.GreedyCycleRemoval(),
+        subgraph: new ogdf.Module.AcyclicSubgraphModule.GreedyCycleRemoval()
     })
 }
 const EXPECTED_STATE = {
@@ -183,12 +183,10 @@ describe('Testing layout.parameters()', () => {
 
     test('Trivial changing parameters', () => {
         layout.parameters(defaultParameters)
-        expect(layout.parameters(trivialTesterDefinedParameters)).toEqual(
-            {
-                ...defaultParameters,
-                ...trivialTesterDefinedParameters,
-            }
-        )
+        expect(layout.parameters(trivialTesterDefinedParameters)).toEqual({
+            ...defaultParameters,
+            ...trivialTesterDefinedParameters
+        })
     })
 
     describe('Wrongly changing parameters', () => {
