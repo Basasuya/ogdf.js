@@ -174,6 +174,14 @@ $ npm run server # open a local http server to see examples
 $ npm run watch:dashboard # to open the dashboard
 ```
 
+#### Publish
+
+```bash
+$ npm install -g lerna # if you didn't install lerna globally
+$ lerna version [major | minor | patch | premajor | preminor | prepatch | prerelease]
+$ lerna publish
+```
+
 ### Progress
 
 -   add other layout algorithms
