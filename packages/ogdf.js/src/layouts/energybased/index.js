@@ -1,15 +1,26 @@
 // energybased
-import dh from './dh'
-import fm3 from './fm3'
-import fme from './fme'
-import fmme from './fmme'
-import gem from './gem'
-import mul from './mul'
-import nr from './nr'
-import pmds from './pmds'
-import segv from './segv'
-import sekk from './sekk'
-import sm from './sm'
-import tut from './tut'
+import DavidsonHarelLayout from './DavidsonHarelLayout'
+import FMMMLayout from './FMMMLayout'
+import FastMultipoleEmbedder from './FastMultipoleEmbedder'
+import FastMultipoleMultilevelEmbedder from './FastMultipoleMultilevelEmbedder'
+import GEMLayout from './GEMLayout'
+import NodeRespecterLayout from './NodeRespecterLayout'
+import PivotMDS from './PivotMDS'
+import SpringEmbedderGridVariant from './SpringEmbedderGridVariant'
+import SpringEmbedderKK from './SpringEmbedderKK'
+import StressMinimization from './StressMinimization'
+import TutteLayout from './TutteLayout'
 
-export default { dh, fm3, fme, fmme, gem, mul, nr, pmds, segv, sekk, sm, tut }
+export default {
+    DavidsonHarelLayout,
+    FMMMLayout,
+    FastMultipoleEmbedder,
+    FastMultipoleMultilevelEmbedder,
+    GEMLayout,
+    NodeRespecterLayout,
+    PivotMDS,
+    SpringEmbedderGridVariant,
+    SpringEmbedderKK,
+    StressMinimization,
+    TutteLayout
+}

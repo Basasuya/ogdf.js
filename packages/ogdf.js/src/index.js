@@ -1,8 +1,4 @@
-import energybased from './layouts/energybased'
-import layered from './layouts/layered'
-import planarity from './layouts/planarity'
-
-import * as utils from './utils'
-
-const layouts = { energybased, layered, planarity }
-export { layouts, utils }
+import * as Module from './module'
+import * as Basic from './basic'
+import { layouts, Layout } from './utils/layout-helper'
+export { Module, Basic, Layout, layouts }

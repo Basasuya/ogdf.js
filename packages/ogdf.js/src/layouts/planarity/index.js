@@ -1,5 +1,5 @@
 // planarity
-import pg from './pg'
-import pl from './pl'
+import PlanarizationGridLayout from './PlanarizationGridLayout'
+import PlanarizationLayout from './PlanarizationLayout'
 
-export default { pg, pl }
+export default { PlanarizationGridLayout, PlanarizationLayout }
