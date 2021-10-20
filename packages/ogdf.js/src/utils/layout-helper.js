@@ -34,9 +34,6 @@ class LayoutRenderer {
     getParameterTree() {
         return this._layout.getParameterTree()
     }
-    getParamaterDefinitionTree() {
-        return this._layout.constructor.getParamaterDefinitionTree()
-    }
     run() {
         let self = this
         function createOGDFProcess() {

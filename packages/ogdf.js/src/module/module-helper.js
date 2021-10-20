@@ -117,18 +117,28 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             })
             return json
         }
-        getParameterTree() {
+        value() {
             let self = this
-            let parameters = {
-                type: this.constructor.ModuleName
-            }
+            let parameters = {}
             this.constructor.SEQUENCE.forEach((name) => {
-                let P = self.constructor.PARAMETERS[name]
-                if (P.type === PARAMETER_TYPE.MODULE)
-                    parameters[name] = self[name].getParameterTree()
-                else parameters[name] = self[name]
+                let P = this.constructor.PARAMETERS[name]
+                parameters[name] = { value: {} }
+                if (P.type === PARAMETER_TYPE.MODULE) {
+                    let value = self[name].value()
+                    parameters[name].value = value
+                    parameters[name].value.parameters = deepmerge(
+                        value.parameters,
+                        P.module[value.name].PARAMETERS
+                    )
+                } else parameters[name].value = self[name]
             })
-            return parameters
+            return { parameters, name: self.constructor.ModuleName }
+        }
+        getParameterTree() {
+            let tree = this.constructor.getParamaterDefinitionTree()
+            let value = this.value()
+            tree = deepmerge(tree, value)
+            return tree
         }
         static getParamaterDefinitionTree() {
             let self = this
@@ -147,6 +157,9 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                         definitions.parameters[name].module[value.ModuleName] =
                             value.getParamaterDefinitionTree()
                     })
+                    definitions.parameters[name].range = self.PARAMETERS[
+                        name
+                    ].module.SubModuleList.map((value) => value.ModuleName)
                     definitions.parameters[name].default =
                         definitions.parameters[name].module[
                         self.PARAMETERS[name].default.ModuleName
