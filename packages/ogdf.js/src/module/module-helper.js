@@ -1,6 +1,6 @@
 import { PARAMETER_TYPE } from '../utils/parameter-type'
 import deepmerge from 'deepmerge'
-class VirtualModule {}
+class VirtualModule { }
 export default function createModule(NAME, MODULE_DIRECTORY) {
     class BaseModule extends VirtualModule {
         /**
@@ -30,35 +30,6 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
         constructor() {
             super()
             this._parameters = {}
-        }
-        /**
-         * create an object correspond to ogdf entry
-         * @param {*} OGDFModule initialized ogdf entry module
-         * @returns the address of buffer
-         */
-        malloc(OGDFModule) {
-            let params = this.constructor.SEQUENCE.map((name) => {
-                let type = this.constructor.PARAMETERS[name].type
-                if (type === PARAMETER_TYPE.CATEGORICAL) {
-                    return this.constructor.PARAMETERS[name].range.indexOf(this[name])
-                } else if (type === PARAMETER_TYPE.MODULE) {
-                    return this[name].malloc(OGDFModule)
-                } else return this[name]
-            })
-            this._buffer = OGDFModule[
-                `_${this.constructor.BaseModuleName}_${this.constructor.ModuleName}`
-            ](...params)
-            return this._buffer
-        }
-        free() {
-            this.constructor.SEQUENCE.forEach((name) => {
-                let type = this.constructor.PARAMETERS[name].type
-                if (type === PARAMETER_TYPE.MODULE) {
-                    return this[name].free()
-                }
-            })
-            OGDFModule[`__delete`](this._buffer)
-            this._buffer = undefined
         }
         /**
          * get or set parameters of module object
@@ -120,7 +91,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                     // e.g., this.parameters("multilevelBuilderType.module", "EdgeCoverMerger")
                     // e.g., this.parameters("multilevelBuilderType.edgeLengthAdjustment")
                     if (this.constructor.SEQUENCE.indexOf(parameter) >= 0)
-                        this._parameters[paramName] = this[paramName] = value
+                        this._parameters[parameter] = this[parameter] = value
                 }
             }
             return this._parameters
@@ -145,6 +116,44 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                 else json.parameters[name] = self[name]
             })
             return json
+        }
+        getParameterTree() {
+            let self = this
+            let parameters = {
+                type: this.constructor.ModuleName
+            }
+            this.constructor.SEQUENCE.forEach((name) => {
+                let P = self.constructor.PARAMETERS[name]
+                if (P.type === PARAMETER_TYPE.MODULE)
+                    parameters[name] = self[name].getParameterTree()
+                else parameters[name] = self[name]
+            })
+            return parameters
+        }
+        static getParamaterDefinitionTree() {
+            let self = this
+            let definitions = {
+                name: this.ModuleName,
+                parameters: {}
+            }
+            this.SEQUENCE.forEach((name) => {
+                let P = self.PARAMETERS[name]
+                if (P.type === PARAMETER_TYPE.MODULE) {
+                    definitions.parameters[name] = {
+                        type: PARAMETER_TYPE.MODULE,
+                        module: {}
+                    }
+                    self.PARAMETERS[name].module.SubModuleList.forEach((value) => {
+                        definitions.parameters[name].module[value.ModuleName] =
+                            value.getParamaterDefinitionTree()
+                    })
+                    definitions.parameters[name].default =
+                        definitions.parameters[name].module[
+                        self.PARAMETERS[name].default.ModuleName
+                        ]
+                } else definitions.parameters[name] = self.PARAMETER_DEFINITION[name]
+            })
+            return definitions
         }
     }
     BaseModule.SubModuleList = []

@@ -27,9 +27,15 @@ class LayoutRenderer {
     graph(graph) {
         if (graph) {
             this._graph = graph
-            this._graphAttributes = new LayoutType.GraphType(this._graph)
+            this._graphAttributes = new this.constructor.LayoutType.GraphType(this._graph)
         }
         return this._graph
+    }
+    getParameterTree() {
+        return this._layout.getParameterTree()
+    }
+    getParamaterDefinitionTree() {
+        return this._layout.constructor.getParamaterDefinitionTree()
     }
     run() {
         let self = this
@@ -55,7 +61,6 @@ class LayoutRenderer {
                             )
                         } else return parameters[name]
                     })
-                    console.log(`_${staticParams.BaseModuleName}_${staticParams.ModuleName}`)
                     let buffer = Module[
                         `_${staticParams.BaseModuleName}_${staticParams.ModuleName}`
                     ](...params)

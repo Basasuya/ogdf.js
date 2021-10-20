@@ -18,7 +18,7 @@
         miserables.links.forEach((link) => {
             link.weight = Math.random()
         })
-        let layout = new ogdf.Layout.StressMinimization({
+        let layout = new ogdf.Layout.SugiyamaLayout({
             graph: miserables,
             parameters: {
                 edgeCosts: 100,
