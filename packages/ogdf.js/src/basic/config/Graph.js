@@ -47,8 +47,8 @@ class Graph {
     graph(graph) {
         if (graph) {
             this._graph = graph
-            this._nodesNum = this._nodesNum
-            this._linksNum = this._linksNum
+            this._nodesNum = this._graph.nodes.length
+            this._linksNum = this._graph.links.length
         }
         return JSON.parse(JSON.stringify(this._graph))
     }
