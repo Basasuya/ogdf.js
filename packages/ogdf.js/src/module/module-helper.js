@@ -1,6 +1,6 @@
 import { PARAMETER_TYPE } from '../utils/parameter-type'
 import deepmerge from 'deepmerge'
-class VirtualModule { }
+class VirtualModule {}
 export default function createModule(NAME, MODULE_DIRECTORY) {
     class BaseModule extends VirtualModule {
         /**
@@ -122,23 +122,32 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             let parameters = {}
             this.constructor.SEQUENCE.forEach((name) => {
                 let P = this.constructor.PARAMETERS[name]
-                parameters[name] = { value: {} }
+                let proxy = {}
                 if (P.type === PARAMETER_TYPE.MODULE) {
-                    let value = self[name].value()
-                    parameters[name].value = value
-                    parameters[name].value.parameters = deepmerge(
-                        value.parameters,
-                        P.module[value.name].PARAMETERS
-                    )
-                } else parameters[name].value = self[name]
+                    proxy = P.module.getParamaterDefinitionTree()
+                    proxy.value = self[name].value()
+                } else {
+                    proxy.type = P.type
+                    proxy.range = P.range
+                    proxy.default = P.default
+                    proxy.value = self[name]
+                }
+                parameters[name] = new Proxy(proxy, {
+                    get(target, key) {
+                        return target[key]
+                    },
+                    set(target, key, value) {
+                        if (key !== 'value')
+                            throw Error('You can only change the value of parameter ' + name + '.')
+                        else {
+                            target[key] = value
+                            self[name] = value
+                            return true
+                        }
+                    }
+                })
             })
-            return { parameters, name: self.constructor.ModuleName }
-        }
-        getParameterTree() {
-            let tree = this.constructor.getParamaterDefinitionTree()
-            let value = this.value()
-            tree = deepmerge(tree, value)
-            return tree
+            return { name: self.constructor.ModuleName, parameters }
         }
         static getParamaterDefinitionTree() {
             let self = this
@@ -162,7 +171,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                     ].module.SubModuleList.map((value) => value.ModuleName)
                     definitions.parameters[name].default =
                         definitions.parameters[name].module[
-                        self.PARAMETERS[name].default.ModuleName
+                            self.PARAMETERS[name].default.ModuleName
                         ]
                 } else definitions.parameters[name] = self.PARAMETER_DEFINITION[name]
             })
@@ -201,18 +210,38 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                             target[param] = value
                             return true
                         }
+                        // module type test
                         if (value instanceof VirtualModule) {
                             if (value instanceof target.constructor.PARAMETERS[param].module) {
                                 target[param] = value
                                 return true
                             } else
                                 throw Error(
-                                    `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}`
+                                    `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}.`
+                                )
+                        }
+                        // range test
+                        let type = target.constructor.PARAMETERS[param].type
+                        if (type === PARAMETER_TYPE.INT || type === PARAMETER_TYPE.DOUBLE) {
+                            if (
+                                value < target.constructor.PARAMETERS[param].range[0] ||
+                                value > target.constructor.PARAMETERS[param].range[1]
+                            )
+                                throw Error(
+                                    `OGDFOutOfRangeError: Parameter ${param} needs a number between ${target.constructor.PARAMETERS[param].range[0]} and ${target.constructor.PARAMETERS[param].range[1]}, but got ${value}.`
+                                )
+                        } else if (type === PARAMETER_TYPE.CATEGORICAL) {
+                            if (target.constructor.PARAMETERS[param].range.indexOf(value) < 0)
+                                throw Error(
+                                    `OGDFCategoryNotFoundError: Parameter ${param} needs one of category in ${target.constructor.PARAMETERS[
+                                        param
+                                    ].range.join(',')}, but got ${value}.`
                                 )
                         }
                         target[param] = value
-                        if (target.constructor.SEQUENCE.indexOf(param) >= 0)
+                        if (target.constructor.SEQUENCE.indexOf(param) >= 0) {
                             target._parameters[param] = value
+                        }
                         return true
                     }
                 })

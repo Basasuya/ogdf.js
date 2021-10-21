@@ -31,8 +31,8 @@ class LayoutRenderer {
         }
         return this._graph
     }
-    getParameterTree() {
-        return this._layout.getParameterTree()
+    value() {
+        return this._layout.value()
     }
     run() {
         let self = this
@@ -191,6 +191,8 @@ function createLayout(layoutModule, graphType) {
         construct(target, args) {
             return new Proxy(new target(...args), {
                 get(target, param) {
+                    if (target._layout.constructor.SEQUENCE.indexOf(param) >= 0)
+                        return target._layout[param]
                     return target[param]
                 },
                 set(target, param, value) {
