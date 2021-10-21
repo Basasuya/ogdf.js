@@ -119,13 +119,26 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
         }
         value() {
             let self = this
+            let value = {
+                type: PARAMETER_TYPE.MODULE,
+                name: this.constructor.ModuleName,
+                range: this.constructor.SubModuleList.map((value) => value.ModuleName),
+                default: this.constructor.getParamaterDefinitionTree(),
+                module: {},
+                value: this
+            }
+            let module = {}
+            self.constructor.SubModuleList.forEach((value) => {
+                module[value.ModuleName] = value.getParamaterDefinitionTree()
+            })
             let parameters = {}
+            // parameter node: type, range, default, value
+            // module node: name, parameters, type, range, default, module
             this.constructor.SEQUENCE.forEach((name) => {
                 let P = this.constructor.PARAMETERS[name]
                 let proxy = {}
                 if (P.type === PARAMETER_TYPE.MODULE) {
-                    proxy = P.module.getParamaterDefinitionTree()
-                    proxy.value = self[name].value()
+                    proxy = self[name].value()
                 } else {
                     proxy.type = P.type
                     proxy.range = P.range
@@ -140,14 +153,15 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                         if (key !== 'value')
                             throw Error('You can only change the value of parameter ' + name + '.')
                         else {
-                            target[key] = value
                             self[name] = value
                             return true
                         }
                     }
                 })
             })
-            return { name: self.constructor.ModuleName, parameters }
+            value.module = module
+            value.parameters = parameters
+            return value
         }
         static getParamaterDefinitionTree() {
             let self = this
@@ -210,16 +224,6 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                             target[param] = value
                             return true
                         }
-                        // module type test
-                        if (value instanceof VirtualModule) {
-                            if (value instanceof target.constructor.PARAMETERS[param].module) {
-                                target[param] = value
-                                return true
-                            } else
-                                throw Error(
-                                    `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}.`
-                                )
-                        }
                         // range test
                         let type = target.constructor.PARAMETERS[param].type
                         if (type === PARAMETER_TYPE.INT || type === PARAMETER_TYPE.DOUBLE) {
@@ -236,6 +240,21 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                                     `OGDFCategoryNotFoundError: Parameter ${param} needs one of category in ${target.constructor.PARAMETERS[
                                         param
                                     ].range.join(',')}, but got ${value}.`
+                                )
+                        } else if (type === PARAMETER_TYPE.MODULE) {
+                            // module type check
+                            if (value instanceof target.constructor.PARAMETERS[param].module) {
+                                target[param] = value
+                                return true
+                            } else if (value instanceof VirtualModule)
+                                throw Error(
+                                    `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}.`
+                                )
+                            else
+                                throw Error(
+                                    `OGDFModuleTypeError: Parameter ${param} needs a ${
+                                        target.constructor.PARAMETERS[param].module.BaseModuleName
+                                    } object, but got ${typeof value}.`
                                 )
                         }
                         target[param] = value
