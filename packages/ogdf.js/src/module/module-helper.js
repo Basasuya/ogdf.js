@@ -124,12 +124,11 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                 range: this.constructor.SubModuleList.map((value) =>
                     value.getParamaterDefinitionTree()
                 ),
-                default: this.constructor.getParamaterDefinitionTree(),
-                value: this
+                default: this.constructor.getParamaterDefinitionTree()
             }
             let parameters = {}
             // parameter node: type, range, default, value
-            // module node: name, parameters, type, range, default, module
+            // module node: name, parameters
             this.constructor.SEQUENCE.forEach((name) => {
                 let P = this.constructor.PARAMETERS[name]
                 let proxy = {}
@@ -141,21 +140,12 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                     proxy.default = P.default
                     proxy.value = self[name]
                 }
-                parameters[name] = new Proxy(proxy, {
-                    get(target, key) {
-                        return target[key]
-                    },
-                    set(target, key, value) {
-                        if (key !== 'value')
-                            throw Error('You can only change the value of parameter ' + name + '.')
-                        else {
-                            self[name] = value
-                            return true
-                        }
-                    }
-                })
+                parameters[name] = proxy
             })
-            value.parameters = parameters
+            value.value = {
+                name: this.constructor.ModuleName,
+                parameters
+            }
             return value
         }
         static getParamaterDefinitionTree() {

@@ -17,10 +17,10 @@ class LayoutRenderer {
     useWorker(useWorker) {
         this._useWorker = useWorker
     }
-    parameters(parameters) {
+    parameters(parameters, value) {
         if (parameters) {
             this._parameters = parameters
-            this._layout.parameters(this._parameters)
+            this._layout.parameters(this._parameters, value)
         }
         return this._layout.parameters()
     }
