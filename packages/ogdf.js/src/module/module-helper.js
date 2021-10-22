@@ -139,7 +139,8 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                 }
                 parameters[name] = proxy
             })
-            value.value = deepmerge({ parameters }, value.default)
+            const overwriteMerge = (destinationArray, sourceArray) => sourceArray
+            value.value = deepmerge({ parameters }, value.default, { arrayMerge: overwriteMerge })
             return value
         }
         static getParamaterDefinitionTree() {
