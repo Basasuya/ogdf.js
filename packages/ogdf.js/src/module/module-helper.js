@@ -135,17 +135,11 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                 if (P.type === PARAMETER_TYPE.MODULE) {
                     proxy = self[name].value()
                 } else {
-                    proxy.type = P.type
-                    proxy.range = P.range
-                    proxy.default = P.default
                     proxy.value = self[name]
                 }
                 parameters[name] = proxy
             })
-            value.value = {
-                name: this.constructor.ModuleName,
-                parameters
-            }
+            value.value = deepmerge({ parameters }, value.default)
             return value
         }
         static getParamaterDefinitionTree() {
