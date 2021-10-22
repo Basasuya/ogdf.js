@@ -121,16 +121,12 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             let self = this
             let value = {
                 type: PARAMETER_TYPE.MODULE,
-                name: this.constructor.ModuleName,
-                range: this.constructor.SubModuleList.map((value) => value.ModuleName),
+                range: this.constructor.SubModuleList.map((value) =>
+                    value.getParamaterDefinitionTree()
+                ),
                 default: this.constructor.getParamaterDefinitionTree(),
-                module: {},
                 value: this
             }
-            let module = {}
-            self.constructor.SubModuleList.forEach((value) => {
-                module[value.ModuleName] = value.getParamaterDefinitionTree()
-            })
             let parameters = {}
             // parameter node: type, range, default, value
             // module node: name, parameters, type, range, default, module
@@ -159,7 +155,6 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                     }
                 })
             })
-            value.module = module
             value.parameters = parameters
             return value
         }
@@ -174,19 +169,12 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                 if (P.type === PARAMETER_TYPE.MODULE) {
                     definitions.parameters[name] = {
                         type: PARAMETER_TYPE.MODULE,
-                        module: {}
-                    }
-                    self.PARAMETERS[name].module.SubModuleList.forEach((value) => {
-                        definitions.parameters[name].module[value.ModuleName] =
+                        range: self.PARAMETERS[name].module.SubModuleList.map((value) =>
                             value.getParamaterDefinitionTree()
-                    })
-                    definitions.parameters[name].range = self.PARAMETERS[
-                        name
-                    ].module.SubModuleList.map((value) => value.ModuleName)
+                        )
+                    }
                     definitions.parameters[name].default =
-                        definitions.parameters[name].module[
-                            self.PARAMETERS[name].default.ModuleName
-                        ]
+                        self.PARAMETERS[name].default.getParamaterDefinitionTree()
                 } else definitions.parameters[name] = self.PARAMETER_DEFINITION[name]
             })
             return definitions
