@@ -29,6 +29,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
         static DEFAULT_PARAMETERS = {}
         constructor() {
             super()
+            // readonly object
             this._parameters = {}
         }
         /**
@@ -94,7 +95,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                         this._parameters[parameter] = this[parameter] = value
                 }
             }
-            return this._parameters
+            return JSON.parse(JSON.stringify(this._parameters))
         }
         /**
          * get json object for using
