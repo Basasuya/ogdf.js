@@ -29,20 +29,17 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
         static DEFAULT_PARAMETERS = {}
         constructor() {
             super()
-            // readonly object
-            this._parameters = {}
         }
         /**
-         * get or set parameters of module object
+         * init parameters of module object
          * @param {*} parameter
-         * @param {*} value
          * @returns parameters
          */
-        parameters(parameter, value) {
+        init(parameter) {
             if (parameter) {
                 // parameter setter
                 if (typeof parameter == 'object') {
-                    // this.parameters({ useHighLevelOptions: true })
+                    // this.init({ useHighLevelOptions: true })
                     for (let paramName of this.constructor.SEQUENCE) {
                         if (this.constructor.PARAMETERS[paramName].type === PARAMETER_TYPE.MODULE) {
                             if (!this.constructor.PARAMETERS[paramName].module)
@@ -58,7 +55,6 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                                 this[paramName] = new this.constructor.PARAMETERS[paramName].module[
                                     parameter[paramName].static.ModuleName
                                 ](parameter[paramName].parameters)
-                                this._parameters[paramName] = this[paramName]
                                 continue
                             }
                             if (parameter[paramName] instanceof VirtualModule) {
@@ -67,7 +63,6 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                                     this.constructor.PARAMETERS[paramName].module
                                 ) {
                                     this[paramName] = parameter[paramName]
-                                    this._parameters[paramName] = this[paramName]
                                     continue
                                 } else
                                     throw Error(
@@ -85,17 +80,10 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                                 parameter[paramName] ||
                                 MODULE_DIRECTORY[this.constructor.ModuleName][paramName].default
                         }
-                        this._parameters[paramName] = this[paramName]
                     }
-                } else if (typeof parameter == 'string') {
-                    // e.g., this.parameters("useHighLevelOptions", true)
-                    // e.g., this.parameters("multilevelBuilderType.module", "EdgeCoverMerger")
-                    // e.g., this.parameters("multilevelBuilderType.edgeLengthAdjustment")
-                    if (this.constructor.SEQUENCE.indexOf(parameter) >= 0)
-                        this._parameters[parameter] = this[parameter] = value
                 }
             }
-            return JSON.parse(JSON.stringify(this._parameters))
+            return this
         }
         /**
          * get json object for using
@@ -184,7 +172,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             })()
             constructor(configs = {}) {
                 super()
-                this.parameters(configs)
+                this.init(configs)
             }
         }
         let ModuleProxy = new Proxy(Module, {
@@ -194,47 +182,51 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                         return target[param]
                     },
                     set(target, param, value) {
-                        if (param[0] === '_') {
-                            target[param] = value
-                            return true
-                        }
-                        // range test
-                        let type = target.constructor.PARAMETERS[param].type
-                        if (type === PARAMETER_TYPE.INT || type === PARAMETER_TYPE.DOUBLE) {
-                            if (
-                                value < target.constructor.PARAMETERS[param].range[0] ||
-                                value > target.constructor.PARAMETERS[param].range[1]
-                            )
-                                throw Error(
-                                    `OGDFOutOfRangeError: Parameter ${param} needs a number between ${target.constructor.PARAMETERS[param].range[0]} and ${target.constructor.PARAMETERS[param].range[1]}, but got ${value}.`
-                                )
-                        } else if (type === PARAMETER_TYPE.CATEGORICAL) {
-                            if (target.constructor.PARAMETERS[param].range.indexOf(value) < 0)
-                                throw Error(
-                                    `OGDFCategoryNotFoundError: Parameter ${param} needs one of category in ${target.constructor.PARAMETERS[
-                                        param
-                                    ].range.join(',')}, but got ${value}.`
-                                )
-                        } else if (type === PARAMETER_TYPE.MODULE) {
-                            // module type check
-                            if (value instanceof target.constructor.PARAMETERS[param].module) {
-                                target[param] = value
-                                return true
-                            } else if (value instanceof VirtualModule)
-                                throw Error(
-                                    `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}.`
-                                )
-                            else
-                                throw Error(
-                                    `OGDFModuleTypeError: Parameter ${param} needs a ${
-                                        target.constructor.PARAMETERS[param].module.BaseModuleName
-                                    } object, but got ${typeof value}.`
-                                )
-                        }
-                        target[param] = value
                         if (target.constructor.SEQUENCE.indexOf(param) >= 0) {
-                            target._parameters[param] = value
-                        }
+                            // range test
+                            let type = target.constructor.PARAMETERS[param].type
+                            if (type === PARAMETER_TYPE.INT || type === PARAMETER_TYPE.DOUBLE) {
+                                if (
+                                    value < target.constructor.PARAMETERS[param].range[0] ||
+                                    value > target.constructor.PARAMETERS[param].range[1]
+                                )
+                                    throw Error(
+                                        `OGDFOutOfRangeError: Parameter ${param} needs a number between ${target.constructor.PARAMETERS[param].range[0]} and ${target.constructor.PARAMETERS[param].range[1]}, but got ${value}.`
+                                    )
+                            } else if (type === PARAMETER_TYPE.CATEGORICAL) {
+                                if (target.constructor.PARAMETERS[param].range.indexOf(value) < 0)
+                                    throw Error(
+                                        `OGDFCategoryNotFoundError: Parameter ${param} needs one of category in ${target.constructor.PARAMETERS[
+                                            param
+                                        ].range.join(',')}, but got ${value}.`
+                                    )
+                            } else if (type === PARAMETER_TYPE.MODULE) {
+                                // module type check
+                                if (value instanceof target.constructor.PARAMETERS[param].module) {
+                                    if (
+                                        target.constructor.PARAMETERS[param].module.ModuleName ===
+                                        value.constructor.ModuleName
+                                    ) {
+                                        throw Error(
+                                            `OGDFModuleTypeError: ${param} needs an implemented module of ${target.constructor.PARAMETERS[param].module.ModuleName}, but a virtual module.`
+                                        )
+                                    }
+                                    target[param] = value
+                                    return true
+                                } else if (value instanceof VirtualModule)
+                                    throw Error(
+                                        `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}.`
+                                    )
+                                else
+                                    throw Error(
+                                        `OGDFModuleTypeError: Parameter ${param} needs a ${
+                                            target.constructor.PARAMETERS[param].module
+                                                .BaseModuleName
+                                        } object, but got ${typeof value}.`
+                                    )
+                            }
+                            target[param] = value
+                        } else target[param] = value
                         return true
                     }
                 })

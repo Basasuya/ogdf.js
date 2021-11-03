@@ -10,19 +10,10 @@ class LayoutRenderer {
         this._layout = new this.constructor.LayoutModule(this._parameters)
         this._graphAttributes = new this.constructor.GraphType(this._graph)
         this._useWorker = config?.useWorker || false
-        this._layout.constructor.SEQUENCE.forEach((paramName) => {
-            this[paramName] = this._layout[paramName]
-        })
+        this.parameters = this._layout
     }
     useWorker(useWorker) {
         this._useWorker = useWorker
-    }
-    parameters(parameters, value) {
-        if (parameters) {
-            this._parameters = parameters
-            this._layout.parameters(this._parameters, value)
-        }
-        return this._layout.parameters()
     }
     graph(graph) {
         if (graph) {
