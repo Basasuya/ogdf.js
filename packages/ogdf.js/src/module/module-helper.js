@@ -29,48 +29,17 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
         static DEFAULT_PARAMETERS = {}
         constructor() {
             super()
-            this._parameters = {}
         }
         /**
-         * create an object correspond to ogdf entry
-         * @param {*} OGDFModule initialized ogdf entry module
-         * @returns the address of buffer
-         */
-        malloc(OGDFModule) {
-            let params = this.constructor.SEQUENCE.map((name) => {
-                let type = this.constructor.PARAMETERS[name].type
-                if (type === PARAMETER_TYPE.CATEGORICAL) {
-                    return this.constructor.PARAMETERS[name].range.indexOf(this[name])
-                } else if (type === PARAMETER_TYPE.MODULE) {
-                    return this[name].malloc(OGDFModule)
-                } else return this[name]
-            })
-            this._buffer = OGDFModule[
-                `_${this.constructor.BaseModuleName}_${this.constructor.ModuleName}`
-            ](...params)
-            return this._buffer
-        }
-        free() {
-            this.constructor.SEQUENCE.forEach((name) => {
-                let type = this.constructor.PARAMETERS[name].type
-                if (type === PARAMETER_TYPE.MODULE) {
-                    return this[name].free()
-                }
-            })
-            OGDFModule[`__delete`](this._buffer)
-            this._buffer = undefined
-        }
-        /**
-         * get or set parameters of module object
+         * init parameters of module object
          * @param {*} parameter
-         * @param {*} value
          * @returns parameters
          */
-        parameters(parameter, value) {
+        init(parameter) {
             if (parameter) {
                 // parameter setter
                 if (typeof parameter == 'object') {
-                    // this.parameters({ useHighLevelOptions: true })
+                    // this.init({ useHighLevelOptions: true })
                     for (let paramName of this.constructor.SEQUENCE) {
                         if (this.constructor.PARAMETERS[paramName].type === PARAMETER_TYPE.MODULE) {
                             if (!this.constructor.PARAMETERS[paramName].module)
@@ -86,7 +55,6 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                                 this[paramName] = new this.constructor.PARAMETERS[paramName].module[
                                     parameter[paramName].static.ModuleName
                                 ](parameter[paramName].parameters)
-                                this._parameters[paramName] = this[paramName]
                                 continue
                             }
                             if (parameter[paramName] instanceof VirtualModule) {
@@ -95,7 +63,6 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                                     this.constructor.PARAMETERS[paramName].module
                                 ) {
                                     this[paramName] = parameter[paramName]
-                                    this._parameters[paramName] = this[paramName]
                                     continue
                                 } else
                                     throw Error(
@@ -113,17 +80,10 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                                 parameter[paramName] ||
                                 MODULE_DIRECTORY[this.constructor.ModuleName][paramName].default
                         }
-                        this._parameters[paramName] = this[paramName]
                     }
-                } else if (typeof parameter == 'string') {
-                    // e.g., this.parameters("useHighLevelOptions", true)
-                    // e.g., this.parameters("multilevelBuilderType.module", "EdgeCoverMerger")
-                    // e.g., this.parameters("multilevelBuilderType.edgeLengthAdjustment")
-                    if (this.constructor.SEQUENCE.indexOf(parameter) >= 0)
-                        this._parameters[paramName] = this[paramName] = value
                 }
             }
-            return this._parameters
+            return this
         }
         /**
          * get json object for using
@@ -146,6 +106,53 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             })
             return json
         }
+        value() {
+            let self = this
+            let value = {
+                type: PARAMETER_TYPE.MODULE,
+                range: this.constructor.SubModuleList.map((value) =>
+                    value.getParamaterDefinitionTree()
+                ),
+                default: this.constructor.getParamaterDefinitionTree()
+            }
+            let parameters = {}
+            // parameter node: type, range, default, value
+            // module node: name, parameters
+            this.constructor.SEQUENCE.forEach((name) => {
+                let P = this.constructor.PARAMETERS[name]
+                let proxy = {}
+                if (P.type === PARAMETER_TYPE.MODULE) {
+                    proxy = self[name].value()
+                } else {
+                    proxy.value = self[name]
+                }
+                parameters[name] = proxy
+            })
+            const overwriteMerge = (destinationArray, sourceArray) => sourceArray
+            value.value = deepmerge({ parameters }, value.default, { arrayMerge: overwriteMerge })
+            return value
+        }
+        static getParamaterDefinitionTree() {
+            let self = this
+            let definitions = {
+                name: this.ModuleName,
+                parameters: {}
+            }
+            this.SEQUENCE.forEach((name) => {
+                let P = self.PARAMETERS[name]
+                if (P.type === PARAMETER_TYPE.MODULE) {
+                    definitions.parameters[name] = {
+                        type: PARAMETER_TYPE.MODULE,
+                        range: self.PARAMETERS[name].module.SubModuleList.map((value) =>
+                            value.getParamaterDefinitionTree()
+                        )
+                    }
+                    definitions.parameters[name].default =
+                        self.PARAMETERS[name].default.getParamaterDefinitionTree()
+                } else definitions.parameters[name] = self.PARAMETER_DEFINITION[name]
+            })
+            return definitions
+        }
     }
     BaseModule.SubModuleList = []
     for (let MODULE_NAME in MODULE_DIRECTORY) {
@@ -165,7 +172,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             })()
             constructor(configs = {}) {
                 super()
-                this.parameters(configs)
+                this.init(configs)
             }
         }
         let ModuleProxy = new Proxy(Module, {
@@ -175,22 +182,51 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                         return target[param]
                     },
                     set(target, param, value) {
-                        if (param[0] === '_') {
-                            target[param] = value
-                            return true
-                        }
-                        if (value instanceof VirtualModule) {
-                            if (value instanceof target.constructor.PARAMETERS[param].module) {
-                                target[param] = value
-                                return true
-                            } else
-                                throw Error(
-                                    `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}`
+                        if (target.constructor.SEQUENCE.indexOf(param) >= 0) {
+                            // range test
+                            let type = target.constructor.PARAMETERS[param].type
+                            if (type === PARAMETER_TYPE.INT || type === PARAMETER_TYPE.DOUBLE) {
+                                if (
+                                    value < target.constructor.PARAMETERS[param].range[0] ||
+                                    value > target.constructor.PARAMETERS[param].range[1]
                                 )
-                        }
-                        target[param] = value
-                        if (target.constructor.SEQUENCE.indexOf(param) >= 0)
-                            target._parameters[param] = value
+                                    throw Error(
+                                        `OGDFOutOfRangeError: Parameter ${param} needs a number between ${target.constructor.PARAMETERS[param].range[0]} and ${target.constructor.PARAMETERS[param].range[1]}, but got ${value}.`
+                                    )
+                            } else if (type === PARAMETER_TYPE.CATEGORICAL) {
+                                if (target.constructor.PARAMETERS[param].range.indexOf(value) < 0)
+                                    throw Error(
+                                        `OGDFCategoryNotFoundError: Parameter ${param} needs one of category in ${target.constructor.PARAMETERS[
+                                            param
+                                        ].range.join(',')}, but got ${value}.`
+                                    )
+                            } else if (type === PARAMETER_TYPE.MODULE) {
+                                // module type check
+                                if (value instanceof target.constructor.PARAMETERS[param].module) {
+                                    if (
+                                        target.constructor.PARAMETERS[param].module.ModuleName ===
+                                        value.constructor.ModuleName
+                                    ) {
+                                        throw Error(
+                                            `OGDFModuleTypeError: ${param} needs an implemented module of ${target.constructor.PARAMETERS[param].module.ModuleName}, but a virtual module.`
+                                        )
+                                    }
+                                    target[param] = value
+                                    return true
+                                } else if (value instanceof VirtualModule)
+                                    throw Error(
+                                        `OGDFModuleTypeError: Parameter ${param} needs a ${target.constructor.PARAMETERS[param].module.BaseModuleName} object, but got ${value.constructor.BaseModuleName}.`
+                                    )
+                                else
+                                    throw Error(
+                                        `OGDFModuleTypeError: Parameter ${param} needs a ${
+                                            target.constructor.PARAMETERS[param].module
+                                                .BaseModuleName
+                                        } object, but got ${typeof value}.`
+                                    )
+                            }
+                            target[param] = value
+                        } else target[param] = value
                         return true
                     }
                 })

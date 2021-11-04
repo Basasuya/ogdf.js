@@ -71,7 +71,7 @@ class BaseGraph extends Graph {
 
             this._sourceIndexArray = []
             this._targetIndexArray = []
-            for (let i = 0; i < this._linksNum; ++i) {
+            for (let i = 0; i < this._graph.links.length; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
             }
@@ -88,8 +88,10 @@ class NodeLinkGraph extends Graph {
     graph(graph) {
         super.graph(graph)
         if (graph) {
+            this._graph = graph
+
             const id2index = {}
-            for (let i = 0; i < this._nodesNum; ++i) {
+            for (let i = 0; i < this._graph.nodes.length; ++i) {
                 if (this._graph.nodes[i]['id'] in id2index) {
                     throw Error('Duplicated Node ID') // duplicated node id is not allowed
                 } else id2index[this._graph.nodes[i]['id']] = i
@@ -97,7 +99,7 @@ class NodeLinkGraph extends Graph {
 
             this._sourceIndexArray = []
             this._targetIndexArray = []
-            for (let i = 0; i < this._linksNum; ++i) {
+            for (let i = 0; i < this._graph.links.length; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
             }
@@ -105,7 +107,7 @@ class NodeLinkGraph extends Graph {
             this._nodesXArray = []
             this._nodesYArray = []
 
-            for (let i = 0; i < this._nodesNum; ++i) {
+            for (let i = 0; i < this._graph.nodes.length; ++i) {
                 this._nodesXArray.push(this._graph.nodes[i].x)
                 this._nodesYArray.push(this._graph.nodes[i].y)
             }
@@ -131,7 +133,7 @@ class LinkWeightGraph extends Graph {
             this._graph = graph
 
             const id2index = {}
-            for (let i = 0; i < this._nodesNum; ++i) {
+            for (let i = 0; i < this._graph.nodes.length; ++i) {
                 if (this._graph.nodes[i]['id'] in id2index) {
                     throw Error('Duplicated Node ID') // duplicated node id is not allowed
                 } else id2index[this._graph.nodes[i]['id']] = i
@@ -140,7 +142,7 @@ class LinkWeightGraph extends Graph {
             this._sourceIndexArray = []
             this._targetIndexArray = []
             this._linkWeightArray = []
-            for (let i = 0; i < this._linksNum; ++i) {
+            for (let i = 0; i < this._graph.links.length; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
                 this._linkWeightArray.push(this._graph.links[i].weight || 1.0)
@@ -164,7 +166,7 @@ class NodeLinkWeightGraph extends Graph {
             this._graph = graph
 
             const id2index = {}
-            for (let i = 0; i < this._nodesNum; ++i) {
+            for (let i = 0; i < this._graph.nodes.length; ++i) {
                 if (this._graph.nodes[i]['id'] in id2index) {
                     throw Error('Duplicated Node ID') // duplicated node id is not allowed
                 } else id2index[this._graph.nodes[i]['id']] = i
@@ -173,7 +175,7 @@ class NodeLinkWeightGraph extends Graph {
             this._sourceIndexArray = []
             this._targetIndexArray = []
             this._linkWeightArray = []
-            for (let i = 0; i < this._linksNum; ++i) {
+            for (let i = 0; i < this._graph.links.length; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
                 this._linkWeightArray.push(this._graph.links[i].weight || 1.0)
@@ -182,7 +184,7 @@ class NodeLinkWeightGraph extends Graph {
             this._nodesXArray = []
             this._nodesYArray = []
 
-            for (let i = 0; i < this._nodesNum; ++i) {
+            for (let i = 0; i < this._graph.nodes.length; ++i) {
                 this._nodesXArray.push(this._graph.nodes[i].x)
                 this._nodesYArray.push(this._graph.nodes[i].y)
             }
@@ -209,7 +211,7 @@ class NodeSizeLinkGraph extends Graph {
             this._graph = graph
 
             const id2index = {}
-            for (let i = 0; i < this._nodesNum; ++i) {
+            for (let i = 0; i < this._graph.nodes.length; ++i) {
                 if (this._graph.nodes[i]['id'] in id2index) {
                     throw Error('Duplicated Node ID') // duplicated node id is not allowed
                 } else id2index[this._graph.nodes[i]['id']] = i
@@ -217,7 +219,7 @@ class NodeSizeLinkGraph extends Graph {
 
             this._sourceIndexArray = []
             this._targetIndexArray = []
-            for (let i = 0; i < this._linksNum; ++i) {
+            for (let i = 0; i < this._graph.links.length; ++i) {
                 this._sourceIndexArray.push(id2index[this._graph.links[i].source])
                 this._targetIndexArray.push(id2index[this._graph.links[i].target])
             }
@@ -227,7 +229,7 @@ class NodeSizeLinkGraph extends Graph {
             this._nodesWidthArray = []
             this._nodesHeightArray = []
 
-            for (let i = 0; i < this._nodesNum; ++i) {
+            for (let i = 0; i < this._graph.nodes.length; ++i) {
                 this._nodesXArray.push(this._graph.nodes[i].x)
                 this._nodesYArray.push(this._graph.nodes[i].y)
                 this._nodesWidthArray.push(this._graph.nodes[i].width)

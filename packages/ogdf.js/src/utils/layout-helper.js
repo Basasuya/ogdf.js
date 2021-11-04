@@ -10,26 +10,20 @@ class LayoutRenderer {
         this._layout = new this.constructor.LayoutModule(this._parameters)
         this._graphAttributes = new this.constructor.GraphType(this._graph)
         this._useWorker = config?.useWorker || false
-        this._layout.constructor.SEQUENCE.forEach((paramName) => {
-            this[paramName] = this._layout[paramName]
-        })
+        this.parameters = this._layout
     }
     useWorker(useWorker) {
         this._useWorker = useWorker
     }
-    parameters(parameters) {
-        if (parameters) {
-            this._parameters = parameters
-            this._layout.parameters(this._parameters)
-        }
-        return this._layout.parameters()
-    }
     graph(graph) {
         if (graph) {
             this._graph = graph
-            this._graphAttributes = new LayoutType.GraphType(this._graph)
+            this._graphAttributes = new this.constructor.LayoutType.GraphType(this._graph)
         }
         return this._graph
+    }
+    value() {
+        return this._layout.value()
     }
     run() {
         let self = this
@@ -55,7 +49,6 @@ class LayoutRenderer {
                             )
                         } else return parameters[name]
                     })
-                    console.log(`_${staticParams.BaseModuleName}_${staticParams.ModuleName}`)
                     let buffer = Module[
                         `_${staticParams.BaseModuleName}_${staticParams.ModuleName}`
                     ](...params)
@@ -189,6 +182,8 @@ function createLayout(layoutModule, graphType) {
         construct(target, args) {
             return new Proxy(new target(...args), {
                 get(target, param) {
+                    if (target._layout.constructor.SEQUENCE.indexOf(param) >= 0)
+                        return target._layout[param]
                     return target[param]
                 },
                 set(target, param, value) {
