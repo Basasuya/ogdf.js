@@ -1,6 +1,6 @@
 {
     "name": "ogdfjs-dashboard",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "private": true,
     "description": "A dashboard for testing ogdf.js",
     "author": "JackieAnxis <jackieanxis@gmail.com>",
@@ -12,7 +12,7 @@
         "@testing-library/user-event": "^7.1.2",
         "antd": "^4.7.2",
         "netv": "^1.1.4",
-        "ogdfjs": "^0.1.6",
+        "ogdfjs": "^0.2.0",
         "react": "^17.0.0",
         "react-dom": "^17.0.0",
         "react-scripts": "3.4.4"
