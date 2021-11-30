@@ -59,24 +59,82 @@ Some layout algorithms are supported now:
 -   [Planarization](https://ogdf.uos.de/doc/classogdf_1_1_planarization_layout.html): The planarization approach for drawing graphs.
 -   [PlanarizationGrid](https://ogdf.uos.de/doc/classogdf_1_1_planarization_grid_layout.html): the planarization grid layout algorithm
 
-##### Layout Algorithms for Clustered Graphs
-
--   [ClusterOrtho](https://ogdf.uos.de/doc/classogdf_1_1_cluster_ortho_layout.html): Represents a planar orthogonal drawing algorithm for c-planar, c-connected clustered graphs.
-
 Examples can be found in [./examples](https://github.com/ZJUVAI/ogdf.js/tree/master/examples). We use [NetV.js](https://github.com/ZJUVAG/NetV.js) to render the graph.
 
 ```JavaScript
 // layouts can be called like:
-const Layout = ogdf.layouts.energebased.fm3
-const fm3 = new Layout()
-fm3.graph(/* graph data */ { nodes: facebook.nodes, links: facebook.links })
-fm3.parameters(/* parameters */ { qualityVersusSpeed: "GorgeousAndEfficient" })
-fm3.run().then(graph => {
+let layout = new ogdf.Layout.SugiyamaLayout({
+    graph: miserables,
+    parameters: {
+        edgeCosts: 100,
+        numberOfPivots: 250,
+        useEdgeCostsAttribute: true,
+        crossMin: new ogdf.Module.LayeredCrossMinModule.MedianHeuristic()
+    },
+    useWorker: false
+})
+layout.run().then(graph => {
     // ...
 })
 
 // or using import/export
 import * as ogdf from 'ogdfjs'
+```
+
+To change the parameters of the layout module, assign the value to the parameter:
+
+```JavaScript
+console.log(layout.parameters.minDistCC) // 20
+layout.parameters.minDistCC = 10
+console.log(layout.parameters.minDistCC) // 10
+// To apply changes, the graph should be recalculated
+layout.run().then(graph => {
+    // ...
+})
+```
+
+To change the parameters of the layout itself (such as useWorker), assign the value to the parameter:
+
+```JavaScript
+console.log(layout.useWorker) // false
+layout.useWorker = true
+console.log(layout.useWorker) // true
+// To apply changes, the graph should be recalculated
+layout.run().then(graph => {
+    // ...
+})
+```
+
+To get or set the graph, you should use `layout.graph` function:
+
+```JavaScript
+console.log(layout.graph()) // {nodes: Array(77), links: Array(254)}
+layout.graph({
+    nodes,
+    links
+})
+```
+
+To get default and current settings of layout parameters, you should use `layout.value()` function, it returns an object like:
+
+```JavaScript
+value = {
+    type: 'MODULE', // PARAMETER_TYPE
+    range: [{...},...], // possible value range
+    default: { // default value of this module or data
+        name: "SugiyamaLayout", // name of this module or data
+        parameters: { // parameters of this module
+            alignBaseClasses: {type,range,default}
+            ...
+        }
+    },
+    value: { // current value of this module or data
+        name: "FMMMLayout",
+        parameters: {
+            ...
+        }
+    }
+}
 ```
 
 ### How to build it?
