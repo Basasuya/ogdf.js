@@ -81,7 +81,7 @@ layout.run().then(graph => {
 import * as ogdf from 'ogdfjs'
 ```
 
-To change the parameters of the layout module, assign the value to the parameter:
+To `get`/`set` original layout parameters (defined by [OGDF](https://ogdf.uos.de/)) by `layout.parameters.xxxx`:
 
 ```JavaScript
 console.log(layout.parameters.minDistCC) // 20
@@ -93,7 +93,7 @@ layout.run().then(graph => {
 })
 ```
 
-To change the parameters of the layout itself (such as useWorker), assign the value to the parameter:
+To `get`/`set` our new parameters by `layout.xxxx`:
 
 ```JavaScript
 console.log(layout.useWorker) // false
@@ -105,7 +105,7 @@ layout.run().then(graph => {
 })
 ```
 
-To get or set the graph, you should use `layout.graph` function:
+To `get`/`set` graph data by `layout.graph()`:
 
 ```JavaScript
 console.log(layout.graph()) // {nodes: Array(77), links: Array(254)}
@@ -115,7 +115,7 @@ layout.graph({
 })
 ```
 
-To get default and current settings of layout parameters, you should use `layout.value()` function, it returns an object like:
+To get default and current settings of layout parameters, use `layout.value()`:
 
 ```JavaScript
 value = {
@@ -243,3 +243,7 @@ $ lerna publish
 ### Progress
 
 -   add other layout algorithms
+
+### License
+
+[MIT License](/LICENSE)
