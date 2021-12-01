@@ -6,24 +6,14 @@ import { createWorker } from './worker-helper'
 class LayoutRenderer {
     constructor(config) {
         this._parameters = config?.parameters || {}
-        this._graph = config?.graph || {}
-        this._layout = new this.constructor.LayoutModule(this._parameters)
-        this._graphAttributes = new this.constructor.GraphType(this._graph)
-        this._useWorker = config?.useWorker || false
-        this.parameters = this._layout
+        this.graph = config?.graph || {}
+        this.layout = new this.constructor.LayoutModule(this._parameters)
+        this.graphAttributes = new this.constructor.GraphType(this.graph)
+        this.useWorker = config?.useWorker || false
+        this.parameters = this.layout
     }
-    useWorker(useWorker) {
-        this._useWorker = useWorker
-    }
-    graph(graph) {
-        if (graph) {
-            this._graph = graph
-            this._graphAttributes = new this.constructor.LayoutType.GraphType(this._graph)
-        }
-        return this._graph
-    }
-    value() {
-        return this._layout.value()
+    configs = () => {
+        return this.layout.configs()
     }
     run() {
         let self = this
@@ -118,7 +108,7 @@ class LayoutRenderer {
             }
             return OGDFProcess
         }
-        if (this._useWorker) {
+        if (this.useWorker) {
             let worker = createWorker(createOGDFProcess)
             return new Promise((resolve, reject) => {
                 // post data, including functions/parameters/..., into the webworker
@@ -126,20 +116,20 @@ class LayoutRenderer {
                     JSON.stringify({
                         initOGDF: initOGDF.toString(),
                         PARAMETER_TYPE,
-                        layoutParams: self._layout.json(),
+                        layoutParams: self.layout.json(),
                         graphType: self.constructor.GraphType.ModuleName,
-                        graphAttributes: self._graphAttributes.json()
+                        graphAttributes: self.graphAttributes.json()
                     })
                 )
                 // onmessage listens the returned value from the webworker, namely, the layout
                 worker.onmessage = (e) => {
                     const nodePositions = JSON.parse(e.data)
-                    for (let i = 0; i < self._graph.nodes.length; ++i) {
-                        this._graph.nodes[i].x = nodePositions[i].x
-                        this._graph.nodes[i].y = nodePositions[i].y
+                    for (let i = 0; i < self.graph.nodes.length; ++i) {
+                        this.graph.nodes[i].x = nodePositions[i].x
+                        this.graph.nodes[i].y = nodePositions[i].y
                     }
                     worker.terminate()
-                    resolve(this._graph)
+                    resolve(this.graph)
                 }
             })
         } else {
@@ -148,15 +138,15 @@ class LayoutRenderer {
                 OGDFProcess({
                     initOGDF,
                     PARAMETER_TYPE,
-                    layoutParams: self._layout.json(),
+                    layoutParams: self.layout.json(),
                     graphType: self.constructor.GraphType.ModuleName,
-                    graphAttributes: self._graphAttributes.json()
+                    graphAttributes: self.graphAttributes.json()
                 }).then((nodes) => {
-                    for (let i = 0; i < this._graph.nodes.length; ++i) {
-                        this._graph.nodes[i].x = nodes[i].x
-                        this._graph.nodes[i].y = nodes[i].y
+                    for (let i = 0; i < this.graph.nodes.length; ++i) {
+                        this.graph.nodes[i].x = nodes[i].x
+                        this.graph.nodes[i].y = nodes[i].y
                     }
-                    resolve(this._graph)
+                    resolve(this.graph)
                 })
             })
         }
@@ -182,14 +172,19 @@ function createLayout(layoutModule, graphType) {
         construct(target, args) {
             return new Proxy(new target(...args), {
                 get(target, param) {
-                    if (target._layout.constructor.SEQUENCE.indexOf(param) >= 0)
-                        return target._layout[param]
                     return target[param]
                 },
                 set(target, param, value) {
+                    if (param === 'configs') throw Error('Error: configs is readonly.')
+                    if (param === 'graph') {
+                        if (value && 'nodes' in value && 'links' in value) {
+                            this.graph = value
+                            this.graphAttributes = new this.constructor.LayoutType.GraphType(
+                                this.graph
+                            )
+                        }
+                    }
                     target[param] = value
-                    if (target._layout.constructor.SEQUENCE.indexOf(param) >= 0)
-                        target._layout[param] = value
                     return true
                 }
             })
