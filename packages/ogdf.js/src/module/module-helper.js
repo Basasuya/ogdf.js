@@ -106,7 +106,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             })
             return json
         }
-        value() {
+        configs = () => {
             let self = this
             let value = {
                 type: PARAMETER_TYPE.MODULE,
@@ -122,7 +122,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                 let P = this.constructor.PARAMETERS[name]
                 let proxy = {}
                 if (P.type === PARAMETER_TYPE.MODULE) {
-                    proxy = self[name].value()
+                    proxy = self[name].configs()
                 } else {
                     proxy.value = self[name]
                 }
@@ -226,7 +226,10 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
                                     )
                             }
                             target[param] = value
-                        } else target[param] = value
+                        } else {
+                            if (param === 'configs') throw Error('Error: configs is readonly.')
+                            target[param] = value
+                        }
                         return true
                     }
                 })

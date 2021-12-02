@@ -105,17 +105,17 @@ layout.run().then(graph => {
 })
 ```
 
-To `get`/`set` graph data by `layout.graph()`:
+To `get`/`set` graph data by `layout.graph`:
 
 ```JavaScript
-console.log(layout.graph()) // {nodes: Array(77), links: Array(254)}
-layout.graph({
+console.log(layout.graph) // {nodes: Array(77), links: Array(254)}
+layout.graph = {
     nodes,
     links
-})
+}
 ```
 
-To get default and current settings of layout parameters, use `layout.value()`:
+To get default and current settings of layout parameters, use `layout.configs()`:
 
 ```JavaScript
 value = {
