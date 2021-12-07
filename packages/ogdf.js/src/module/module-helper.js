@@ -136,6 +136,7 @@ export default function createModule(NAME, MODULE_DIRECTORY) {
             let self = this
             let definitions = {
                 name: this.ModuleName,
+                constructor: this,
                 parameters: {}
             }
             this.SEQUENCE.forEach((name) => {
